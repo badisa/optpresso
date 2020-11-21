@@ -20,7 +20,9 @@ def capture(parent_args: Namespace, leftover: List[str]):
     parser = ArgumentParser()
     parser.add_argument("camera", default=0, type=int, help="Camera index to use")
     parser.add_argument("--output-dir", default=".", type=str)
-    parser.add_argument("--machine", default="linea_mini", type=str, help="Espresso machine used")
+    parser.add_argument(
+        "--machine", default="linea_mini", type=str, help="Espresso machine used"
+    )
     args = parser.parse_args(leftover)
     if not os.path.isdir(args.output_dir):
         print(f"No such directory: {args.output_dir}")
