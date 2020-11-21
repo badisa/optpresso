@@ -35,8 +35,8 @@ of inputs is intended to evaluate the effectiveness of different capture techniq
 
 Developed/"tested" using python 3.7
 
-::
-
-  pip install -e .
+```
+$ pip install -e .
+```
 
 
