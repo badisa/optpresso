@@ -45,15 +45,19 @@ def capture(parent_args: Namespace, leftover: List[str]):
             cv2.imshow("capture", frame)
             k = cv2.waitKey(1)
             if k == 99 or k == 13:  # Hit C or enter for capture
-                value = get_user_input("Espresso pull time:", float)
+                value = get_user_input("Espresso pull time:", int)
                 now = int(time.time())
-                output_path = os.path.join(args.output_dir, f"{now}-{args.machine}-{value}.png")
+                dir_name = os.path.join(args.output_dir, str(value))
+                if not os.path.isdir(dir_name):
+                    os.mkdir(dir_name)
+                output_path = os.path.join(
+                    dir_name, f"{now}-{args.machine}.png"
+                )
                 cv2.imwrite(output_path, frame)
                 print(f"Wrote frame to {output_path}")
             elif k == 113 or k == 27:  # Hit q or esc to quit
                 print("Quitting")
                 break
-
     finally:
         cam.release()
         cv2.destroyAllWindows()
