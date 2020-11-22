@@ -14,6 +14,8 @@ to account.
 
 ## Data Collection Methodology
 
+Collected data lives in Google Drive [here](https://drive.google.com/drive/folders/1MTZe69StPiZw1J9uAkJloxB7YduGlczp?usp=sharing). 
+
 ### Coffee Data
 
 1. Grind a few coffee beans
