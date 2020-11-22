@@ -23,7 +23,7 @@ IMG_EXTS = [".jpg", ".png"]
 def train(parent_args: Namespace, leftover: List[str]):
     parser = ArgumentParser()
     parser.add_argument("directory")
-    parser.add_argument("--batch_size", default=5, type=int)
+    parser.add_argument("--batch-size", default=5, type=int)
     parser.add_argument("--epochs", default=200, type=int)
     args = parser.parse_args(leftover)
 
