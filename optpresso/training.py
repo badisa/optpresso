@@ -13,7 +13,8 @@ import numpy as np
 from keras.optimizers import Adam
 from keras.utils import plot_model
 from keras.models import Sequential
-from keras.layers import Activation, Conv2D, MaxPooling2D, Flatten, Dense, Dropout
+from keras.callbacks import ModelCheckpoint, EarlyStopping, ReduceLROnPlateau
+from keras.layers import Activation, Conv2D, MaxPooling2D, Flatten, Dense, Dropout, LeakyReLU
 from keras.preprocessing.image import img_to_array, load_img
 
 IMG_EXTS = [".jpg", ".png"]
@@ -38,6 +39,11 @@ def train(parent_args: Namespace, leftover: List[str]):
         steps_per_epoch=len(generator) // args.batch_size,
         shuffle=True,
         batch_size=args.batch_size,
+        callbacks=[
+            EarlyStopping(monitor="loss", min_delta=1.0, patience=500, mode="min"),
+            ModelCheckpoint("checkpoint.hf", monitor="loss", save_best_only=True),
+            ReduceLROnPlateau(monitor="loss", factor=0.2, patience=10, min_lr=0.00001),
+        ],
     )
     model.save("junk-model.h5")
     plot_model(model, to_file="junk-model.png")
@@ -89,24 +95,24 @@ class GroundsLoader:
 def build_model(shape: List[int], alpha: float = 0.3) -> List[Any]:
     model = Sequential()
     model.add(Conv2D(32, (3, 3), input_shape=shape))
-    model.add(Activation("relu"))
+    model.add(LeakyReLU(alpha=alpha))
     model.add(MaxPooling2D(pool_size=(2, 2)))
 
     model.add(Conv2D(32, (3, 3)))
-    model.add(Activation("relu"))
+    model.add(LeakyReLU(alpha=alpha))
     model.add(MaxPooling2D(pool_size=(2, 2)))
 
     model.add(Conv2D(64, (3, 3)))
-    model.add(Activation("relu"))
+    model.add(LeakyReLU(alpha=alpha))
     model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(Flatten())
     # this converts our 3D feature maps to 1D feature vectors
     model.add(Dense(64))
-    model.add(Activation("relu"))
+    model.add(LeakyReLU(alpha=alpha))
     model.add(Dropout(0.5))
     model.add(Dense(1))
     model.add(Activation("linear"))
     # From regression example
-    opt = Adam(lr=1e-4)
+    opt = Adam(learning_rate=1e-4)
     model.compile(optimizer=opt, loss="mse", metrics=["mse"])
     return model
