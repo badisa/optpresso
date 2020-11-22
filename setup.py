@@ -19,6 +19,7 @@ setup(
         "numpy==1.18.5",
         "matplotlib==3.3.3",
         "keras==2.4.3",
+        "pydot==1.4.1",
         "opencv-python==4.4.0.46",
     ],
     packages=find_packages(),

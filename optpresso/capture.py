@@ -50,9 +50,7 @@ def capture(parent_args: Namespace, leftover: List[str]):
                 dir_name = os.path.join(args.output_dir, str(value))
                 if not os.path.isdir(dir_name):
                     os.mkdir(dir_name)
-                output_path = os.path.join(
-                    dir_name, f"{now}-{args.machine}.png"
-                )
+                output_path = os.path.join(dir_name, f"{now}-{args.machine}.png")
                 cv2.imwrite(output_path, frame)
                 print(f"Wrote frame to {output_path}")
             elif k == 113 or k == 27:  # Hit q or esc to quit
