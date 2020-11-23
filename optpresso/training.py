@@ -23,13 +23,15 @@ IMG_EXTS = [".jpg", ".png"]
 def train(parent_args: Namespace, leftover: List[str]):
     parser = ArgumentParser()
     parser.add_argument("directory")
-    parser.add_argument("--batch-size", default=5, type=int)
+    parser.add_argument("--batch-size", default=16, type=int)
     parser.add_argument("--epochs", default=200, type=int)
+    parser.add_argument("--height", default=255, type=int)
+    parser.add_argument("--width", default=255, type=int)
     args = parser.parse_args(leftover)
 
-    generator = GroundsLoader(args.directory, args.batch_size, (255, 255))
+    generator = GroundsLoader(args.directory, args.batch_size, (args.height, args.width))
 
-    model = build_model((255, 255, 3))
+    model = build_model((args.height, args.width, 3))
 
     model.summary()
 
@@ -84,7 +86,7 @@ class GroundsLoader:
 
     def get_batch(self, start: int, end: int):
         files = self._paths[start:end]
-        x = np.zeros((len(files), self._target_size[0], self._target_size[0], 3))
+        x = np.zeros((len(files), self._target_size[0], self._target_size[1], 3))
         y = np.zeros((len(files),))
         for i, path in enumerate(files):
             x[i] = img_to_array(load_img(path, target_size=self._target_size))
@@ -110,9 +112,11 @@ def build_model(shape: List[int], alpha: float = 0.3) -> List[Any]:
     model.add(Dense(64))
     model.add(LeakyReLU(alpha=alpha))
     model.add(Dropout(0.5))
+
+    # Dense layer of size 1 with linear activation to get that glorious regression
     model.add(Dense(1))
     model.add(Activation("linear"))
-    # From regression example
+    # A low learning rate seems better, at least when data was ~100 images
     opt = Adam(learning_rate=1e-4)
     model.compile(optimizer=opt, loss="mse", metrics=["mse"])
     return model
