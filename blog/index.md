@@ -3,9 +3,10 @@
 Since I would like to better understand Machine Learning, I will attempt to document my process with Optpresso.
 
 
-## Day 1
+### Day 1 - [Too little data, too little knowledge](day1.md)
 
-[Too little data, too little knowledge](day1.md)
+
+### Day 2 - [45 shots later...](day2.md)
 
 
 
