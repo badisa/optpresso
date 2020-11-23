@@ -100,18 +100,21 @@ def build_model(shape: List[int], alpha: float = 0.3) -> List[Any]:
     model.add(LeakyReLU(alpha=alpha))
     model.add(MaxPooling2D(pool_size=(2, 2)))
 
-    model.add(Conv2D(32, (3, 3)))
+    model.add(Conv2D(64, (3, 3)))
     model.add(LeakyReLU(alpha=alpha))
     model.add(MaxPooling2D(pool_size=(2, 2)))
 
-    model.add(Conv2D(64, (3, 3)))
+    model.add(Conv2D(128, (3, 3)))
     model.add(LeakyReLU(alpha=alpha))
     model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(Flatten())
     # this converts our 3D feature maps to 1D feature vectors
-    model.add(Dense(64))
+    model.add(Dense(128))
     model.add(LeakyReLU(alpha=alpha))
     model.add(Dropout(0.5))
+
+    # model.add(Dense(64))
+    # model.add(LeakyReLU(alpha=alpha))
 
     # Dense layer of size 1 with linear activation to get that glorious regression
     model.add(Dense(1))
