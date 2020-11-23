@@ -11,7 +11,7 @@ from keras.preprocessing.image import img_to_array, load_img
 
 def predict(parent_args: Namespace, leftover: List[str]):
     parser = ArgumentParser()
-    parser.add_argument("file_path")
+    parser.add_argument("file_path", nargs="*")
     parser.add_argument("--model", default=None)
     args = parser.parse_args(leftover)
 
@@ -20,7 +20,11 @@ def predict(parent_args: Namespace, leftover: List[str]):
         model_path = "junk-model.h5"
     model = load_model(model_path)
 
-    img_arr = img_to_array(
-        load_img(os.path.expanduser(args.file_path), target_size=(255, 255))
-    )
-    print(model.predict(np.array([img_arr])))
+    images = []
+    for i, path in enumerate(args.file_path):
+        images.append(img_to_array(
+            load_img(os.path.expanduser(path), target_size=(model.input_shape[1], model.input_shape[2]))
+        ))
+    predictions = model.predict(np.array(images))
+    for path, predict in zip(args.file_path, predictions):
+        print(f"{path}: Predicted pull time {predict[0]}s")
