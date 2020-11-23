@@ -33,7 +33,7 @@ a Cainda Digital Microscope (i.e. a cheap digital "microscope"). Additional data
 supplemented using images captured with a phone or DSLR, input by hand. The variety
 of inputs is intended to evaluate the effectiveness of different capture techniques.
 
-## But I own a <insert espresso machine here>!
+## But I own a \<insert espresso machine here\>!
 
 While this project is currently tightly coupled to the Linea Mini's flow/pressure profile, if not to my specific machine, that is not the long term goal! Once the underlying Neural Network has been trained to reliably determine the pull time from grind, an additional tool will be added to build your own model to go from the Neural Network's prediction to your own personal machine. The difficult part is taking an image and getting a number, once you have a number there are simpler methods of mapping one function (pull time on a Linea Mini) to another (pull time on your machine of choice).
 
