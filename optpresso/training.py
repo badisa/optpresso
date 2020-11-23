@@ -5,6 +5,7 @@ The inspiration/code came from the following:
 - https://blog.keras.io/building-powerful-image-classification-models-using-very-little-data.html
 """
 import os
+from random import shuffle
 from typing import List, Any
 from argparse import Namespace, ArgumentParser
 
@@ -39,7 +40,6 @@ def train(parent_args: Namespace, leftover: List[str]):
         generator.generator(),
         epochs=args.epochs,
         steps_per_epoch=len(generator) // args.batch_size,
-        shuffle=True,
         batch_size=args.batch_size,
         callbacks=[
             EarlyStopping(monitor="loss", min_delta=1.0, patience=500, mode="min"),
@@ -76,6 +76,7 @@ class GroundsLoader:
         # I kind of get it, but still hate the infinite generator
         total_size = len(self._paths)
         while True:
+            shuffle(self._paths)
             batch_start = 0
             batch_end = self._batch_size
             while batch_start < total_size:
