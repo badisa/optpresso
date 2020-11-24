@@ -24,6 +24,7 @@ IMG_EXTS = [".jpg", ".png"]
 def train(parent_args: Namespace, leftover: List[str]):
     parser = ArgumentParser()
     parser.add_argument("directory")
+    parser.add_argument("--validation-directory", default=None)
     parser.add_argument("--batch-size", default=16, type=int)
     parser.add_argument("--epochs", default=200, type=int)
     parser.add_argument("--height", default=255, type=int)
@@ -31,6 +32,11 @@ def train(parent_args: Namespace, leftover: List[str]):
     args = parser.parse_args(leftover)
 
     generator = GroundsLoader(args.directory, args.batch_size, (args.height, args.width))
+    validation = None
+    if args.validation_directory:
+        # Should rewrite the grounds loader into a Sequence class
+        validation = GroundsLoader(args.validation_directory, args.batch_size, (args.height, args.width))
+        validation = validation.get_batch(0, len(validation))
 
     model = build_model((args.height, args.width, 3))
 
@@ -46,6 +52,7 @@ def train(parent_args: Namespace, leftover: List[str]):
             ModelCheckpoint("checkpoint.hf", monitor="loss", save_best_only=True),
             ReduceLROnPlateau(monitor="loss", factor=0.2, patience=10, min_lr=0.00001),
         ],
+        validation_data=validation,
     )
     model.save("junk-model.h5")
     plot_model(model, to_file="junk-model.png")
