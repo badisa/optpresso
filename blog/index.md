@@ -17,7 +17,7 @@ Since I would like to better understand Machine Learning, I will attempt to docu
 The following is a list of coffees that have been used for data collection. Mostly lighter roasts, so this model may be way off for darker roasts.
 
 * Brandywine Coffee Roasters - Dynamic Cherry
-* Barrington Coffee Roasting - Natural
+* Barrington Coffee Roasting - The Natural
 * Barrington Coffee Roasting - Gold
 * Proud Mary Coffee - Guatelama Natural Pacamara Finca El Carmen
 * Proud Mary Coffee - Panama  Dr. Enders - Lot #173
