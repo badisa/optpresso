@@ -8,6 +8,8 @@ Since I would like to better understand Machine Learning, I will attempt to docu
 
 ### Day 2 - [45 shots later...](day2.md)
 
+### Day 3 - [Poking the beast](day3.md)
+
 
 
 ## Coffee Sacrificed
