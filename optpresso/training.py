@@ -34,7 +34,7 @@ def train(parent_args: Namespace, leftover: List[str]):
     if args.validation_directory:
         # Should rewrite the grounds loader into a Sequence class
         validation = GroundsLoader(args.validation_directory, args.batch_size, (args.height, args.width))
-        validation = np.array(list(validation.generator(0, len(validation))))
+        validation = validation.get_batch(0, len(validation))
 
     model = build_model((args.height, args.width, 3))
 
