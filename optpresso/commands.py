@@ -5,7 +5,9 @@ from argparse import ArgumentParser
 from optpresso.training import train
 from optpresso.capture import capture
 from optpresso.predict import predict
+from optpresso.eval import evalulate_model
 
+EVAL = "eval"
 TRAIN = "train"
 CAPTURE = "capture"
 PREDICT = "predict"
@@ -13,7 +15,7 @@ PREDICT = "predict"
 
 def main():
     parser = ArgumentParser(description="OPTPresso: ML for espresso")
-    parser.add_argument("cmd", choices=[TRAIN, CAPTURE, PREDICT])
+    parser.add_argument("cmd", choices=[TRAIN, CAPTURE, PREDICT, EVAL])
     # Args to be added, probably
     args, leftover = parser.parse_known_args()
     if args.cmd == TRAIN:
@@ -22,6 +24,8 @@ def main():
         capture(args, leftover)
     elif args.cmd == PREDICT:
         predict(args, leftover)
+    elif args.cmd == EVAL:
+        evalulate_model(args, leftover)
     else:
         print(f"Unknown cmd: {args.cmd}")
         sys.exit(1)
