@@ -9,7 +9,7 @@ Since I would like to better understand Machine Learning, I will attempt to docu
 
 ### Day 3 - [Poking the beast](day3.md)
 
-
+### Day 4 - [Scrutinizing the model](day4.md)
 
 ## Coffee Sacrificed
 
@@ -19,7 +19,7 @@ The following is a list of coffees that have been used for data collection. Most
 * Barrington Coffee Roasting - The Natural
 * Barrington Coffee Roasting - Gold
 * Barrington Coffee Roasting - 413
-* Proud Mary Coffee - Guatelama Natural Pacamara Finca El Carmen
+* Proud Mary Coffee - Guatemala Natural Pacamara Finca El Carmen
 * Proud Mary Coffee - Panama  Dr. Enders - Lot #173
 * Proud Mary Coffee - Bernardina Washed
 * Corvus Coffee - Columbian Natural Java
