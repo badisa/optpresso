@@ -6,11 +6,13 @@ several assumptions are made regarding the espresso:
 
 1. Shots use 18g of coffee
 2. Pull time is how long it takes to end up with ~36g in the cup
-3. Shots pulled using a linea mini
-4. Grinder used is the Conical Monolith from Kafatek
+3. Shots pulled using a Linea mini
+4. Grinder used is the Conical Monolith (MC3) from [Kafatek](https://www.kafatek.com/)
 
-These assumptions are made to simplify the number of varibles the CNN needs
+These assumptions are made to simplify the number of variables the CNN needs
 to account.
+
+## [Daily Blog](blog/index.md)
 
 ## Data Collection Methodology
 
