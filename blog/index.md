@@ -5,7 +5,6 @@ Since I would like to better understand Machine Learning, I will attempt to docu
 
 ### Day 1 - [Too little data, too little knowledge](day1.md)
 
-
 ### Day 2 - [45 shots later...](day2.md)
 
 ### Day 3 - [Poking the beast](day3.md)
@@ -19,8 +18,10 @@ The following is a list of coffees that have been used for data collection. Most
 * Brandywine Coffee Roasters - Dynamic Cherry
 * Barrington Coffee Roasting - The Natural
 * Barrington Coffee Roasting - Gold
+* Barrington Coffee Roasting - 413
 * Proud Mary Coffee - Guatelama Natural Pacamara Finca El Carmen
 * Proud Mary Coffee - Panama  Dr. Enders - Lot #173
 * Proud Mary Coffee - Bernardina Washed
 * Corvus Coffee - Columbian Natural Java
 * Corvus Coffee - Columbian Sidra
+* Madcap Coffee - Yenni Reinoso
