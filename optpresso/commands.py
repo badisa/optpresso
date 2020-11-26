@@ -2,10 +2,10 @@ import sys
 
 from argparse import ArgumentParser
 
-from optpresso.training import train
 from optpresso.capture import capture
 from optpresso.predict import predict
-from optpresso.eval import evalulate_model
+from optpresso.models.training import train
+from optpresso.models.eval import evalulate_model
 
 EVAL = "eval"
 TRAIN = "train"
