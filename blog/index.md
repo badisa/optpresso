@@ -11,6 +11,8 @@ Since I would like to better understand Machine Learning, I will attempt to docu
 
 ### Day 4 - [Scrutinizing the model](day4.md)
 
+### Day 5 - [No Data, No Results](day5.md)
+
 ## Coffee Sacrificed
 
 The following is a list of coffees that have been used for data collection. Mostly lighter roasts, so this model may be way off for darker roasts.
@@ -25,3 +27,4 @@ The following is a list of coffees that have been used for data collection. Most
 * Corvus Coffee - Columbian Natural Java
 * Corvus Coffee - Columbian Sidra
 * Madcap Coffee - Yenni Reinoso
+* AmazonBasics - Columbia Medium Roast
