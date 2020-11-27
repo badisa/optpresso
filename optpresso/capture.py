@@ -34,7 +34,7 @@ def capture(parent_args: Namespace, leftover: List[str]):
     print("Keyboard Shortcuts")
     print("------------------")
     print("c/enter - capture image and prompt for pull time")
-    print("q/esc - quite")
+    print("q/esc - quit")
     print("------------------")
     try:
         while True:
