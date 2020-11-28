@@ -19,14 +19,15 @@ Since I would like to better understand Machine Learning, I will attempt to docu
 
 The following is a list of coffees that have been used for data collection. Mostly lighter roasts, so this model may be way off for darker roasts.
 
-* Brandywine Coffee Roasters - Dynamic Cherry
-* Barrington Coffee Roasting - The Natural
-* Barrington Coffee Roasting - Gold
-* Barrington Coffee Roasting - 413
-* Proud Mary Coffee - Guatemala Natural Pacamara Finca El Carmen
-* Proud Mary Coffee - Panama  Dr. Enders - Lot #173
-* Proud Mary Coffee - Bernardina Washed
-* Corvus Coffee - Columbian Natural Java
-* Corvus Coffee - Columbian Sidra
-* Madcap Coffee - Yenni Reinoso
+* [Brandywine Coffee Roasters](https://brandywinecoffeeroasters.myshopify.com/) - Dynamic Cherry
+* [Barrington Coffee Roasting](https://barringtoncoffee.com/) - The Natural
+* [Barrington Coffee Roasting](https://barringtoncoffee.com/) - Gold
+* [Barrington Coffee Roasting](https://barringtoncoffee.com/) - 413
+* [Proud Mary Coffee](https://proudmarycoffee.com/) - Guatemala Natural Pacamara Finca El Carmen
+* [Proud Mary Coffee](https://proudmarycoffee.com/) - Panama  Dr. Enders - Lot #173
+* [Proud Mary Coffee](https://proudmarycoffee.com/) - Bernardina Washed
+* [Corvus Coffee](https://www.corvuscoffee.com/) - Columbian Natural Java
+* [Corvus Coffee](https://www.corvuscoffee.com/) - Columbian Sidra
+* [CandleStick Coffee](https://candlestickcoffee.com/) - Columbia
+* [Madcap Coffee](http://madcapcoffee.com/) - Yenni Reinoso
 * AmazonBasics - Columbia Medium Roast
