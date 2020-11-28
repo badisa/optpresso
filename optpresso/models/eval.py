@@ -29,7 +29,11 @@ def evalulate_model(parent_args: Namespace, leftover: List[str]):
 
     for model_path in models:
         model = load_model(model_path)
-        loader = GroundsLoader(args.directory, args.batch_size, (model.input_shape[1], model.input_shape[2]))
+        loader = GroundsLoader(
+            args.directory,
+            args.batch_size,
+            (model.input_shape[1], model.input_shape[2]),
+        )
         x_test, y_test = loader.get_batch(0, len(loader))
 
         # Give us a clever best fit
@@ -42,8 +46,8 @@ def evalulate_model(parent_args: Namespace, leftover: List[str]):
         yfit, mse_err = gp.predict(xfit[:, np.newaxis], return_std=True)
         yfit = yfit.squeeze()
         dyfit = 2 * np.sqrt(mse_err)  # 2*sigma ~ 95% confidence region
-        plt.plot(xfit, yfit, '-', color='gray', label="GP Fit")
-        plt.fill_between(xfit, yfit - dyfit, yfit + dyfit, color='gray', alpha=0.2)
+        plt.plot(xfit, yfit, "-", color="gray", label="GP Fit")
+        plt.fill_between(xfit, yfit - dyfit, yfit + dyfit, color="gray", alpha=0.2)
 
         plt.plot(y_test, y_predict, "ro", label="Prediction values")
         plt.axline([0, 0], [1, 1])

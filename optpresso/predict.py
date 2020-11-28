@@ -22,9 +22,14 @@ def predict(parent_args: Namespace, leftover: List[str]):
 
     images = []
     for i, path in enumerate(args.file_path):
-        images.append(img_to_array(
-            load_img(os.path.expanduser(path), target_size=(model.input_shape[1], model.input_shape[2]))
-        ))
+        images.append(
+            img_to_array(
+                load_img(
+                    os.path.expanduser(path),
+                    target_size=(model.input_shape[1], model.input_shape[2]),
+                )
+            )
+        )
     predictions = model.predict(np.array(images))
     for path, predict in zip(args.file_path, predictions):
         print(f"{path}: Predicted pull time {predict[0]}s")
