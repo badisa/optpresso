@@ -8,6 +8,7 @@ from typing import List, Any
 from argparse import Namespace, ArgumentParser
 
 import numpy as np
+import matplotlib.pyplot as plt
 
 from keras.utils import plot_model
 from keras.callbacks import ModelCheckpoint, EarlyStopping, ReduceLROnPlateau
@@ -24,6 +25,7 @@ def train(parent_args: Namespace, leftover: List[str]):
     parser.add_argument("--epochs", default=200, type=int)
     parser.add_argument("--height", default=255, type=int)
     parser.add_argument("--width", default=255, type=int)
+    parser.add_argument("--write", action="store_true", help="Write out loss graph to loss_graph.png")
     parser.add_argument(
         "--model-name", choices=list(MODEL_CONSTRUCTORS.keys()), default="optpresso"
     )
@@ -47,7 +49,7 @@ def train(parent_args: Namespace, leftover: List[str]):
 
     model.summary()
 
-    model.fit(
+    fit_hist = model.fit(
         generator.training_gen(),
         epochs=args.epochs,
         steps_per_epoch=len(generator) // args.batch_size,
@@ -62,3 +64,12 @@ def train(parent_args: Namespace, leftover: List[str]):
         validation_data=validation,
     )
     model.save(args.output_path)
+    x = np.linspace(0, len(fit_hist.history["val_loss"]), len(fit_hist.history["val_loss"]))
+    plt.plot(x, fit_hist.history["val_loss"], label="Validation Loss")
+    plt.plot(x, fit_hist.history["loss"], label="Training Loss")
+    plt.yscale("log")
+    plt.legend()
+    if args.write:
+        plt.savefig("loss_graph.png")
+    else:
+        plt.show()
