@@ -7,7 +7,7 @@ several assumptions are made regarding the espresso:
 1. Shots use 18g of coffee
 2. Pull time is how long it takes to end up with ~36g in the cup
 3. Shots pulled using a Linea mini
-4. Grinder used is the Conical Monolith (MC3) from [Kafatek](https://www.kafatek.com/)
+4. Grinder used is the Conical Monolith (MC3) from [Kafatek](https://www.kafatek.com/) or the [Niche Zero](https://www.nichecoffee.co.uk/)
 
 These assumptions are made to simplify the number of variables the CNN needs
 to account.
@@ -34,6 +34,13 @@ Images are typically collected using the `optpresso capture` command along with
 a Cainda Digital Microscope (i.e. a cheap digital "microscope"). Additional data is
 supplemented using images captured with a phone or DSLR, input by hand. The variety
 of inputs is intended to evaluate the effectiveness of different capture techniques.
+
+### Collection Equipment
+
+The following are 'microscopes' that have been used to collect data. There is a reference image within the Google drive [folder](https://drive.google.com/drive/folders/1MTZe69StPiZw1J9uAkJloxB7YduGlczp?usp=sharing) to show the approximate size of the frame. The tallest line in the image indicates 1/10th of an inch, making the width covered by the sensor 0.15 of an inch.
+
+* [Cheap Microscope](https://www.amazon.com/gp/product/B085XZVFGT/ref=ppx_yo_dt_b_asin_title_o03_s00?ie=UTF8&psc=1)
+* [Less Cheap Microscope](https://www.amazon.com/gp/product/B08D73XS81/ref=ppx_yo_dt_b_asin_title_o03_s00?ie=UTF8&psc=1)
 
 ## But I own a \<insert espresso machine here\>!
 
