@@ -15,6 +15,8 @@ Since I would like to better understand Machine Learning, I will attempt to docu
 
 ### Day 6 - [Thanksgiving Coffee Collection](day6.md)
 
+### Day 7 and 8 - [Waiting on data](day7and8.md)
+
 ## Coffee Sacrificed
 
 The following is a list of coffees that have been used for data collection. Mostly lighter roasts, so this model may be way off for darker roasts.
