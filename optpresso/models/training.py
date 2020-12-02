@@ -70,6 +70,6 @@ def train(parent_args: Namespace, leftover: List[str]):
     plt.yscale("log")
     plt.legend()
     if args.write:
-        plt.savefig("loss_graph.png")
+        plt.savefig(f"{args.model_name}_loss_graph.png")
     else:
         plt.show()
