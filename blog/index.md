@@ -30,6 +30,8 @@ The following is a list of coffees that have been used for data collection. Most
 * [Proud Mary Coffee](https://proudmarycoffee.com/) - Bernardina Washed
 * [Corvus Coffee](https://www.corvuscoffee.com/) - Columbian Natural Java
 * [Corvus Coffee](https://www.corvuscoffee.com/) - Columbian Sidra
+* [Onyx Coffee Lab](https://onyxcoffeelab.com/) - El Salvador Santa Rosa Honey
+* [Onyx Coffee Lab](https://onyxcoffeelab.com/) - Decaf Ethiopian Guji Natural
 * [CandleStick Coffee](https://candlestickcoffee.com/) - Columbia
 * [Madcap Coffee](http://madcapcoffee.com/) - Yenni Reinoso
 * AmazonBasics - Columbia Medium Roast
