@@ -55,10 +55,10 @@ def train(parent_args: Namespace, leftover: List[str]):
         steps_per_epoch=len(generator) // args.batch_size,
         batch_size=args.batch_size,
         callbacks=[
-            # EarlyStopping(monitor="loss", min_delta=1.0, patience=500, mode="min"),
+            EarlyStopping(monitor="val_loss", min_delta=0.01, patience=100, mode="min", restore_best_weights=True),
             # ModelCheckpoint("checkpoint.hf", monitor="loss", save_best_only=True),
             ReduceLROnPlateau(
-                monitor="val_loss", factor=0.2, patience=10, min_lr=0.00001
+                monitor="val_loss", factor=0.2, patience=10, min_lr=1e-6
             ),
         ],
         validation_data=validation,

@@ -408,11 +408,11 @@ def create_optpresso_model(shape: List[int], alpha: float = 0.3) -> List[Any]:
     model.add(LeakyReLU(alpha=alpha))
     model.add(MaxPooling2D(pool_size=(2, 2)))
 
-    model.add(Conv2D(128, (4, 4)))
+    model.add(Conv2D(64, (4, 4)))
     model.add(LeakyReLU(alpha=alpha))
     model.add(MaxPooling2D(pool_size=(2, 2)))
 
-    model.add(Conv2D(256, (2, 2)))
+    model.add(Conv2D(128, (2, 2)))
     model.add(LeakyReLU(alpha=alpha))
     model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(Flatten())
@@ -423,6 +423,7 @@ def create_optpresso_model(shape: List[int], alpha: float = 0.3) -> List[Any]:
     model.add(Dense(64))
     model.add(LeakyReLU(alpha=alpha))
     model.add(Dropout(0.5))
+
 
     # Dense layer of size 1 with linear activation to get that glorious regression
     model.add(Dense(1))
