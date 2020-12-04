@@ -1,4 +1,5 @@
 import os
+import sys
 
 from typing import List
 from argparse import ArgumentParser, Namespace
@@ -7,6 +8,8 @@ import numpy as np
 
 from keras.models import load_model
 from keras.preprocessing.image import img_to_array, load_img
+
+from optpresso.data.config import load_config
 
 
 def predict(parent_args: Namespace, leftover: List[str]):
@@ -17,9 +20,14 @@ def predict(parent_args: Namespace, leftover: List[str]):
 
     model_path = args.model
     if model_path is None:
-        model_path = "junk-model.h5"
+        config = load_config()
+        if config is None:
+            print("No model provided and no default model configured")
+            sys.exit(1)
+        model_path = config.model
     model = load_model(model_path)
 
+    # TODO optimize this images array
     images = []
     for i, path in enumerate(args.file_path):
         images.append(

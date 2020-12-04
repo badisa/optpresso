@@ -424,7 +424,6 @@ def create_optpresso_model(shape: List[int], alpha: float = 0.3) -> List[Any]:
     model.add(LeakyReLU(alpha=alpha))
     model.add(Dropout(0.5))
 
-
     # Dense layer of size 1 with linear activation to get that glorious regression
     model.add(Dense(1))
     model.add(Activation("linear"))

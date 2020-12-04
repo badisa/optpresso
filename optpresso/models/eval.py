@@ -1,4 +1,5 @@
 import os
+import sys
 from typing import List
 from argparse import ArgumentParser, Namespace
 
@@ -11,6 +12,7 @@ import numpy as np
 from sklearn.gaussian_process import GaussianProcessRegressor
 
 from optpresso.utils import GroundsLoader
+from optpresso.data.config import load_config
 
 
 def evalulate_model(parent_args: Namespace, leftover: List[str]):
@@ -23,7 +25,11 @@ def evalulate_model(parent_args: Namespace, leftover: List[str]):
 
     models = []
     if args.models is None:
-        models.append("model.h5")
+        config = load_config()
+        if config is None:
+            print("No model provided and no default model configured")
+            sys.exit(1)
+        models.append(config.model)
     else:
         models.extend(args.models)
 

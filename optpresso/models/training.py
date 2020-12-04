@@ -25,7 +25,9 @@ def train(parent_args: Namespace, leftover: List[str]):
     parser.add_argument("--epochs", default=200, type=int)
     parser.add_argument("--height", default=240, type=int)
     parser.add_argument("--width", default=320, type=int)
-    parser.add_argument("--write", action="store_true", help="Write out loss graph to loss_graph.png")
+    parser.add_argument(
+        "--write", action="store_true", help="Write out loss graph to loss_graph.png"
+    )
     parser.add_argument(
         "--model-name", choices=list(MODEL_CONSTRUCTORS.keys()), default="optpresso"
     )
