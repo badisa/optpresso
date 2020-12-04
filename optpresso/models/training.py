@@ -57,16 +57,22 @@ def train(parent_args: Namespace, leftover: List[str]):
         steps_per_epoch=len(generator) // args.batch_size,
         batch_size=args.batch_size,
         callbacks=[
-            EarlyStopping(monitor="val_loss", min_delta=0.01, patience=100, mode="min", restore_best_weights=True),
-            # ModelCheckpoint("checkpoint.hf", monitor="loss", save_best_only=True),
-            ReduceLROnPlateau(
-                monitor="val_loss", factor=0.2, patience=10, min_lr=1e-6
+            EarlyStopping(
+                monitor="val_loss",
+                min_delta=0.01,
+                patience=100,
+                mode="min",
+                restore_best_weights=True,
             ),
+            # ModelCheckpoint("checkpoint.hf", monitor="loss", save_best_only=True),
+            ReduceLROnPlateau(monitor="val_loss", factor=0.2, patience=10, min_lr=1e-6),
         ],
         validation_data=validation,
     )
     model.save(args.output_path)
-    x = np.linspace(0, len(fit_hist.history["val_loss"]), len(fit_hist.history["val_loss"]))
+    x = np.linspace(
+        0, len(fit_hist.history["val_loss"]), len(fit_hist.history["val_loss"])
+    )
     plt.plot(x, fit_hist.history["val_loss"], label="Validation Loss")
     plt.plot(x, fit_hist.history["loss"], label="Training Loss")
     plt.yscale("log")
