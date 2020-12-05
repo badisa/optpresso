@@ -420,7 +420,7 @@ def create_optpresso_model(shape: List[int], alpha: float = 0.3) -> List[Any]:
     model.add(Dense(128))
     model.add(LeakyReLU(alpha=alpha))
 
-    model.add(Dense(64))
+    model.add(Dense(128))
     model.add(LeakyReLU(alpha=alpha))
     model.add(Dropout(0.5))
 
