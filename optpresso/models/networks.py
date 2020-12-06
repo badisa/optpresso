@@ -404,17 +404,15 @@ def create_comma_model_large_dropout(input_shape: List[int], alpha: float = 0.3)
 
 def create_optpresso_model(shape: List[int], alpha: float = 0.3) -> List[Any]:
     model = Sequential()
-    model.add(Conv2D(32, (8, 8), input_shape=shape))
+    model.add(Conv2D(32, (8, 8), strides=(4, 4), input_shape=shape))
     model.add(LeakyReLU(alpha=alpha))
-    model.add(MaxPooling2D(pool_size=(2, 2)))
 
-    model.add(Conv2D(64, (4, 4)))
+    model.add(Conv2D(64, (4, 4), strides=(2, 2)))
     model.add(LeakyReLU(alpha=alpha))
-    model.add(MaxPooling2D(pool_size=(2, 2)))
+    # model.add(MaxPooling2D(pool_size=(2, 2)))
 
-    model.add(Conv2D(128, (2, 2)))
+    model.add(Conv2D(128, (2, 2), strides=(1, 1)))
     model.add(LeakyReLU(alpha=alpha))
-    model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(Flatten())
     # this converts our 3D feature maps to 1D feature vectors
     model.add(Dense(128))

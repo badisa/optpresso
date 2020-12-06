@@ -4,6 +4,8 @@ The inspiration/code came from the following:
 - https://github.com/rsyamil/cnn-regression
 - https://blog.keras.io/building-powerful-image-classification-models-using-very-little-data.html
 """
+import sys
+import math
 from typing import List, Any
 from argparse import Namespace, ArgumentParser
 
@@ -39,6 +41,9 @@ def train(parent_args: Namespace, leftover: List[str]):
     generator = GroundsLoader(
         args.directory, args.batch_size, (args.height, args.width)
     )
+    if len(generator) <= 0:
+        print(f"No files in directory {args.directory}")
+        sys.exit(1)
     validation = None
     if args.validation_directory:
         # Should rewrite the grounds loader into a Sequence class
@@ -51,21 +56,22 @@ def train(parent_args: Namespace, leftover: List[str]):
 
     model.summary()
 
+
     fit_hist = model.fit(
         generator.training_gen(),
         epochs=args.epochs,
-        steps_per_epoch=len(generator) // args.batch_size,
+        steps_per_epoch=int(math.ceil(len(generator) / args.batch_size)),
         batch_size=args.batch_size,
         callbacks=[
             EarlyStopping(
                 monitor="val_loss",
                 min_delta=0.01,
-                patience=100,
+                patience=25,
                 mode="min",
                 restore_best_weights=True,
             ),
-            # ModelCheckpoint("checkpoint.hf", monitor="loss", save_best_only=True),
-            ReduceLROnPlateau(monitor="val_loss", factor=0.2, patience=10, min_lr=1e-6),
+            # ModelCheckpoint("checkpoint", monitor="val_loss", save_best_only=True),
+            # ReduceLROnPlateau(monitor="val_loss", factor=0.2, patience=10, min_lr=1e-6),
         ],
         validation_data=validation,
     )
