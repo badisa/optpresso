@@ -7,15 +7,50 @@ from typing import List, Any, Optional
 from dataclasses import dataclass, asdict
 from argparse import Namespace, ArgumentParser
 
+import numpy as np
 
-DEFAULT_CONFIG_DIR = "~/.optpresso"
+from sklearn.gaussian_process import GaussianProcessRegressor
+
+
+DEFAULT_CONFIG_DIR = os.path.expanduser("~/.optpresso")
 OPTPRESSO_CONFIG_ENV = "OPTPRESSO_DIR"
 
 
 @dataclass
 class OptpressoConfig:
     model: str
-    machine: str
+    data_path: str = os.path.join(DEFAULT_CONFIG_DIR, "model.npy")
+    machine: str = ""
+    use_secondary_model: bool = True
+    _model_data: Optional[np.array] = None
+
+    @property
+    def model_data(self):
+        if self._model_data is None:
+            if not self.use_secondary_model:
+                raise RuntimeError("Unable to use personal model, its disabled")
+            if not os.path.isfile(self.data_path):
+                self._model_data = np.array([[], []])
+            else:
+                self._model_data = np.load(self.data_path)
+        return self._model_data
+
+    def update_secondary_model(self, predictions: List[float], actual: float):
+        data = self.model_data
+        for pred in predictions:
+            data = np.concatenate((data, [[pred], [actual]]), axis=1)
+        np.save(self.data_path, data)
+        self._model_data = None
+
+
+    def load_secondary_model(self):
+        data = self.model_data
+        model = GaussianProcessRegressor()
+        # Use the difference, in which case the default value of 0 for the GP
+        # function is just added to the model's values.
+        y = data[1] - data[0]
+        model.fit(np.array(data[0]).reshape(-1, 1), np.array(y).reshape(-1, 1))
+        return model
 
 
 def load_config() -> Optional[OptpressoConfig]:
@@ -44,12 +79,15 @@ def init_optpresso(parent_args: Namespace, leftover: List[str]):
     )
     parser.add_argument(
         "--dir",
-        default="~/.optpresso",
+        default=DEFAULT_CONFIG_DIR,
         type=str,
         help=f"Directory to store config in, if not default set the env variable {OPTPRESSO_CONFIG_ENV}",
     )
     parser.add_argument(
         "--machine", default=None, help="Name of the espresso machine being used"
+    )
+    parser.add_argument(
+        "--disable-secondary-model", action="store_true", help="Disable secondary model intended to better fit individual workflows"
     )
     args = parser.parse_args(leftover)
     config_dir = os.path.expanduser(args.dir)
@@ -59,12 +97,15 @@ def init_optpresso(parent_args: Namespace, leftover: List[str]):
         sys.exit(1)
     if not os.path.isdir(config_dir):
         os.mkdir(config_dir)
-    if not args.no_copy:
-        shutil.copy(args.model, os.path.join(config_dir, os.path.basename(args.model)))
     model_path = args.model
+    if not args.no_copy:
+        model_path = os.path.join(config_dir, os.path.basename(args.model))
+        shutil.copy(args.model, model_path)
     config = OptpressoConfig(
         model=model_path,
         machine=args.machine,
+        use_secondary_model=not args.disable_secondary_model,
+        data_path=os.path.join(config_dir, "model.npy"),
     )
     with open(config_path, "w") as ofs:
         json.dump(asdict(config), ofs)
