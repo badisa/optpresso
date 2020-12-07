@@ -9,14 +9,68 @@ import numpy as np
 from keras.models import load_model
 from keras.preprocessing.image import img_to_array, load_img
 
+import cv2
+
 from optpresso.data.config import load_config
 
+def predict_from_camera(model, camera: int):
+    predictions = np.array([], dtype=np.float32)
+    cam = cv2.VideoCapture(camera)
+    # Copy pasta
+    cv2.namedWindow("capture")
+    print("-Starting Prediction-")
+    print("---------------------")
+    print("Keyboard Shortcuts")
+    print("---------------------")
+    print("c/enter - capture image for prediction")
+    print("d - delete last predict")
+    print("p - print current prediction values")
+    print("q/esc - quit")
+    print("------------------")
+    try:
+        while True:
+            ret, frame = cam.read()
+            if not ret:
+                print("Failed to read frame")
+                return
+            cv2.imshow("capture", frame)
+            k = cv2.waitKey(1)
+            if k == 99 or k == 13:  # Hit C or enter for capture
+                # Width and height are reversed
+                keras_frame = cv2.resize(frame, (model.input_shape[2], model.input_shape[1]))
+                keras_frame = keras_frame[...,::-1].astype(np.float32) # Reverse BGR to RGB and convert to float32
+                pred = model.predict(np.array([keras_frame]))
+                predictions = np.concatenate((predictions, pred), axis=None)
+                print("Captured image has predicted time: {:.2f}".format(float(pred[0])))
+                print(f"Points: {len(predictions)}, Mean = {predictions.mean()}, Std Dev = {predictions.std()}")
+            elif k == 113 or k == 27:  # Hit q or esc to quit
+                print("Quitting")
+                break
+            elif k == 112:
+                print("-- Current Predictions --")
+                print(list(predictions))
+                print(f"Points: {len(predictions)}, Mean = {predictions.mean()}, Std Dev = {predictions.std()}")
+            elif k == 100:
+                if len(predictions):
+                    print("Dropping last prediction")
+                    predictions = predictions[:-1]
+                else:
+                    print("No predictions left")
+
+
+    finally:
+        cam.release()
+        cv2.destroyAllWindows()
 
 def predict(parent_args: Namespace, leftover: List[str]):
     parser = ArgumentParser()
     parser.add_argument("file_path", nargs="*")
+    parser.add_argument("--camera", default=None, type=int)
     parser.add_argument("--model", default=None)
     args = parser.parse_args(leftover)
+    if len(args.file_path) == 0 and args.camera is None:
+        print("Must provide file paths or a camera for predictions")
+        sys.exit(1)
 
     model_path = args.model
     if model_path is None:
@@ -27,17 +81,21 @@ def predict(parent_args: Namespace, leftover: List[str]):
         model_path = config.model
     model = load_model(model_path)
 
-    # TODO optimize this images array
-    images = []
-    for i, path in enumerate(args.file_path):
-        images.append(
-            img_to_array(
-                load_img(
-                    os.path.expanduser(path),
-                    target_size=(model.input_shape[1], model.input_shape[2]),
+    if len(args.file_path):
+        # TODO optimize this images array
+        images = []
+        for i, path in enumerate(args.file_path):
+            images.append(
+                img_to_array(
+                    load_img(
+                        os.path.expanduser(path),
+                        target_size=(model.input_shape[1], model.input_shape[2]),
+                    )
                 )
             )
-        )
-    predictions = model.predict(np.array(images))
-    for path, predict in zip(args.file_path, predictions):
-        print(f"{path}: Predicted pull time {predict[0]}s")
+        predictions = model.predict(np.array(images))
+        for path, predict in zip(args.file_path, predictions):
+            print(f"{path}: Predicted pull time {predict[0]}s")
+        print(predictions.mean(), predictions.std())
+    else:
+        predict_from_camera(model, args.camera)
