@@ -65,8 +65,7 @@ $ optpresso init path/to/downloaded/model.h5
 ## TODO
 
 * Implement a web interface, no one likes CLIs
-* Build up a 'personal' model using Gaussian Process to account for other Espresso machines
+* Improve secondary model's fitting data
 * Make the model better on average than within 6 seconds (on average)
-* Add a way to determine how in focus an image is when capturing data
 
 
