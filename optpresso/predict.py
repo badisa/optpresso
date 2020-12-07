@@ -42,6 +42,8 @@ def predict_from_camera(model, camera: int, config: OptpressoConfig):
             if not ret:
                 print("Failed to read frame")
                 return
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+            print("Focus (higher is better): {:.2f}".format(cv2.Laplacian(gray, cv2.CV_64F).var()), end="\r")
             cv2.imshow("capture", frame)
             k = cv2.waitKey(1)
             if k == 99 or k == 13:  # Hit c or enter for capture
@@ -60,10 +62,12 @@ def predict_from_camera(model, camera: int, config: OptpressoConfig):
                 print("Quitting")
                 break
             elif k == 112:
+                print()
                 print("-- Current Predictions --")
                 print(list(predictions))
                 print(f"# Predictions = {len(predictions)}, Mean = {predictions.mean()}, Std Dev = {predictions.std()}")
             elif k == 100:
+                print()
                 if len(predictions):
                     print("Dropping last prediction")
                     predictions = predictions[:-1]
@@ -72,6 +76,7 @@ def predict_from_camera(model, camera: int, config: OptpressoConfig):
             elif (
                 k == 116 and secondary_model is not None
             ):  # Hit t to predict secondary model
+                print()
                 if not len(predictions):
                     print("No predictions to test yet")
                     continue
@@ -86,6 +91,7 @@ def predict_from_camera(model, camera: int, config: OptpressoConfig):
             elif (
                 k == 117 and secondary_model is not None
             ):  # Hit u to take predictions and update with the 'real' value
+                print()
                 value = get_user_input("Actual Espresso pull time:", float)
                 config.update_secondary_model(predictions, value)
                 # Reload the model, probably should create a wrapper around
