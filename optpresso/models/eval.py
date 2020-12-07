@@ -57,9 +57,22 @@ def evalulate_model(parent_args: Namespace, leftover: List[str]):
         plt.plot(xfit, yfit, "-", color="gray", label="GP Fit")
         plt.fill_between(xfit, yfit - dyfit, yfit + dyfit, color="gray", alpha=0.2)
         plt.axline([0, 0], [1, 1])
-        plt.plot(np.unique(y_test), np.poly1d(np.polyfit(y_test, y_predict.squeeze(), 1))(np.unique(y_test)), color="black", label="Poly1D fit")
-        plt.annotate("r^2 = {:.3f}".format(r2_score(y_test, y_predict)), (0.7, 0.04), xycoords="axes fraction")
-        plt.annotate("mse = {:.3f}".format(mean_squared_error(y_test, y_predict)), (0.7, 0.01), xycoords="axes fraction")
+        plt.plot(
+            np.unique(y_test),
+            np.poly1d(np.polyfit(y_test, y_predict.squeeze(), 1))(np.unique(y_test)),
+            color="black",
+            label="Poly1D fit",
+        )
+        plt.annotate(
+            "r^2 = {:.3f}".format(r2_score(y_test, y_predict)),
+            (0.7, 0.04),
+            xycoords="axes fraction",
+        )
+        plt.annotate(
+            "mse = {:.3f}".format(mean_squared_error(y_test, y_predict)),
+            (0.7, 0.01),
+            xycoords="axes fraction",
+        )
         plt.ylabel("Predicted Pull time (s)")
         plt.xlabel("Actual Pull time (s)")
         plt.legend()

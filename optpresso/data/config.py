@@ -42,7 +42,6 @@ class OptpressoConfig:
         np.save(self.data_path, data)
         self._model_data = None
 
-
     def load_secondary_model(self) -> Optional[GaussianProcessRegressor]:
         data = self.model_data
         model = GaussianProcessRegressor()
@@ -89,7 +88,9 @@ def init_optpresso(parent_args: Namespace, leftover: List[str]):
         "--machine", default=None, help="Name of the espresso machine being used"
     )
     parser.add_argument(
-        "--disable-secondary-model", action="store_true", help="Disable secondary model intended to better fit individual workflows"
+        "--disable-secondary-model",
+        action="store_true",
+        help="Disable secondary model intended to better fit individual workflows",
     )
     args = parser.parse_args(leftover)
     config_dir = os.path.expanduser(args.dir)

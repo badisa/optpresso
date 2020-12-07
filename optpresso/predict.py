@@ -14,6 +14,7 @@ import cv2
 from optpresso.data.config import load_config, OptpressoConfig
 from optpresso.capture import get_user_input
 
+
 def predict_from_camera(model, camera: int, config: OptpressoConfig):
     predictions = np.array([], dtype=np.float32)
     secondary_model = None
@@ -25,15 +26,16 @@ def predict_from_camera(model, camera: int, config: OptpressoConfig):
     print("-Starting Prediction-")
     print("---------------------")
     print("Keyboard Shortcuts")
-    print("---------------------")
+    print("------------------")
     print("c/enter - capture image for prediction")
     print("d - delete last predict")
+    # TODO add a clear command
     print("p - print current prediction values")
     if secondary_model is not None:
-        print("t - test secondary model")
+        print("t - view secondary model predictions")
         print("u - update secondary model")
     print("q/esc - quit")
-    print("------------------")
+    print("---------------------")
     try:
         while True:
             ret, frame = cam.read()
@@ -42,10 +44,14 @@ def predict_from_camera(model, camera: int, config: OptpressoConfig):
                 return
             cv2.imshow("capture", frame)
             k = cv2.waitKey(1)
-            if k == 99 or k == 13:  # Hit C or enter for capture
+            if k == 99 or k == 13:  # Hit c or enter for capture
                 # Width and height are reversed
-                keras_frame = cv2.resize(frame, (model.input_shape[2], model.input_shape[1]))
-                keras_frame = keras_frame[...,::-1].astype(np.float32) # Reverse BGR to RGB and convert to float32
+                keras_frame = cv2.resize(
+                    frame, (model.input_shape[2], model.input_shape[1])
+                )
+                keras_frame = keras_frame[..., ::-1].astype(
+                    np.float32
+                )  # Reverse BGR to RGB and convert to float32
                 pred = model.predict(np.array([keras_frame]))
                 predictions = np.concatenate((predictions, pred), axis=None)
                 print("Captured image has predicted time: {:.2f}".format(float(pred[0])))
@@ -63,22 +69,33 @@ def predict_from_camera(model, camera: int, config: OptpressoConfig):
                     predictions = predictions[:-1]
                 else:
                     print("No predictions left")
-            elif k == 116 and secondary_model is not None:
+            elif (
+                k == 116 and secondary_model is not None
+            ):  # Hit t to predict secondary model
                 if not len(predictions):
                     print("No predictions to test yet")
                     continue
-                preds = secondary_model.predict(predictions.reshape(-1, 1)).reshape(len(predictions)) + predictions
+                preds = (
+                    secondary_model.predict(predictions.reshape(-1, 1)).reshape(
+                        len(predictions)
+                    )
+                    + predictions
+                )
                 for new, old in zip(preds, predictions):
                     print(f"Secondary Model: {new}, Original Model: {old}")
-            elif k == 117 and secondary_model is not None:
+            elif (
+                k == 117 and secondary_model is not None
+            ):  # Hit u to take predictions and update with the 'real' value
                 value = get_user_input("Actual Espresso pull time:", float)
                 config.update_secondary_model(predictions, value)
+                # Reload the model, probably should create a wrapper around
+                # the Gaussian model to make this less goofy
                 secondary_model = config.load_secondary_model()
-
 
     finally:
         cam.release()
         cv2.destroyAllWindows()
+
 
 def predict(parent_args: Namespace, leftover: List[str]):
     parser = ArgumentParser()

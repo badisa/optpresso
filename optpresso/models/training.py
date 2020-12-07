@@ -56,7 +56,6 @@ def train(parent_args: Namespace, leftover: List[str]):
 
     model.summary()
 
-
     fit_hist = model.fit(
         generator.training_gen(),
         epochs=args.epochs,
