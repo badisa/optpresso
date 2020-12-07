@@ -43,7 +43,12 @@ def capture(parent_args: Namespace, leftover: List[str]):
                 print("Failed to read frame")
                 return
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-            print("Focus (higher is better): {:.2f}".format(cv2.Laplacian(gray, cv2.CV_64F).var()), end="\r")
+            print(
+                "Focus (higher is better): {:.2f}".format(
+                    cv2.Laplacian(gray, cv2.CV_64F).var()
+                ),
+                end="\r",
+            )
             cv2.imshow("capture", frame)
             k = cv2.waitKey(1)
             if k == 99 or k == 13:  # Hit C or enter for capture

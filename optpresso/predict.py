@@ -43,7 +43,12 @@ def predict_from_camera(model, camera: int, config: OptpressoConfig):
                 print("Failed to read frame")
                 return
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-            print("Focus (higher is better): {:.2f}".format(cv2.Laplacian(gray, cv2.CV_64F).var()), end="\r")
+            print(
+                "Focus (higher is better): {:.2f}".format(
+                    cv2.Laplacian(gray, cv2.CV_64F).var()
+                ),
+                end="\r",
+            )
             cv2.imshow("capture", frame)
             k = cv2.waitKey(1)
             if k == 99 or k == 13:  # Hit c or enter for capture
@@ -56,8 +61,12 @@ def predict_from_camera(model, camera: int, config: OptpressoConfig):
                 )  # Reverse BGR to RGB and convert to float32
                 pred = model.predict(np.array([keras_frame]))
                 predictions = np.concatenate((predictions, pred), axis=None)
-                print("Captured image has predicted time: {:.2f}".format(float(pred[0])))
-                print(f"Points: {len(predictions)}, Mean = {predictions.mean()}, Std Dev = {predictions.std()}")
+                print(
+                    "Captured image has predicted time: {:.2f}".format(float(pred[0]))
+                )
+                print(
+                    f"Points: {len(predictions)}, Mean = {predictions.mean()}, Std Dev = {predictions.std()}"
+                )
             elif k == 113 or k == 27:  # Hit q or esc to quit
                 print("Quitting")
                 break
@@ -65,7 +74,9 @@ def predict_from_camera(model, camera: int, config: OptpressoConfig):
                 print()
                 print("-- Current Predictions --")
                 print(list(predictions))
-                print(f"# Predictions = {len(predictions)}, Mean = {predictions.mean()}, Std Dev = {predictions.std()}")
+                print(
+                    f"# Predictions = {len(predictions)}, Mean = {predictions.mean()}, Std Dev = {predictions.std()}"
+                )
             elif k == 100:
                 print()
                 if len(predictions):
