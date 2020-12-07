@@ -11,10 +11,14 @@ from keras.preprocessing.image import img_to_array, load_img
 
 import cv2
 
-from optpresso.data.config import load_config
+from optpresso.data.config import load_config, OptpressoConfig
+from optpresso.capture import get_user_input
 
-def predict_from_camera(model, camera: int):
+def predict_from_camera(model, camera: int, config: OptpressoConfig):
     predictions = np.array([], dtype=np.float32)
+    secondary_model = None
+    if config is not None and config.use_secondary_model:
+        secondary_model = config.load_secondary_model()
     cam = cv2.VideoCapture(camera)
     # Copy pasta
     cv2.namedWindow("capture")
@@ -25,6 +29,9 @@ def predict_from_camera(model, camera: int):
     print("c/enter - capture image for prediction")
     print("d - delete last predict")
     print("p - print current prediction values")
+    if secondary_model is not None:
+        print("t - test secondary model")
+        print("u - update secondary model")
     print("q/esc - quit")
     print("------------------")
     try:
@@ -49,13 +56,24 @@ def predict_from_camera(model, camera: int):
             elif k == 112:
                 print("-- Current Predictions --")
                 print(list(predictions))
-                print(f"Points: {len(predictions)}, Mean = {predictions.mean()}, Std Dev = {predictions.std()}")
+                print(f"# Predictions = {len(predictions)}, Mean = {predictions.mean()}, Std Dev = {predictions.std()}")
             elif k == 100:
                 if len(predictions):
                     print("Dropping last prediction")
                     predictions = predictions[:-1]
                 else:
                     print("No predictions left")
+            elif k == 116 and secondary_model is not None:
+                if not len(predictions):
+                    print("No predictions to test yet")
+                    continue
+                preds = secondary_model.predict(predictions.reshape(-1, 1)).reshape(len(predictions)) + predictions
+                for new, old in zip(preds, predictions):
+                    print(f"Secondary Model: {new}, Original Model: {old}")
+            elif k == 117 and secondary_model is not None:
+                value = get_user_input("Actual Espresso pull time:", float)
+                config.update_secondary_model(predictions, value)
+                secondary_model = config.load_secondary_model()
 
 
     finally:
@@ -72,9 +90,9 @@ def predict(parent_args: Namespace, leftover: List[str]):
         print("Must provide file paths or a camera for predictions")
         sys.exit(1)
 
+    config = load_config()
     model_path = args.model
     if model_path is None:
-        config = load_config()
         if config is None:
             print("No model provided and no default model configured")
             sys.exit(1)
@@ -98,4 +116,4 @@ def predict(parent_args: Namespace, leftover: List[str]):
             print(f"{path}: Predicted pull time {predict[0]}s")
         print(predictions.mean(), predictions.std())
     else:
-        predict_from_camera(model, args.camera)
+        predict_from_camera(model, args.camera, config)

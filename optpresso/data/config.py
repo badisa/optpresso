@@ -43,9 +43,11 @@ class OptpressoConfig:
         self._model_data = None
 
 
-    def load_secondary_model(self):
+    def load_secondary_model(self) -> Optional[GaussianProcessRegressor]:
         data = self.model_data
         model = GaussianProcessRegressor()
+        if not data.any():
+            return model
         # Use the difference, in which case the default value of 0 for the GP
         # function is just added to the model's values.
         y = data[1] - data[0]
