@@ -2,7 +2,7 @@
 
 My new Proud Mary tin of [Panamanian Green Tip Geisha](https://proudmarycoffee.com/collections/deluxe/products/limited-panama-lamastus-family-estates-elida-green-tip-geisha-asd-natural-100gm-tin) came into today and I set about trying to dial it in using 1 gram doses. The Proud Mary tins have been some of my favorite coffees when I dial them in right, however they also seem to always be difficult to dial in.
 
-![Is so exotic]({{site.url}}/optpresso/blog/img/day-18-exotic.jpg)
+![Is so exotic]({{site.url}}/optpresso/blog/img/day18-exotic.jpg)
 
 Starting at about 8.5 on my MC3, which seems to be the lower end of most coffees I grind for espresso I got a mean prediction of 39 with a standard deviation of 4. Between doses of 1 gram I flushed the grinder by using the Mr. Puff device, which might not be enough but don't have too many beans to burn adjusting grind. Taking the grind down to 8 to see how a finer adjustment did I saw the mean value go from 39 to 35, which isn't what I had hoped for obviously. I settled on 9 for an actual pull which came out to be only 20 seconds, of which no predictions were taken (I need to support prediction and collection at the same time). Finally going down to 8.5 I got a pull of 25 seconds and a prediction mean of 34 with a standard deviation of 4. The 25 second shot was surprisingly drinkable though, so I am excited to see where it can end up. I have 60 grams left to play with, will continue to see if the model has any signal.
 
