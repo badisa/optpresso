@@ -19,7 +19,7 @@ Since I would like to better understand Machine Learning, I will attempt to docu
 
 ### Day 16 - [And so the model gets worse...](day16.md)
 
-### Day 18 - [It doesn't work!](day16.md)
+### Day 18 - [It doesn't work!](day18.md)
 
 ## Coffee Sacrificed
 
