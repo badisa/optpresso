@@ -1,9 +1,10 @@
 import os
+import math
 import shutil
 import random
+from tempfile import TemporaryDirectory
 
 from collections import defaultdict
-from optpresso.utils import GroundsLoader
 
 IMG_EXTS = [".jpg", ".png"]
 
@@ -13,15 +14,32 @@ VALIDATION_DIR_NAME = "validation"
 
 def find_test_paths(directory: str):
     for root, dirs, files in os.walk(directory):
+        try:
+            pull_time = int(os.path.basename(root))
+        except (TypeError, ValueError):
+            continue
         for file in files:
             if os.path.splitext(file)[1].lower() not in IMG_EXTS:
                 continue
             data_path = os.path.join(root, file)
-            try:
-                pull_time = int(os.path.basename(os.path.dirname(data_path)))
-            except (TypeError, ValueError):
-                continue
             yield pull_time, data_path
+
+def k_fold_partition(input_dir: str, folds: int = 10) -> TemporaryDirectory:
+    paths = list(find_test_paths(input_dir))
+    random.shuffle(paths)
+    tmpdir = TemporaryDirectory()
+    batch_size = math.ceil(len(paths)/folds)
+    fold = 0
+    for offset in range(0, len(paths), batch_size):
+        fold_dir = os.path.join(tmpdir.name, str(fold))
+        os.mkdir(fold_dir)
+        for time, path in paths[offset: offset+batch_size]:
+            output_dir = os.path.join(fold_dir, str(time))
+            if not os.path.isdir(output_dir):
+                os.mkdir(output_dir)
+            shutil.copy(path, os.path.join(output_dir, os.path.basename(path)))
+        fold += 1
+    return tmpdir
 
 
 def partition_data(input_dir: str, output_dir: str, validation_ratio: float):

@@ -1,9 +1,12 @@
 import os
 from random import shuffle
+from typing import Optional, List
 
 import numpy as np
 
 from keras.preprocessing.image import img_to_array, load_img
+
+from optpresso.data.partition import find_test_paths
 
 IMG_EXTS = [".jpg", ".png"]
 
@@ -15,16 +18,18 @@ class GroundsLoader:
 
     __slots__ = ("_directory", "_batch_size", "_paths", "_target_size")
 
-    def __init__(self, directory: str, batch_size: int, target_size: tuple):
+    def __init__(self, batch_size: int, target_size: tuple, directory: Optional[str] = None, paths: Optional[List[str]] = None):
         self._directory = directory
         self._batch_size = batch_size
         self._paths = []
         self._target_size = target_size
-        for root, dirs, files in os.walk(directory):
-            for file in files:
-                if os.path.splitext(file)[1].lower() not in IMG_EXTS:
-                    continue
-                self._paths.append(os.path.join(root, file))
+        if directory is None and paths is None:
+            raise RuntimeError("Must provide directory or paths")
+        if directory is not None:
+            for _, path in find_test_paths(directory):
+                self._paths.append(path)
+        if paths is not None:
+            self._paths.extend(paths)
 
     def __len__(self):
         return len(self._paths)

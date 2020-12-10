@@ -37,9 +37,9 @@ def evalulate_model(parent_args: Namespace, leftover: List[str]):
     for model_path in models:
         model = load_model(model_path)
         loader = GroundsLoader(
-            args.directory,
             args.batch_size,
             (model.input_shape[1], model.input_shape[2]),
+            directory=args.directory,
         )
         x_test, y_test = loader.get_batch(0, len(loader))
 
