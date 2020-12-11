@@ -27,7 +27,8 @@ Since I would like to better understand Machine Learning, I will attempt to docu
 
 The following is a list of coffees that have been used for data collection. Mostly lighter roasts, so this model may be way off for darker roasts.
 
-* [Brandywine Coffee Roasters](https://brandywinecoffeeroasters.myshopify.com/) - Dynamic Cherry
+* [Brandywine Coffee Roasters](https://brandywinecoffeeroasters.myshopify.com/) - Panama CCD Dynamic Cherry
+* [Brandywine Coffee Roasters](https://brandywinecoffeeroasters.myshopify.com/) - Panama CCD Static Cherry
 * [Barrington Coffee Roasting](https://barringtoncoffee.com/) - The Natural
 * [Barrington Coffee Roasting](https://barringtoncoffee.com/) - Gold
 * [Barrington Coffee Roasting](https://barringtoncoffee.com/) - 413
