@@ -23,6 +23,8 @@ Since I would like to better understand Machine Learning, I will attempt to docu
 
 ### Day 20 - [K, fold it](day20.md)
 
+### Day 30 - [Finally the model gets better!](day20.md)
+
 ## Coffee Sacrificed
 
 The following is a list of coffees that have been used for data collection. Mostly lighter roasts, so this model may be way off for darker roasts.
@@ -47,3 +49,4 @@ The following is a list of coffees that have been used for data collection. Most
 * [Madcap Coffee](http://madcapcoffee.com/) - Yenni Reinoso
 * [Madcap Coffee](http://madcapcoffee.com/) - Third Coast
 * AmazonBasics - Columbia Medium Roast
+* AmazonBasics - Just Bright (DON'T EVER BUY THIS, ITS JUNK)
