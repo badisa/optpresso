@@ -17,7 +17,6 @@ from keras.layers import (
 from keras.layers.advanced_activations import PReLU
 from keras.layers.convolutional import Convolution2D
 from keras.layers.normalization import BatchNormalization
-from keras.layers.experimental.preprocessing import RandomFlip
 
 
 def create_comma_model_relu(input_shape: List[int], alpha: float = 0.3):
@@ -405,8 +404,7 @@ def create_comma_model_large_dropout(input_shape: List[int], alpha: float = 0.3)
 
 def create_optpresso_model(shape: List[int], alpha: float = 0.3) -> List[Any]:
     model = Sequential()
-    model.add(RandomFlip(input_shape=shape))
-    model.add(Conv2D(32, (8, 8), strides=(4, 4)))
+    model.add(Conv2D(32, (8, 8), strides=(4, 4), input_shape=shape))
     model.add(LeakyReLU(alpha=alpha))
 
     model.add(Conv2D(64, (4, 4), strides=(2, 2)))
