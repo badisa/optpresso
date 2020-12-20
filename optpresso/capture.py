@@ -19,14 +19,15 @@ def flip_image(path: str, flip_img: bool = True, mirror_img : bool = False):
     name, ext = os.path.splitext(path)
     img = load_img(path)
     if mirror_img:
-        img = img.transpose(Image.FLIP_LEFT_RIGHT)
-        img.save(f"{name}-flip-0{ext}")
+        mirror = img.transpose(Image.FLIP_LEFT_RIGHT)
+        mirror.save(f"{name}-flip-0{ext}")
     if flip_img:
-        img = img.transpose(Image.FLIP_TOP_BOTTOM)
-        img.save(f"{name}-flip-1{ext}")
+        flip = img.transpose(Image.FLIP_TOP_BOTTOM)
+        flip.save(f"{name}-flip-1{ext}")
     if flip_img and mirror_img:
-        img = img.transpose(Image.FLIP_TOP_BOTTOM)
+        img = img.transpose(Image.FLIP_LEFT_RIGHT).transpose(Image.FLIP_TOP_BOTTOM)
         img.save(f"{name}-flip-2{ext}")
+
 
 def get_user_input(prompt: str, converter) -> Any:
     while True:
