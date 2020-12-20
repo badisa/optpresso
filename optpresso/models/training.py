@@ -140,4 +140,4 @@ def train(parent_args: Namespace, leftover: List[str]):
         plt.yscale("log")
         plt.legend()
         plt.savefig(f"{args.model_name}_loss_graph-with-folds.png")
-        print("Average Validation Loss: {}".format(np.array(fold_min).mean()))
+        print("Average Validation Loss: {}, All: {}".format(np.array(fold_min).mean(), fold_min))
