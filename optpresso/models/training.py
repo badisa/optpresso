@@ -46,8 +46,8 @@ def train(parent_args: Namespace, leftover: List[str]):
     callbacks = [
         EarlyStopping(
             monitor="val_loss",
-            min_delta=0.01,
-            patience=25,
+            min_delta=1.0,
+            patience=10,
             mode="min",
             restore_best_weights=True,
         ),
