@@ -41,12 +41,18 @@ def evalulate_model(parent_args: Namespace, leftover: List[str]):
             (model.input_shape[1], model.input_shape[2]),
             directory=args.directory,
         )
-        x_test, y_test = loader.get_batch(0, len(loader))
-
+        i = 0
+        y_predict = []
+        y_test = []
+        for x, y in loader.generator():
+            y_pred = model.predict(x)
+            y_predict.extend(list(y_pred))
+            y_test.extend(list(y))
+        y_predict = np.array(y_predict)
+        y_test = np.array(y_test)
+        plt.plot(y_test, y_predict, "ro", label="Prediction values", alpha=0.3)
         # Give us a clever best fit
         # https://jakevdp.github.io/PythonDataScienceHandbook/04.03-errorbars.html
-        y_predict = model.predict(x_test)
-        plt.plot(y_test, y_predict, "ro", label="Prediction values", alpha=0.3)
         gp = GaussianProcessRegressor()
         gp.fit(y_test[:, np.newaxis], y_predict)
         # Start at 3 as that is the floor for the model based on the machine
