@@ -1,0 +1,9 @@
+# Work Log Day 31
+
+I discovered late last night that when I had flipped my images I had done so poorly and each image had two duplicate flips. With the duplicated data the model was able to fit some points twice as effectively which was what resulted in the dramatic improvement in error. Once I had fixed all of the flips I found the error had gone up from \~130 to about 140+.
+
+I spent the day training the model with minor differences to see if any 'obvious' trick like increasing the number of CNN filters would improve performance. Despite trying lots of little tricks and trying other loss functions (MAE, log-cosh) I was not able to improve the model. Which makes me wonder if the images are too low quality. It really calls for a more in depth evaluation of the images and to see which images are performing particularly poorly. I should also use the data I have been collecting on grind setting and espresso time to see how spread out the data can be at a single grind, which certainly varies quite a bit towards the tails (\~5 seconds and \~50 seconds).
+
+Going to try and test all of the models that is in `optpresso/models/networks.py` to see if the models that had performed on a very small dataset might perform better on the diverse set.
+
+In programming news I have begun working on cleaning up the code (far from ideal though) and adding in the ability to graph the validation points while training to have a clearer idea of what the spread looks like just for the validation data. Still need to work on getting test data as well, which could likely just be a fold in k-folds. Guess having so few images makes me hesitant to 'sacrifice' any to the test set.

@@ -23,7 +23,9 @@ Since I would like to better understand Machine Learning, I will attempt to docu
 
 ### Day 20 - [K, fold it](day20.md)
 
-### Day 30 - [Finally the model gets better!](day20.md)
+### Day 30 - [Finally the model gets better!](day30.md)
+
+### Day 31 - [Check your data before celebrating](day31.md)
 
 ## Coffee Sacrificed
 
