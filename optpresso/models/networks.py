@@ -1,3 +1,10 @@
+"""
+The inspiration/code came from the following:
+
+- https://github.com/rsyamil/cnn-regression
+- https://blog.keras.io/building-powerful-image-classification-models-using-very-little-data.html
+- https://github.com/udacity/self-driving-car/tree/master/steering-models/community-models/rambo
+"""
 from typing import List, Any
 from keras.optimizers import Adam
 from keras.models import Sequential

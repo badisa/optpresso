@@ -1,9 +1,3 @@
-"""
-The inspiration/code came from the following:
-
-- https://github.com/rsyamil/cnn-regression
-- https://blog.keras.io/building-powerful-image-classification-models-using-very-little-data.html
-"""
 import os
 import sys
 import math
