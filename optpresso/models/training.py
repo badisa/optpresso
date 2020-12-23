@@ -28,12 +28,15 @@ class PolynomialDecay:
         return float(self.learning_rate * decay)
 
 def train_model(args, model, training, validation, callbacks: Optional[List[Any]] = None, fold: Optional[int] = None):
+    validation_batch = None
     if args.weighted:
         training_gen = training.weighted_training_gen()
-        validation_batch = validation.get_weighted_batch(0, len(validation))
+        if validation is not None:
+            validation_batch = validation.get_weighted_batch(0, len(validation))
     else:
         training_gen = training.training_gen()
-        validation_batch = validation.get_batch(0, len(validation))
+        if validation is not None:
+            validation_batch = validation.get_batch(0, len(validation))
     fit_hist = model.fit(
         training_gen,
         epochs=args.epochs,

@@ -1,6 +1,7 @@
 import os
 from random import shuffle
 from typing import Optional, List
+from collections import defaultdict
 
 import numpy as np
 
@@ -16,13 +17,14 @@ class GroundsLoader:
     data usable for regression, no nasty classification
     """
 
-    __slots__ = ("_directory", "_batch_size", "_paths", "_target_size")
+    __slots__ = ("_directory", "_batch_size", "_paths", "_target_size", "_weights")
 
     def __init__(self, batch_size: int, target_size: tuple, directory: Optional[str] = None, paths: Optional[List[str]] = None):
         self._directory = directory
         self._batch_size = batch_size
         self._paths = []
         self._target_size = target_size
+        self._weights = None
         if directory is None and paths is None:
             raise RuntimeError("Must provide directory or paths")
         if directory is not None:
@@ -36,6 +38,28 @@ class GroundsLoader:
                     print("Skipping path", path)
                     continue
                 self._paths.append((time, path))
+    @property
+    def weights(self):
+        """
+        Returns a numpy array indexed by integer time to the correspoding
+        weights.
+        """
+        if self._weights is None:
+            bins = defaultdict(int)
+            max_time = 0
+            for time, path in self._paths:
+                bins[int(time)] += 1
+                max_time = max(max_time, time)
+            totals = [(key, val) for key, val in bins.items()]
+            totals.sort(key=lambda x: x[1], reverse=True)
+            max_count = totals[0][1]
+            max_diff = max_count - totals[-1][1]
+            # factor = max_count // totals[-1][1]
+            weights = np.ones(int(max_time) + 1)
+            for x in totals:
+                weights[x[0]] = max_count / x[1]
+            self._weights = weights
+        return self._weights
 
     def __len__(self):
         return len(self._paths)
@@ -83,10 +107,5 @@ class GroundsLoader:
         x, y = self.get_batch(start, end)
         weights = np.ones(y.shape)
         for i, time in enumerate(y):
-            if time <= 15.0:
-                weights[i] = 1.5
-            elif time <= 25.0 or time >= 45.0:
-                weights[i] = 1.25
-            elif time >= 28 and time <= 36:
-                weights[i] = 0.8
+            weights[i] = self.weights[int(time)]
         return x, y, weights
