@@ -27,6 +27,8 @@ Since I would like to better understand Machine Learning, I will attempt to docu
 
 ### Day 31 - [Check your data before celebrating](day31.md)
 
+### Day 34 - [No matter what I try...](day34.md)
+
 ## Coffee Sacrificed
 
 The following is a list of coffees that have been used for data collection. Mostly lighter roasts, so this model may be way off for darker roasts.
