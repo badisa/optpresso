@@ -19,7 +19,13 @@ class GroundsLoader:
 
     __slots__ = ("_directory", "_batch_size", "_paths", "_target_size", "_weights")
 
-    def __init__(self, batch_size: int, target_size: tuple, directory: Optional[str] = None, paths: Optional[List[str]] = None):
+    def __init__(
+        self,
+        batch_size: int,
+        target_size: tuple,
+        directory: Optional[str] = None,
+        paths: Optional[List[str]] = None,
+    ):
         self._directory = directory
         self._batch_size = batch_size
         self._paths = []
@@ -38,6 +44,7 @@ class GroundsLoader:
                     print("Skipping path", path)
                     continue
                 self._paths.append((time, path))
+
     @property
     def weights(self):
         """

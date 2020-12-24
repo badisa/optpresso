@@ -15,6 +15,7 @@ from sklearn.gaussian_process import GaussianProcessRegressor
 from optpresso.utils import GroundsLoader
 from optpresso.data.config import load_config
 
+
 def graph_model(model_path, model, loader, write: bool = False):
     i = 0
     y_predict = []

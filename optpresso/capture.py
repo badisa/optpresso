@@ -9,7 +9,7 @@ from PIL import Image
 from keras.preprocessing.image import load_img
 
 
-def flip_image(path: str, flip_img: bool = True, mirror_img : bool = False):
+def flip_image(path: str, flip_img: bool = True, mirror_img: bool = False):
     """Flip the image and save files in the same place with the -flip-<int> as a suffix
 
     If the int is 0 then it was a horizontal flip
@@ -42,7 +42,9 @@ def capture(parent_args: Namespace, leftover: List[str]):
     parser = ArgumentParser()
     parser.add_argument("camera", default=0, type=int, help="Camera index to use")
     parser.add_argument("--output-dir", default=".", type=str)
-    parser.add_argument("--no-flip", action="store_true", help="Disable flipping and mirroring images")
+    parser.add_argument(
+        "--no-flip", action="store_true", help="Disable flipping and mirroring images"
+    )
     parser.add_argument(
         "--machine", default="linea_mini", type=str, help="Espresso machine used"
     )
