@@ -1,20 +1,73 @@
 import os
 import sys
 import math
-from typing import List, Any, Optional
+from typing import List, Any, Optional, Dict
 from argparse import Namespace, ArgumentParser
 
 import numpy as np
 import matplotlib.pyplot as plt
 
 from keras.models import load_model
-from keras.callbacks import ModelCheckpoint, EarlyStopping, LearningRateScheduler
+from keras.callbacks import ModelCheckpoint, EarlyStopping, LearningRateScheduler, Callback
 
 from optpresso.utils import GroundsLoader, set_random_seed
 from optpresso.data.partition import find_test_paths, k_fold_partition
 from optpresso.models.networks import MODEL_CONSTRUCTORS
 from optpresso.models.eval import graph_model
 from optpresso.data.config import load_config
+
+
+class CycleWeightSaver(Callback):
+
+    def __init__(self, monitor: str, cycles: int, num_epochs: int, mode: str = "min", save_prefix: str = "cycle-"):
+        super().__init__()
+        self.monitor = monitor
+        self.cycles = cycles
+        self.num_epochs = num_epochs
+        if mode not in ["min", "max"]:
+            raise ValueError(f"Invalid mode: {mode}")
+        if mode == "min":
+            self.monitor_op = np.less
+        else:
+            self.monitor_op = np.greater
+        self.save_prefix = save_prefix
+        self.best_weights = [None for _ in range(self.cycles)]
+        self.cycle_bests = [None for _ in range(self.cycles)]
+
+    def on_epoch_end(self, epoch: int, logs: Optional[Dict[str, Any]] = None):
+        if logs is None:
+            print(f"No logs for epoch {epoch}")
+            return
+        if self.monitor not in logs:
+            print(f"Unable to find metric {self.monitor}")
+            return
+        cycle = epoch // (self.num_epochs // self.cycles)
+        cur_cy_weight = self.cycle_bests[cycle]
+        mon_val = logs[self.monitor]
+        if self.best_weights[cycle] is None or cur_cy_weight is None:
+            self.best_weights[cycle] = self.model.get_weights()
+            self.cycle_bests[cycle] = mon_val
+        elif self.monitor_op(mon_val, cur_cy_weight):
+            self.best_weights[cycle] = self.model.get_weights()
+            self.cycle_bests[cycle] = mon_val
+
+    def on_train_end(self, logs: Optional[Dict[str, Any]] = None):
+        if logs is None:
+            print(f"No logs for epoch {epoch}")
+            return
+        if self.monitor not in logs:
+            print(f"Unable to find metric {self.monitor}")
+            return
+        best_cycle = 0
+        for i in range(self.cycles):
+            self.model.set_weights(self.best_weights[i])
+            self.model.save(f"{self.save_prefix}{i}.h5")
+            if self.monitor_op(self.cycle_bests[i], self.cycle_bests[best_cycle]):
+                best_cycle = i
+        # Also save the model with only the very best weights
+        self.model.set_weights(self.best_weights[best_cycle])
+
+
 
 
 class PolynomialDecay:
@@ -164,17 +217,12 @@ def train(parent_args: Namespace, leftover: List[str]):
             )
         )
     elif args.mode == "annealing":
-        callbacks.append(
-            LearningRateScheduler(CyclicCosineAnnealing(5, args.epochs)),
-        )
-        callbacks.append(
-            EarlyStopping(
-                monitor="val_loss",
-                min_delta=0.0,
-                patience=0,  # Hack to get the best weights, really need the best 5 weights
-                mode="min",
-                restore_best_weights=True,
-            )
+        cycles = 5
+        callbacks.extend(
+            [
+                LearningRateScheduler(CyclicCosineAnnealing(cycles, args.epochs)),
+                CycleWeightSaver("val_loss", cycles, args.epochs, mode="min"),
+            ]
         )
 
     config = load_config()
