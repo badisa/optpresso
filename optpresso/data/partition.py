@@ -24,16 +24,17 @@ def find_test_paths(directory: str):
             data_path = os.path.join(root, file)
             yield pull_time, data_path
 
+
 def k_fold_partition(input_dir: str, folds: int = 10) -> TemporaryDirectory:
     paths = list(find_test_paths(input_dir))
     random.shuffle(paths)
     tmpdir = TemporaryDirectory()
-    batch_size = math.ceil(len(paths)/folds)
+    batch_size = math.ceil(len(paths) / folds)
     fold = 0
     for offset in range(0, len(paths), batch_size):
         fold_dir = os.path.join(tmpdir.name, str(fold))
         os.mkdir(fold_dir)
-        for time, path in paths[offset: offset+batch_size]:
+        for time, path in paths[offset : offset + batch_size]:
             output_dir = os.path.join(fold_dir, str(time))
             if not os.path.isdir(output_dir):
                 os.mkdir(output_dir)
