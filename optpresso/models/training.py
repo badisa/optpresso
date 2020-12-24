@@ -75,7 +75,7 @@ class PolynomialDecay:
     __slots__ = ("num_epochs", "learning_rate", "power")
 
     def __init__(
-        self, num_epochs: int = 100, learning_rate: float = 1e-4, power: float = 1.0
+        self, num_epochs: int = 100, learning_rate: float = 1e-3, power: float = 1.0
     ):
         self.num_epochs = num_epochs
         self.learning_rate = learning_rate
@@ -96,7 +96,7 @@ class CyclicCosineAnnealing:
 
     __slots__ = ("num_cycles", "epoches", "initial_rate")
 
-    def __init__(self, num_cycles: int, epoches: int, learning_rate: float = 0.01):
+    def __init__(self, num_cycles: int, epoches: int, learning_rate: float = 0.001):
         self.num_cycles = num_cycles
         self.epoches = epoches
         self.initial_rate = learning_rate
