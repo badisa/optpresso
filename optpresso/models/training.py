@@ -163,13 +163,15 @@ def train(parent_args: Namespace, leftover: List[str]):
     elif args.mode == "annealing":
         callbacks.append(
             LearningRateScheduler(CyclicCosineAnnealing(5, args.epochs)),
+        )
+        callbacks.append(
             EarlyStopping(
                 monitor="val_loss",
                 min_delta=0.0,
                 patience=0,  # Hack to get the best weights, really need the best 5 weights
                 mode="min",
                 restore_best_weights=True,
-            ),
+            )
         )
 
     config = load_config()
