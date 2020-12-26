@@ -45,7 +45,7 @@ def create_comma_model_relu(input_shape: List[int], alpha: float = 0.3):
     model.add(Activation("relu"))
     model.add(Dense(1))
 
-    model.compile(optimizer="adam", loss="mse")
+    model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
 
     return model
 
@@ -70,7 +70,7 @@ def create_comma_model_lrelu(input_shape: List[int], alpha: float = 0.3):
     model.add(LeakyReLU())
     model.add(Dense(1))
 
-    model.compile(optimizer="adam", loss="mse")
+    model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
 
     return model
 
@@ -95,7 +95,7 @@ def create_comma_model_prelu(input_shape: List[int], alpha: float = 0.3):
     model.add(PReLU())
     model.add(Dense(1))
 
-    model.compile(optimizer="adam", loss="mse")
+    model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
 
     return model
 
@@ -122,7 +122,7 @@ def create_comma_model2(input_shape: List[int], alpha: float = 0.3):
     model.add(Activation("relu"))
     model.add(Dense(1))
 
-    model.compile(optimizer="adam", loss="mse")
+    model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
 
     return model
 
@@ -148,7 +148,7 @@ def create_comma_model3(input_shape: List[int], alpha: float = 0.3):
     model.add(Activation("relu"))
     model.add(Dense(1))
 
-    model.compile(optimizer="adam", loss="mse")
+    model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
 
     return model
 
@@ -176,7 +176,7 @@ def create_comma_model4(input_shape: List[int], alpha: float = 0.3):
     model.add(Activation("relu"))
     model.add(Dense(1))
 
-    model.compile(optimizer="adam", loss="mse")
+    model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
 
     return model
 
@@ -200,7 +200,7 @@ def create_comma_model5(input_shape: List[int], alpha: float = 0.3):
     model.add(Activation("relu"))
     model.add(Dense(1))
 
-    model.compile(optimizer="adam", loss="mse")
+    model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
 
     return model
 
@@ -222,7 +222,7 @@ def create_comma_model6(input_shape: List[int], alpha: float = 0.3):
     model.add(Activation("relu"))
     model.add(Dense(1))
 
-    model.compile(optimizer="adam", loss="mse")
+    model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
 
     return model
 
@@ -250,7 +250,7 @@ def create_comma_model_bn(input_shape: List[int], alpha: float = 0.3):
     model.add(Activation("relu"))
     model.add(Dense(1))
 
-    model.compile(optimizer="adam", loss="mse")
+    model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
 
     return model
 
@@ -281,7 +281,7 @@ def create_nvidia_model1(input_shape: List[int], alpha: float = 0.3):
     model.add(Activation("relu"))
     model.add(Dense(1))
 
-    model.compile(optimizer="adam", loss="mse")
+    model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
 
     return model
 
@@ -314,7 +314,7 @@ def create_nvidia_model2(input_shape: List[int], alpha: float = 0.3):
     model.add(Activation("relu"))
     model.add(Dense(1))
 
-    model.compile(optimizer="adam", loss="mse")
+    model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
 
     return model
 
@@ -347,7 +347,7 @@ def create_nvidia_model3(input_shape: List[int], alpha: float = 0.3):
     model.add(Activation("relu"))
     model.add(Dense(1))
 
-    model.compile(optimizer="adam", loss="mse")
+    model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
 
     return model
 
@@ -376,7 +376,7 @@ def create_comma_model_large(input_shape: List[int], alpha: float = 0.3):
     model.add(Activation("relu"))
     model.add(Dense(1))
 
-    model.compile(optimizer="adam", loss="mse")
+    model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
 
     return model
 
@@ -405,7 +405,7 @@ def create_comma_model_large_dropout(input_shape: List[int], alpha: float = 0.3)
     model.add(Activation("relu"))
     model.add(Dense(1))
 
-    model.compile(optimizer="adam", loss="mse")
+    model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
 
     return model
 
