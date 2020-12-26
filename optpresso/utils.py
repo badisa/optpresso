@@ -20,7 +20,7 @@ class GroundsLoader:
     data usable for regression, no nasty classification
     """
 
-    __slots__ = ("_directory", "_batch_size", "_paths", "_target_size", "_weights")
+    __slots__ = ("_directory", "_batch_size", "_paths", "_target_size", "_weights", "_scaling")
 
     def __init__(
         self,
@@ -28,6 +28,7 @@ class GroundsLoader:
         target_size: tuple,
         directory: Optional[str] = None,
         paths: Optional[List[str]] = None,
+        scaling: int = 1.0,
     ):
         self._directory = directory
         self._batch_size = batch_size
@@ -36,9 +37,10 @@ class GroundsLoader:
         self._weights = None
         if directory is None and paths is None:
             raise RuntimeError("Must provide directory or paths")
+        self._scaling = scaling
         if directory is not None:
             for time, path in find_test_paths(directory):
-                self._paths.append((time, path))
+                self._paths.append((time * scaling, path))
         if paths is not None:
             for path in paths:
                 try:
@@ -46,7 +48,7 @@ class GroundsLoader:
                 except Exception:
                     print("Skipping path", path)
                     continue
-                self._paths.append((time, path))
+                self._paths.append((time * scaling, path))
 
     @property
     def weights(self):
