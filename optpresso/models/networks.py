@@ -20,6 +20,7 @@ from keras.layers import (
     ELU,
     Activation,
 )
+from keras.initializers import Constant
 
 from keras.layers.advanced_activations import PReLU
 from keras.layers.convolutional import Convolution2D
@@ -430,7 +431,7 @@ def create_optpresso_model(shape: List[int], alpha: float = 0.3) -> List[Any]:
     model.add(Dropout(0.5))
 
     # Dense layer of size 1 with linear activation to get that glorious regression
-    model.add(Dense(1))
+    model.add(Dense(1, bias_initializer=Constant(30)))  # Initialize last layer with aprox mean of data
     model.add(Activation("linear"))
     # A low learning rate seems better, at least when data was ~100 images
     opt = Adam(learning_rate=1e-4)
