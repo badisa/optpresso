@@ -205,6 +205,7 @@ def train(parent_args: Namespace, leftover: List[str]):
         sys.exit(1)
     if args.seed is not None:
         set_random_seed(args.seed)
+    model_name, ext = os.path.splitext(args.output_path)
     callbacks = []
     if args.mode == "patience":
         callbacks.append(
@@ -221,7 +222,7 @@ def train(parent_args: Namespace, leftover: List[str]):
         callbacks.extend(
             [
                 LearningRateScheduler(CyclicCosineAnnealing(cycles, args.epochs)),
-                CycleWeightSaver("val_loss", cycles, args.epochs, mode="min"),
+                CycleWeightSaver("val_loss", cycles, args.epochs, mode="min", save_prefix=f"{model_name}-cycle-"),
             ]
         )
 
@@ -250,7 +251,7 @@ def train(parent_args: Namespace, leftover: List[str]):
         model = MODEL_CONSTRUCTORS[args.model_name]((args.height, args.width, 3))
         train_model(args, model, generator, validation, callbacks=callbacks)
         if comp_model is not None and args.eval and validation is not None:
-            graph_model("comparison", comp_model, validation, write=args.write)
+            graph_model(f"comp-{model_name}", comp_model, validation, write=args.write)
     else:
         folds_dir = k_fold_partition(args.directory, folds=args.k_folds)
         fold_to_path = {}
@@ -289,7 +290,7 @@ def train(parent_args: Namespace, leftover: List[str]):
             fold_min.append(min(fit_hist.history["val_loss"]))
             if comp_model is not None and args.eval:
                 graph_model(
-                    f"comparison-fold-{i}", comp_model, validation, write=args.write
+                    f"comp-{model_name}-fold-{i}", comp_model, validation, write=args.write
                 )
         print(
             "Average Validation Loss: {}, All: {}".format(
