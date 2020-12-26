@@ -1,13 +1,16 @@
 import os
-from random import shuffle
+from random import shuffle, seed
 from typing import Optional, List
 from collections import defaultdict
 
 import numpy as np
+from numpy.random import seed as np_seed
 
 from keras.preprocessing.image import img_to_array, load_img
 
 from optpresso.data.partition import find_test_paths
+
+from tensorflow.random import set_seed
 
 IMG_EXTS = [".jpg", ".png"]
 
@@ -116,3 +119,8 @@ class GroundsLoader:
         for i, time in enumerate(y):
             weights[i] = self.weights[int(time)]
         return x, y, weights
+
+def set_random_seed(seed_num: int):
+    seed(seed_num)
+    np_seed(seed_num)
+    set_seed(seed_num)

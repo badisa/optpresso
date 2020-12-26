@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 from keras.models import load_model
 from keras.callbacks import ModelCheckpoint, EarlyStopping, LearningRateScheduler
 
-from optpresso.utils import GroundsLoader
+from optpresso.utils import GroundsLoader, set_random_seed
 from optpresso.data.partition import find_test_paths, k_fold_partition
 from optpresso.models.networks import MODEL_CONSTRUCTORS
 from optpresso.models.eval import graph_model
@@ -145,10 +145,13 @@ def train(parent_args: Namespace, leftover: List[str]):
         "--output-path", default="model.h5", help="Output path of the model"
     )
     parser.add_argument("--mode", choices=["patience", "annealing"], default="patience")
+    parser.add_argument("--seed", default=None, type=int)
     args = parser.parse_args(leftover)
     if args.validation_directory is not None and args.k_folds is not None:
         print("Can't provide K Folds and Validation directory")
         sys.exit(1)
+    if args.seed is not None:
+        set_random_seed(args.seed)
     callbacks = []
     if args.mode == "patience":
         callbacks.append(
