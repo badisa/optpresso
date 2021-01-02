@@ -44,6 +44,7 @@ The following is a list of coffees that have been used for data collection. Most
 * [Proud Mary Coffee](https://proudmarycoffee.com/) - Panama Dr. Enders - Lot #173
 * [Proud Mary Coffee](https://proudmarycoffee.com/) - Bernardina Washed
 * [Proud Mary Coffee](https://proudmarycoffee.com/) - Panama Green Tip Geisha ASD
+* [Proud Mary Coffee](https://proudmarycoffee.com/) - Ethiopian Supernatural
 * [Corvus Coffee](https://www.corvuscoffee.com/) - Columbian Natural Java
 * [Corvus Coffee](https://www.corvuscoffee.com/) - Columbian Sidra
 * [Corvus Coffee](https://www.corvuscoffee.com/) - Costa Rican Manzana
