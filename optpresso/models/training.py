@@ -195,6 +195,9 @@ def train(parent_args: Namespace, leftover: List[str]):
         "--model-name", choices=list(MODEL_CONSTRUCTORS.keys()), default="optpresso"
     )
     parser.add_argument(
+        "--patience", default=30, type=int,
+    )
+    parser.add_argument(
         "--output-path", default="model.h5", help="Output path of the model"
     )
     parser.add_argument("--mode", choices=["patience", "annealing"], default="patience")
@@ -211,8 +214,8 @@ def train(parent_args: Namespace, leftover: List[str]):
         callbacks.append(
             EarlyStopping(
                 monitor="val_loss",
-                min_delta=1.0,
-                patience=10,
+                min_delta=0.5,
+                patience=args.patience,
                 mode="min",
                 restore_best_weights=True,
             )
