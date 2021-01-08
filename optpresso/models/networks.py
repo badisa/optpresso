@@ -26,6 +26,8 @@ from keras.layers.advanced_activations import PReLU
 from keras.layers.convolutional import Convolution2D
 from keras.layers.normalization import BatchNormalization
 
+MEAN_VALUE = 30
+
 
 def create_comma_model_relu(input_shape: List[int], alpha: float = 0.3):
     model = Sequential()
@@ -43,7 +45,7 @@ def create_comma_model_relu(input_shape: List[int], alpha: float = 0.3):
     model.add(Activation("relu"))
     model.add(Dense(512))
     model.add(Activation("relu"))
-    model.add(Dense(1))
+    model.add(Dense(1, bias_initializer=Constant(MEAN_VALUE)))
 
     model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
 
@@ -68,7 +70,7 @@ def create_comma_model_lrelu(input_shape: List[int], alpha: float = 0.3):
     model.add(Dense(512))
     # model.add(Dropout(.5))
     model.add(LeakyReLU())
-    model.add(Dense(1))
+    model.add(Dense(1, bias_initializer=Constant(MEAN_VALUE)))
 
     model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
 
@@ -93,7 +95,7 @@ def create_comma_model_prelu(input_shape: List[int], alpha: float = 0.3):
     model.add(Dense(512))
     # model.add(Dropout(.5))
     model.add(PReLU())
-    model.add(Dense(1))
+    model.add(Dense(1, bias_initializer=Constant(MEAN_VALUE)))
 
     model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
 
@@ -120,7 +122,7 @@ def create_comma_model2(input_shape: List[int], alpha: float = 0.3):
     model.add(Activation("relu"))
     model.add(Dense(256))
     model.add(Activation("relu"))
-    model.add(Dense(1))
+    model.add(Dense(1, bias_initializer=Constant(MEAN_VALUE)))
 
     model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
 
@@ -146,7 +148,7 @@ def create_comma_model3(input_shape: List[int], alpha: float = 0.3):
     model.add(Activation("relu"))
     model.add(Dense(512))
     model.add(Activation("relu"))
-    model.add(Dense(1))
+    model.add(Dense(1, bias_initializer=Constant(MEAN_VALUE)))
 
     model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
 
@@ -174,7 +176,7 @@ def create_comma_model4(input_shape: List[int], alpha: float = 0.3):
     model.add(Activation("relu"))
     model.add(Dense(512))
     model.add(Activation("relu"))
-    model.add(Dense(1))
+    model.add(Dense(1, bias_initializer=Constant(MEAN_VALUE)))
 
     model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
 
@@ -198,7 +200,7 @@ def create_comma_model5(input_shape: List[int], alpha: float = 0.3):
     model.add(Activation("relu"))
     model.add(Dense(512))
     model.add(Activation("relu"))
-    model.add(Dense(1))
+    model.add(Dense(1, bias_initializer=Constant(MEAN_VALUE)))
 
     model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
 
@@ -220,7 +222,7 @@ def create_comma_model6(input_shape: List[int], alpha: float = 0.3):
     model.add(Activation("relu"))
     model.add(Dense(256))
     model.add(Activation("relu"))
-    model.add(Dense(1))
+    model.add(Dense(1, bias_initializer=Constant(MEAN_VALUE)))
 
     model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
 
@@ -248,7 +250,7 @@ def create_comma_model_bn(input_shape: List[int], alpha: float = 0.3):
     model.add(Dense(512))
     model.add(BatchNormalization())
     model.add(Activation("relu"))
-    model.add(Dense(1))
+    model.add(Dense(1, bias_initializer=Constant(MEAN_VALUE)))
 
     model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
 
@@ -279,7 +281,7 @@ def create_nvidia_model1(input_shape: List[int], alpha: float = 0.3):
     model.add(Activation("relu"))
     model.add(Dense(10))
     model.add(Activation("relu"))
-    model.add(Dense(1))
+    model.add(Dense(1, bias_initializer=Constant(MEAN_VALUE)))
 
     model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
 
@@ -312,7 +314,7 @@ def create_nvidia_model2(input_shape: List[int], alpha: float = 0.3):
     model.add(Activation("relu"))
     model.add(Dense(10))
     model.add(Activation("relu"))
-    model.add(Dense(1))
+    model.add(Dense(1, bias_initializer=Constant(MEAN_VALUE)))
 
     model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
 
@@ -345,7 +347,7 @@ def create_nvidia_model3(input_shape: List[int], alpha: float = 0.3):
     model.add(Activation("relu"))
     model.add(Dense(64))
     model.add(Activation("relu"))
-    model.add(Dense(1))
+    model.add(Dense(1, bias_initializer=Constant(MEAN_VALUE)))
 
     model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
 
@@ -374,7 +376,7 @@ def create_comma_model_large(input_shape: List[int], alpha: float = 0.3):
     # model.add(Dropout(.5))
     # model.add(ELU())
     model.add(Activation("relu"))
-    model.add(Dense(1))
+    model.add(Dense(1, bias_initializer=Constant(MEAN_VALUE)))
 
     model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
 
@@ -403,7 +405,7 @@ def create_comma_model_large_dropout(input_shape: List[int], alpha: float = 0.3)
     model.add(Dropout(0.5))
     # model.add(ELU())
     model.add(Activation("relu"))
-    model.add(Dense(1))
+    model.add(Dense(1, bias_initializer=Constant(MEAN_VALUE)))
 
     model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
 
@@ -431,7 +433,7 @@ def create_optpresso_model(shape: List[int], alpha: float = 0.3) -> List[Any]:
     model.add(Dropout(0.5))
 
     # Dense layer of size 1 with linear activation to get that glorious regression
-    model.add(Dense(1, bias_initializer=Constant(30)))  # Initialize last layer with aprox mean of data
+    model.add(Dense(1, bias_initializer=Constant(MEAN_VALUE)))  # Initialize last layer with aprox mean of data
     model.add(Activation("linear"))
     # A low learning rate seems better, at least when data was ~100 images
     opt = Adam(learning_rate=1e-4)
