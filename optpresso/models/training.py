@@ -7,6 +7,7 @@ from argparse import Namespace, ArgumentParser
 import numpy as np
 import matplotlib.pyplot as plt
 
+from keras.backend import clear_session
 from keras.models import load_model
 from keras.callbacks import ModelCheckpoint, EarlyStopping, LearningRateScheduler, Callback
 
@@ -117,22 +118,24 @@ def train_model(
     callbacks: Optional[List[Any]] = None,
     fold: Optional[int] = None,
 ):
-    validation_batch = None
+    validation_gen = None
     if args.weighted:
         training_gen = training.weighted_training_gen()
         if validation is not None:
-            validation_batch = validation.get_weighted_batch(0, len(validation))
+            validation_gen = validation.weighted_training_gen()
     else:
         training_gen = training.training_gen()
         if validation is not None:
-            validation_batch = validation.get_batch(0, len(validation))
+            validation_gen = validation.training_gen()
     fit_hist = model.fit(
         training_gen,
         epochs=args.epochs,
         steps_per_epoch=int(math.ceil(len(training) / args.batch_size)),
         batch_size=args.batch_size,
         callbacks=callbacks,
-        validation_data=validation_batch,
+        validation_data=validation_gen,
+        validation_batch_size=args.batch_size,
+        validation_steps=int(math.ceil(len(validation)) / args.batch_size),
     )
     output_path = args.output_path
     name, ext = os.path.splitext(output_path)
@@ -285,7 +288,7 @@ def train(parent_args: Namespace, leftover: List[str]):
                 (args.height, args.width),
                 paths=validation_paths,
             )
-
+            clear_session()
             model = MODEL_CONSTRUCTORS[args.model_name]((args.height, args.width, 3))
             fit_hist = train_model(
                 args, model, generator, validation, callbacks=callbacks, fold=i
