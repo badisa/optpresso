@@ -179,8 +179,8 @@ def train(parent_args: Namespace, leftover: List[str]):
     )
     parser.add_argument("--batch-size", default=16, type=int)
     parser.add_argument("--epochs", default=200, type=int)
-    parser.add_argument("--height", default=240, type=int)
-    parser.add_argument("--width", default=320, type=int)
+    parser.add_argument("--height", default=480, type=int)
+    parser.add_argument("--width", default=640, type=int)
     parser.add_argument(
         "--weighted",
         action="store_true",
