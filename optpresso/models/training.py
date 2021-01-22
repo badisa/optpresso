@@ -152,7 +152,6 @@ def train_model(
         train_label += f" Fold {fold}"
     plt.plot(x, fit_hist.history["val_loss"], label=val_label)
     plt.plot(x, fit_hist.history["loss"], label=train_label)
-    plt.yscale("log")
     plt.legend()
     if args.write:
         if fold is None:
