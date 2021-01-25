@@ -75,7 +75,7 @@ def evalulate_model(parent_args: Namespace, leftover: List[str]):
         models.extend(args.models)
 
     for model_path in models:
-        model = load_model(model_path)
+        model = load_model(model_path, compile=False)
         loader = GroundsLoader(
             args.batch_size,
             (model.input_shape[1], model.input_shape[2]),

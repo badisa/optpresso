@@ -131,12 +131,12 @@ def predict(parent_args: Namespace, leftover: List[str]):
             print("No model provided and no default model configured")
             sys.exit(1)
         model_path = config.model
-    model = load_model(model_path)
+    model = load_model(model_path, compile=False)
 
     if len(args.file_path):
         # TODO optimize this images array
         images = []
-        for i, path in enumerate(args.file_path):
+        for path in args.file_path:
             images.append(
                 img_to_array(
                     load_img(
