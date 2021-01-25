@@ -27,6 +27,8 @@ from keras.layers.advanced_activations import PReLU
 from keras.layers.convolutional import Convolution2D
 from keras.layers.normalization import BatchNormalization
 
+from optpresso.models.metrics import adjusted_mse
+
 MEAN_VALUE = 30
 
 
@@ -322,7 +324,7 @@ def create_nvidia_model2(input_shape: List[int], alpha: float = 0.3):
     model.add(Activation("relu"))
     model.add(Dense(1, bias_initializer=Constant(MEAN_VALUE)))
 
-    model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
+    model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse", metrics=[adjusted_mse])
 
     return model
 
