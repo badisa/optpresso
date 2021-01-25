@@ -152,7 +152,7 @@ def train_model(
         train_label += f" Fold {fold}"
     plt.plot(x, fit_hist.history["val_loss"], label=val_label)
     plt.plot(x, fit_hist.history["loss"], label=train_label)
-    plt.legend()
+    plt.legend(loc="upper right")
     if args.write:
         if fold is None:
             plt.savefig(f"{name}_loss_graph.png")

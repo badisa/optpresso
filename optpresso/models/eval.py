@@ -46,12 +46,12 @@ def graph_model(model_path, model, loader, write: bool = False):
     )
     plt.ylabel("Predicted Pull time (s)")
     plt.xlabel("Actual Pull time (s)")
-    plt.legend()
-    plt.suptitle(f"Model: {model_path}")
+    plt.legend(loc="upper left")
+    model_name = os.path.basename(model_path).split(".")[0]
+    plt.suptitle(f"Model: {model_name}")
     if not write:
         plt.show()
     else:
-        model_name = os.path.basename(model_path).split(".")[0]
         plt.savefig(f"eval-{model_name}.png")
     plt.close()
 
