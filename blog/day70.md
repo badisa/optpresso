@@ -14,6 +14,6 @@ I know that Matt Perger has [renounced](https://www.baristahustle.com/blog/stop-
 
 The question is really how much better the model than it was? In the past month I have investigated custom metrics, using the approximate error `err = 0.1x - 0.16` where x is the actual pull time. In training it seems to perform better, getting the modified (anything below error is treated as 0) MSE to about 105. What I notice is that I seem to just be shifting the value that most images are assigned to. It seems that this value ends up being the mean which isn't very satisfying. Regardless of SpatialDropout and Dense dropout it seems to be a lower bound. Now this lower bound has reduced from 120 MSE thanks to more images, and I hope that more images will improve it further. At 14.5k images, which is about an order of magnitude less than ImageNet (150k), it seems that the best way to improve this is to collect more images. I particularly worry that I need a wider range of coffee to account for the variance as roast certain does place a big role in pull times, based only on experience. The following image shows the current best performance (not yet in Google Drive as of writing this).
 
-![Best model yet!]({{site.url}}/optpresso/blog/img/eval-jan-2021.jpg)
+![Best model yet!]({{site.url}}/optpresso/blog/img/eval-jan-2021.png)
 
 I hope to have more updates here, though I think the primary discovery is that data is king.
