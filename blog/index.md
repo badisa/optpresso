@@ -31,6 +31,8 @@ Since I would like to better understand Machine Learning, I will attempt to docu
 
 ### Day 37 - [Back to basics](day37.md)
 
+### Day 70 - [Slow and Steady](day70.md)
+
 ## Coffee Sacrificed
 
 The following is a list of coffees that have been used for data collection. Mostly lighter roasts, so this model may be way off for darker roasts.

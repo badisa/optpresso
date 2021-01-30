@@ -1,0 +1,21 @@
+# Work Log Day 70
+
+**Written under the influence, so take it all with a grain of salt**
+
+The last month has been rather boring with regards to this project. The biggest take away I had from [Andrej Karpthy's](https://karpathy.github.io/2019/04/25/recipe/) blog was to collect more data. A lot more data. Since it is no longer a holiday the amount of data I have been able to collect is much diminished. However I decided to start pulling Madcap's Third Coast up towards 40~ seconds to improve my model even if the shots were less consistent/tasty than they were at 30 seconds.
+
+A question that arose out of this, is what preparation methods has the smallest variation in the pull time. As far as I can tell reading around, this is not a metric that many use. I imagine coffee shops care about this as it results in fewer shots thrown away. This, of course, assumes that the primary metric used to evaluate a shot served to a customer is pull time rather than something like total dissolved solids (TDS). The data related to this experiment can be found [here](https://docs.google.com/spreadsheets/d/1dDfuIq74pjELNtfb_0sdiNnG3qFKrfqC2sax7ewrWYg/edit#gid=1726376181)
+
+## Why not TDS!?
+
+Why don't I use TDS? In large part I don't use TDS as a measurement because I have had terrible shots from coffee shops that rely heavily on TDS (on the other hand Aunty Peg's in Melbourne uses TDS and it has the BEST shots ever) and because it is expensive. The additional metric of TDS is appealing, though it doesn't seem accessible to the general user of espresso. The variables that are available to me, and many others, seem to be large enough in quantity that I would like to explore them in detail, and also in an open manner, that provides me a reason to look for other metrics. 
+
+I know that Matt Perger has [renounced](https://www.baristahustle.com/blog/stop-renouncing-refractometers/) renouncing refractometers. And while I was not particularly impressed by the shots I had at Sensory Lab, which paled in comparisons to the shots I had at Aunty Peg's (which also used refractometers), I get it. TDS can be a useful metric. However as far as I can tell, there is not compelling (read as available/open) evidence for TDS being the be all end all metric. Espresso is complicated, and if it wasn't I wouldn't find it much fun. Due to its complexity, there are many more factors than easily identifiable by humans (I am ignoring taste here). Having been spending more time looking at the images that are feeding this model I am increasingly convinced that the factors that place into espresso are more biological (read as weird/maybe-even-random) in nature.
+
+## What about the model!?
+
+I am pretty drunk while I write this, as you might have guessed from the repeated use of interrobangs. However the question is really how much better the model than it was? In the past month I have investigated custom metrics, using the approximate error `err = 0.1x - 0.16` where x is the actual pull time. In training it seems to perform better, getting the modified (anything below error is treated as 0) MSE to about 105. What I notice is that I seem to just be shifting the value that most images are assigned to. It seems that this value ends up being the mean which isn't very satisfying. Regardless of SpatialDropout and Dense dropout it seems to be a lower bound. Now this lower bound has reduced from 120 MSE thanks to more images, and I hope that more images will improve it further. At 14.5k images, which is about an order of magnitude less than ImageNet (150k), it seems that the best way to improve this is to collect more images. I particularly worry that I need a wider range of coffee to account for the variance as roast certain does place a big role in pull times, based only on experience. The following image shows the current best performance (not yet in Google Drive as of writing this).
+
+![Best model yet!]({{site.url}}/optpresso/blog/img/eval-jan-2021.jpg)
+
+I hope to have more updates here, though I think the primary discovery is that data is king.
