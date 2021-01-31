@@ -296,7 +296,7 @@ def create_nvidia_model2(input_shape: List[int], alpha: float = 0.3):
 
     model.add(
         Convolution2D(
-            24, (5, 5), strides=(2, 2), padding="same", input_shape=input_shape, kernel_initializer=glorot_normal()
+            24, (5, 5), padding="same", input_shape=input_shape, kernel_initializer=glorot_normal()
         )
     )
     model.add(BatchNormalization())
