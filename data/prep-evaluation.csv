@@ -1,0 +1,51 @@
+In (Grams),Out (Grams),Time (Seconds),Temp (F),Humidity (%),Coffee,Prep Method,Channeling,Grinder,Grind Setting
+18,36,33,55.51,29.7,Candlestick Coffee - Columbia,None,yes - slow center,MC3,8.75
+18,36,32,55.4,29.8,Candlestick Coffee - Columbia,None,yes - slow center,MC3,8.75
+18,36,30,55.29,30,Candlestick Coffee - Columbia,None,yes - slow center,MC3,8.75
+18,36,37,55.29,30.1,Candlestick Coffee - Columbia,None,yes - slow center,MC3,8.75
+18,36,31,54.39,29.1,Candlestick Coffee - Columbia,None,yes - slow center,MC3,8.75
+18,36,37,54.5,29.5,Candlestick Coffee - Columbia,None,yes - slow center,MC3,8.75
+18,36,37,54.5,28.8,Candlestick Coffee - Columbia,None,yes - slow center,MC3,8.75
+18,36,35,54.05,28.3,Candlestick Coffee - Columbia,None,yes - slow center,MC3,8.75
+18,36,38,53.71,27.9,Candlestick Coffee - Columbia,None,yes - slow center,MC3,8.75
+18,36,33,53.6,28.3,Candlestick Coffee - Columbia,None,yes - slow center,MC3,8.75
+18,36,39,54.72,29.3,Candlestick Coffee - Columbia,OCD - 9,yes - slower center,MC3,8.75
+18,36,34,54.95,29.3,Candlestick Coffee - Columbia,OCD - 9,yes - slower center,MC3,8.75
+18,36,31,55.29,29.3,Candlestick Coffee - Columbia,OCD - 9,yes - slower center,MC3,8.75
+18,36,37,55.63,29.1,Candlestick Coffee - Columbia,OCD - 9,yes - slower center,MC3,8.75
+18,36,31,56.3,29.1,Candlestick Coffee - Columbia,OCD - 9,no,MC3,8.75
+18,36,32,56.64,29.2,Candlestick Coffee - Columbia,OCD - 9,yes - slower center,MC3,8.75
+18,36,40,56.64,29.2,Candlestick Coffee - Columbia,OCD - 9,no,MC3,8.75
+18,36,33,56.86,29.3,Candlestick Coffee - Columbia,OCD - 9,no,MC3,8.75
+18,36,31,56.97,29.1,Candlestick Coffee - Columbia,OCD - 9,no,MC3,8.75
+18,36,36,57.09,29.2,Candlestick Coffee - Columbia,OCD - 9,yes,MC3,8.75
+18,36,34,56.53,29.2,Candlestick Coffee - Columbia,WDT,no,MC3,8.75
+18,36,31,55.85,29.4,Candlestick Coffee - Columbia,WDT,"yes - went to one side, bubbles",MC3,8.75
+18,36,32,56.07,29.4,Candlestick Coffee - Columbia,WDT,no,MC3,8.75
+18,36,20,56.3,29.3,Candlestick Coffee - Columbia,WDT,yes,MC3,8.75
+18,36,22,56.4,29.3,Candlestick Coffee - Columbia,WDT,yes,MC3,8.75
+18,36,35,56.64,29.1,Candlestick Coffee - Columbia,WDT,yes - slow center,MC3,8.75
+18,36,23,56.75,29.2,Candlestick Coffee - Columbia,WDT,yes,MC3,8.75
+18,36,24,56.86,29.4,Candlestick Coffee - Columbia,WDT,yes,MC3,8.75
+18,36,28,56.97,29.1,Candlestick Coffee - Columbia,WDT,yes,MC3,8.75
+18,36,27,56.97,28.9,Candlestick Coffee - Columbia,WDT,yes,MC3,8.75
+18,36,28,56.3,20.4,Candlestick Coffee - Columbia,RDT,yes - slow center,MC3,8.75
+18,36,27,56.53,20.6,Candlestick Coffee - Columbia,RDT,yes - slow center,MC3,8.75
+18,36,21,56.64,20.7,Candlestick Coffee - Columbia,RDT,yes,MC3,8.75
+18,36,37,56.86,20.9,Candlestick Coffee - Columbia,RDT,yes - right side,MC3,8.75
+18,36,29,56.97,20.9,Candlestick Coffee - Columbia,RDT,yes - fast edges,MC3,8.75
+18,36,32,57.31,20.8,Candlestick Coffee - Columbia,RDT,yes - slow center,MC3,8.75
+18,36,29,57.54,20.4,Candlestick Coffee - Columbia,RDT,yes - slow center,MC3,8.75
+18,36,33,57.54,20.3,Candlestick Coffee - Columbia,RDT,yes - fast edge,MC3,8.75
+18,36,35,57.65,20.4,Candlestick Coffee - Columbia,RDT,yes - slow edge,MC3,8.75
+18,36,38,57.99,20.4,Candlestick Coffee - Columbia,RDT,yes - slow edge,MC3,8.75
+18,36,37,58.21,19.7,Candlestick Coffee - Columbia,DT,yes - entire side slow,MC3,8.75
+18,36,30,58.32,19.9,Candlestick Coffee - Columbia,DT,yes - fast edge,MC3,8.75
+18,36,40,58.66,19.9,Candlestick Coffee - Columbia,DT,yes - entire side slow,MC3,8.75
+18,36,23,58.78,19.3,Candlestick Coffee - Columbia,DT,yes - spray,MC3,8.75
+18,36,39,58.89,19.4,Candlestick Coffee - Columbia,DT,yes - slow center,MC3,8.75
+18,36,28,59.22,19.7,Candlestick Coffee - Columbia,DT,yes - fast edge,MC3,8.75
+18,36,31,59.45,19.6,Candlestick Coffee - Columbia,DT,yes - fast edge,MC3,8.75
+18,36,26,59.67,19.1,Candlestick Coffee - Columbia,DT,yes - fast edge,MC3,8.75
+18,36,31,59.67,19.2,Candlestick Coffee - Columbia,DT,yes - fast edge,MC3,8.75
+18,36,26,59.9,19.6,Candlestick Coffee - Columbia,DT,yes - fast edge,MC3,8.75
