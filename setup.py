@@ -21,6 +21,7 @@ setup(
         "keras==2.4.3",
         "pydot==1.4.1",
         "opencv-python==4.4.0.46",
+        "flask==1.1.2",
     ],
     packages=find_packages(),
     entry_points={"console_scripts": ["optpresso=optpresso.commands:main"]},
