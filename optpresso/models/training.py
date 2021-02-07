@@ -1,6 +1,7 @@
 import os
 import sys
 import math
+import random
 from typing import List, Any, Optional, Dict
 from argparse import Namespace, ArgumentParser
 
@@ -260,13 +261,20 @@ def train(parent_args: Namespace, leftover: List[str]):
     else:
         folds_dir = k_fold_partition(args.directory, folds=args.k_folds)
         fold_to_path = {}
+        test_fold = random.randint(0, args.k_folds-1)
         for i in range(args.k_folds):
             fold_to_path[i] = [
                 x[1] for x in find_test_paths(os.path.join(folds_dir.name, str(i)))
             ]
+        test_set = GroundsLoader(
+            args.batch_size,
+            (args.height, args.width),
+            paths=fold_to_path[test_fold],
+        )
         fold_min = []
         for i in range(args.k_folds):
-            validation_paths = fold_to_path[i]
+            if i == test_fold:
+                continue
             test_paths = []
             for key, paths in fold_to_path.items():
                 if key == i:
@@ -285,7 +293,7 @@ def train(parent_args: Namespace, leftover: List[str]):
             validation = GroundsLoader(
                 args.batch_size,
                 (args.height, args.width),
-                paths=validation_paths,
+                paths=fold_to_path[i],
             )
             clear_session()
             model = MODEL_CONSTRUCTORS[args.model_name]((args.height, args.width, 3))
@@ -293,10 +301,14 @@ def train(parent_args: Namespace, leftover: List[str]):
                 args, model, generator, validation, callbacks=callbacks, fold=i
             )
             fold_min.append(min(fit_hist.history["val_loss"]))
-            if comp_model is not None and args.eval:
+            if args.eval:
                 graph_model(
-                    f"comp-{model_name}-fold-{i}", comp_model, validation, write=args.write
+                    f"{model_name}-fold-{i}-test", model, test_set, write=args.write
                 )
+                if comp_model is not None:
+                    graph_model(
+                        f"comp-{model_name}-fold-{i}", comp_model, validation, write=args.write
+                    )
         print(
             "Average Validation Loss: {}, All: {}".format(
                 np.array(fold_min).mean(), fold_min
