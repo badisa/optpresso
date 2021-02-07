@@ -161,7 +161,7 @@ def train_model(
     else:
         plt.show()
     plt.close()
-    if args.eval:
+    if args.eval and validation is not None:
         graph_model(output_path, model, validation, write=args.write)
     return fit_hist
 
@@ -234,7 +234,7 @@ def train(parent_args: Namespace, leftover: List[str]):
     config = load_config()
     comp_model = None
     if config is not None:
-        comp_model = load_model(config.model)
+        comp_model = load_model(config.model, compile=False)
 
     if args.k_folds is None:
         generator = GroundsLoader(

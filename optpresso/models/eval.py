@@ -61,8 +61,11 @@ def evalulate_model(parent_args: Namespace, leftover: List[str]):
     parser.add_argument("directory")
     parser.add_argument("--write", action="store_true")
     parser.add_argument("--models", nargs="+")
-    parser.add_argument("--batch-size", default=16)
+    parser.add_argument("--batch-size", default=128)
     args = parser.parse_args(leftover)
+    if not os.path.isdir(args.directory):
+        print(f"No such directory: {args.directory}")
+        sys.exit(1)
 
     models = []
     if args.models is None:
