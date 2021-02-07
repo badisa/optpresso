@@ -15,8 +15,8 @@ setup(
     install_requires=[
         "pandas==1.1.4",
         "scikit-learn==0.23.2",
-        "tensorflow==2.3.1",
-        "numpy==1.18.5",
+        "tensorflow==2.4.1",
+        "numpy==1.19.*",
         "matplotlib==3.3.3",
         "keras==2.4.3",
         "pydot==1.4.1",
