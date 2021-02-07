@@ -61,10 +61,23 @@ $ optpresso init path/to/downloaded/model.h5
 
 ```
 
+## Usage
+
+It is possible to use Optpresso via two different means. Either using the CLI with the following commands:
+
+```
+$ optpresso predict --camera 0  # For predictions
+$ optpresso capture 0  # For capturing images
+```
+
+Or you can use the Web UI which has more advanced features and generally easier to use.
+
+```
+$ optpresso serve /path/to/capture/to [--capture-split] [--seed=0] [--browser] [--port=888] [--split-ratio=7,2,1]
+```
 
 ## TODO
 
-* Implement a web interface, no one likes CLIs
 * Improve secondary model's fitting data (its down right unusable right now)
 * Make the model better on average than within 6 seconds (on average)
 

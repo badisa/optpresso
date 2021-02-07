@@ -21,6 +21,7 @@ class OptpressoConfig:
     model: str
     data_path: str = os.path.join(DEFAULT_CONFIG_DIR, "model.npy")
     machine: str = ""
+    grinder: str = ""
     use_secondary_model: bool = True
     _model_data: Optional[np.array] = None
 
@@ -52,6 +53,15 @@ class OptpressoConfig:
         y = data[1] - data[0]
         model.fit(np.array(data[0]).reshape(-1, 1), np.array(y).reshape(-1, 1))
         return model
+
+    def save(self):
+        directory = DEFAULT_CONFIG_DIR
+        if OPTPRESSO_CONFIG_ENV in os.environ:
+            directory = os.environ[OPTRESSO_CONFIG_ENV]
+        directory = os.path.expanduser(directory)
+        path = os.path.join(directory, "config")
+        with open(path, "w") as ofs:
+            json.dump(asdict(self), ofs)
 
 
 def load_config() -> Optional[OptpressoConfig]:
@@ -88,6 +98,9 @@ def init_optpresso(parent_args: Namespace, leftover: List[str]):
         "--machine", default=None, help="Name of the espresso machine being used"
     )
     parser.add_argument(
+        "--grinder", default=None, help="Name of the espresso grinder used"
+    )
+    parser.add_argument(
         "--disable-secondary-model",
         action="store_true",
         help="Disable secondary model intended to better fit individual workflows",
@@ -106,10 +119,10 @@ def init_optpresso(parent_args: Namespace, leftover: List[str]):
         shutil.copy(args.model, model_path)
     config = OptpressoConfig(
         model=model_path,
+        grinder=args.grinder,
         machine=args.machine,
         use_secondary_model=not args.disable_secondary_model,
         data_path=os.path.join(config_dir, "model.npy"),
     )
-    with open(config_path, "w") as ofs:
-        json.dump(asdict(config), ofs)
+    config.save()
     print("Configured Optpresso, good luck!")
