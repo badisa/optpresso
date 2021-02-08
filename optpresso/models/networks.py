@@ -315,7 +315,7 @@ def create_nvidia_model2(input_shape: List[int], alpha: float = 0.3):
     model.add(SpatialDropout2D(0.5))
     model.add(Activation("relu"))
     model.add(Convolution2D(64, (3, 3), strides=(2, 2), padding="same", kernel_initializer=glorot_normal()))
-    model.add(SpatialDropout2D(0.5))
+    model.add(BatchNormalization())
     model.add(Flatten())
     model.add(Activation("relu"))
     model.add(Dense(100))
