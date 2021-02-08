@@ -269,7 +269,7 @@ def train(parent_args: Namespace, leftover: List[str]):
         test_set = GroundsLoader(
             args.batch_size,
             (args.height, args.width),
-            paths=fold_to_path[test_fold],
+            paths=fold_to_path.pop(test_fold),
         )
         fold_min = []
         for i in range(args.k_folds):
@@ -287,7 +287,7 @@ def train(parent_args: Namespace, leftover: List[str]):
                 paths=test_paths,
             )
             if len(generator) <= 0:
-                print(f"No files in directory {args.directory}")
+                print(f"No files in k-fold paths: {test_paths}")
                 sys.exit(1)
             # Should rewrite the grounds loader into a Sequence class
             validation = GroundsLoader(
