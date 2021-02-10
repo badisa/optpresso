@@ -33,6 +33,8 @@ Since I would like to better understand Machine Learning, I will attempt to docu
 
 ### Day 70 - [Slow and Steady](day70.md)
 
+### Day 80 - [Test sets!](day80.md)
+
 ## Coffee Sacrificed
 
 The following is a list of coffees that have been used for data collection. Mostly lighter roasts, so this model may be way off for darker roasts.
@@ -42,18 +44,22 @@ The following is a list of coffees that have been used for data collection. Most
 * [Barrington Coffee Roasting](https://barringtoncoffee.com/) - The Natural
 * [Barrington Coffee Roasting](https://barringtoncoffee.com/) - Gold
 * [Barrington Coffee Roasting](https://barringtoncoffee.com/) - 413
+* [Blue Bottle](https://bluebottlecoffee.com/) - Winter Blooms
+* [Boomtown Coffee](https://www.boomtowncoffee.com/) - Poas Honeyed Costa Rican
 * [Proud Mary Coffee](https://proudmarycoffee.com/) - Guatemala Natural Pacamara Finca El Carmen
 * [Proud Mary Coffee](https://proudmarycoffee.com/) - Panama Dr. Enders - Lot #173
 * [Proud Mary Coffee](https://proudmarycoffee.com/) - Bernardina Washed
 * [Proud Mary Coffee](https://proudmarycoffee.com/) - Panama Green Tip Geisha ASD
 * [Proud Mary Coffee](https://proudmarycoffee.com/) - Ethiopian Supernatural
 * [Proud Mary Coffee](https://proudmarycoffee.com/) - Panama Hartmann Estate African Bonga Honey Process
+* [Proud Mary Coffee](https://proudmarycoffee.com/) - Luito Geisha Panama
 * [Corvus Coffee](https://www.corvuscoffee.com/) - Columbian Natural Java
 * [Corvus Coffee](https://www.corvuscoffee.com/) - Columbian Sidra
 * [Corvus Coffee](https://www.corvuscoffee.com/) - Costa Rican Manzana
 * [Onyx Coffee Lab](https://onyxcoffeelab.com/) - Geometry
 * [Onyx Coffee Lab](https://onyxcoffeelab.com/) - El Salvador Santa Rosa Honey
 * [Onyx Coffee Lab](https://onyxcoffeelab.com/) - Decaf Ethiopian Guji Natural
+* [Onyx Coffee Lab](https://onyxcoffeelab.com/) - Columbia Delagua Jesus Nunez Natural
 * [CandleStick Coffee](https://candlestickcoffee.com/) - Columbia
 * [CandleStick Coffee](https://candlestickcoffee.com/) - Costa Rica
 * [CandleStick Coffee](https://candlestickcoffee.com/) - Guatemala
