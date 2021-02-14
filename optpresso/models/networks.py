@@ -314,7 +314,8 @@ def create_nvidia_model2(input_shape: List[int], alpha: float = 0.3):
             kernel_initializer=glorot_normal(),
         )
     )
-    model.add(SpatialDropout2D(0.3))
+    model.add(BatchNormalization())
+    # model.add(SpatialDropout2D(0.3))
     model.add(Activation("relu"))
     model.add(
         Convolution2D(
