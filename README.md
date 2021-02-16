@@ -7,12 +7,12 @@ several assumptions are made regarding the espresso:
 1. Shots use 18g of coffee
 2. Pull time is how long it takes to end up with ~36g in the cup
 3. Shots pulled using a Linea mini and an [18g VST basket](https://store.vstapps.com/collections/vst-precision-filter-baskets/products/vst-precision-filter-baskets)
-4. Grinder used is the Conical Monolith (MC3) from [Kafatek](https://www.kafatek.com/) or the [Niche Zero](https://www.nichecoffee.co.uk/)
+4. Grinder used is the Conical Monolith (MC3) from [Kafatek](https://www.kafatek.com/), the [Vario-W](https://baratza.com/grinder/vario-w/), or the [Niche Zero](https://www.nichecoffee.co.uk/)
 
 These assumptions are made to simplify the number of variables the CNN needs
 to account.
 
-## [Daily Blog](blog/index.md)
+## [Blog](blog/index.md)
 
 ## Data Collection Methodology
 
@@ -65,7 +65,7 @@ $ optpresso init path/to/downloaded/model.h5
 ## TODO
 
 * Implement a web interface, no one likes CLIs
-* Improve secondary model's fitting data
+* Improve secondary model's fitting data (its down right unusable right now)
 * Make the model better on average than within 6 seconds (on average)
 
 
