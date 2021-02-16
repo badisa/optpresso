@@ -46,11 +46,13 @@ The following is a list of coffees that have been used for data collection. Most
 * [Barrington Coffee Roasting](https://barringtoncoffee.com/) - 413
 * [Blue Bottle](https://bluebottlecoffee.com/) - Winter Blooms
 * [Boomtown Coffee](https://www.boomtowncoffee.com/) - Poas Honeyed Costa Rican
+* [Boomtown Coffee](https://www.boomtowncoffee.com/) - Spindletop
 * [Proud Mary Coffee](https://proudmarycoffee.com/) - Guatemala Natural Pacamara Finca El Carmen
 * [Proud Mary Coffee](https://proudmarycoffee.com/) - Panama Dr. Enders - Lot #173
 * [Proud Mary Coffee](https://proudmarycoffee.com/) - Bernardina Washed
 * [Proud Mary Coffee](https://proudmarycoffee.com/) - Panama Green Tip Geisha ASD
 * [Proud Mary Coffee](https://proudmarycoffee.com/) - Ethiopian Supernatural
+* [Proud Mary Coffee](https://proudmarycoffee.com/) - Exploding Heart
 * [Proud Mary Coffee](https://proudmarycoffee.com/) - Panama Hartmann Estate African Bonga Honey Process
 * [Proud Mary Coffee](https://proudmarycoffee.com/) - Luito Geisha Panama
 * [Corvus Coffee](https://www.corvuscoffee.com/) - Columbian Natural Java
