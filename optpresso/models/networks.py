@@ -325,7 +325,9 @@ def create_nvidia_model2(input_shape: List[int], alpha: float = 0.3):
     model.add(Activation("relu"))
     model.add(Dense(1, bias_initializer=Constant(MEAN_VALUE)))
 
-    model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse", metrics=[adjusted_mse])
+    model.compile(
+        optimizer=Adam(learning_rate=2e-4), loss="mse", metrics=[adjusted_mse]
+    )
 
     return model
 
