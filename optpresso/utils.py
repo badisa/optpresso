@@ -62,14 +62,13 @@ class GroundsLoader:
             for time, path in self._paths:
                 bins[int(time)] += 1
                 max_time = max(max_time, time)
-            totals = [(key, val) for key, val in bins.items()]
-            totals.sort(key=lambda x: x[1], reverse=True)
-            max_count = totals[0][1]
-            max_diff = max_count - totals[-1][1]
-            # factor = max_count // totals[-1][1]
+            max_count = max(bins.values())
+
             weights = np.ones(int(max_time) + 1)
-            for x in totals:
-                weights[x[0]] = max_count / x[1]
+            # Aim for 1.0 for the highest count, with increasing weights with lower counts
+            # TODO evaluate trying a non linear relation for the lower counts
+            for x in bins.items():
+                weights[x[0]] = 2.0 - (x[1] / max_count)
             self._weights = weights
         return self._weights
 
@@ -93,8 +92,7 @@ class GroundsLoader:
         batch_start = 0
         batch_end = self._batch_size
         while batch_start < total_size:
-            limit = min(batch_end, total_size)
-            yield meth(batch_start, limit)
+            yield meth(batch_start, min(batch_end, total_size))
             batch_start += self._batch_size
             batch_end += self._batch_size
 
@@ -106,21 +104,20 @@ class GroundsLoader:
 
     def get_batch(self, start: int, end: int):
         files = self._paths[start:end]
-        x = np.zeros((len(files), self._target_size[0], self._target_size[1], 3))
-        y = np.zeros((len(files),))
-        i = 0
-        for time, path in files:
+        x = np.empty((len(files), self._target_size[0], self._target_size[1], 3))
+        y = np.empty((len(files),))
+        for i, (time, path) in enumerate(files):
             x[i] = img_to_array(load_img(path, target_size=self._target_size))
             y[i] = time
-            i += 1
         return x, y
 
     def get_weighted_batch(self, start: int, end: int):
         x, y = self.get_batch(start, end)
-        weights = np.ones(y.shape)
+        weights = np.empty(y.shape)
         for i, time in enumerate(y):
             weights[i] = self.weights[int(time)]
         return x, y, weights
+
 
 def set_random_seed(seed_num: int):
     seed(seed_num)
