@@ -10,7 +10,12 @@ import matplotlib.pyplot as plt
 
 from keras.backend import clear_session
 from keras.models import load_model
-from keras.callbacks import ModelCheckpoint, EarlyStopping, LearningRateScheduler, Callback
+from keras.callbacks import (
+    ModelCheckpoint,
+    EarlyStopping,
+    LearningRateScheduler,
+    Callback,
+)
 
 from optpresso.utils import GroundsLoader, set_random_seed
 from optpresso.data.partition import find_test_paths, k_fold_partition
@@ -20,8 +25,14 @@ from optpresso.data.config import load_config
 
 
 class CycleWeightSaver(Callback):
-
-    def __init__(self, monitor: str, cycles: int, num_epochs: int, mode: str = "min", save_prefix: str = "cycle-"):
+    def __init__(
+        self,
+        monitor: str,
+        cycles: int,
+        num_epochs: int,
+        mode: str = "min",
+        save_prefix: str = "cycle-",
+    ):
         super().__init__()
         self.monitor = monitor
         self.cycles = cycles
@@ -68,8 +79,6 @@ class CycleWeightSaver(Callback):
                 best_cycle = i
         # Also save the model with only the very best weights
         self.model.set_weights(self.best_weights[best_cycle])
-
-
 
 
 class PolynomialDecay:
@@ -199,7 +208,9 @@ def train(parent_args: Namespace, leftover: List[str]):
         "--model-name", choices=list(MODEL_CONSTRUCTORS.keys()), default="optpresso"
     )
     parser.add_argument(
-        "--patience", default=30, type=int,
+        "--patience",
+        default=30,
+        type=int,
     )
     parser.add_argument(
         "--output-path", default="model.h5", help="Output path of the model"
@@ -229,7 +240,13 @@ def train(parent_args: Namespace, leftover: List[str]):
         callbacks.extend(
             [
                 LearningRateScheduler(CyclicCosineAnnealing(cycles, args.epochs)),
-                CycleWeightSaver("val_loss", cycles, args.epochs, mode="min", save_prefix=f"{model_name}-cycle-"),
+                CycleWeightSaver(
+                    "val_loss",
+                    cycles,
+                    args.epochs,
+                    mode="min",
+                    save_prefix=f"{model_name}-cycle-",
+                ),
             ]
         )
 
@@ -266,7 +283,7 @@ def train(parent_args: Namespace, leftover: List[str]):
     else:
         folds_dir = k_fold_partition(args.directory, folds=args.k_folds)
         fold_to_path = {}
-        test_fold = random.randint(0, args.k_folds-1)
+        test_fold = random.randint(0, args.k_folds - 1)
         for i in range(args.k_folds):
             fold_to_path[i] = [
                 x[1] for x in find_test_paths(os.path.join(folds_dir.name, str(i)))

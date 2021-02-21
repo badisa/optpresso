@@ -295,29 +295,75 @@ def create_nvidia_model2(input_shape: List[int], alpha: float = 0.3):
 
     model.add(
         Convolution2D(
-            24, (5, 5), padding="same", input_shape=input_shape, kernel_initializer=glorot_normal()
+            24,
+            (5, 5),
+            padding="same",
+            input_shape=input_shape,
+            kernel_initializer=glorot_normal(),
         )
     )
     model.add(BatchNormalization())
     model.add(Activation("relu"))
     # model.add(SpatialDropout2D(0.3))
-    model.add(Convolution2D(36, (5, 5), strides=(2, 2), padding="same", kernel_initializer=glorot_normal()))
+    model.add(
+        Convolution2D(
+            36,
+            (5, 5),
+            strides=(2, 2),
+            padding="same",
+            kernel_initializer=glorot_normal(),
+        )
+    )
+    model.add(BatchNormalization())
     model.add(SpatialDropout2D(0.3))
     model.add(Activation("relu"))
-    model.add(Convolution2D(48, (5, 5), strides=(2, 2), padding="same", kernel_initializer=glorot_normal()))
+    model.add(
+        Convolution2D(
+            48,
+            (5, 5),
+            strides=(2, 2),
+            padding="same",
+            kernel_initializer=glorot_normal(),
+        )
+    )
     model.add(SpatialDropout2D(0.3))
     model.add(Activation("relu"))
-    model.add(Convolution2D(64, (3, 3), strides=(2, 2), padding="same", kernel_initializer=glorot_normal()))
+    model.add(
+        Convolution2D(
+            64,
+            (3, 3),
+            strides=(2, 2),
+            padding="same",
+            kernel_initializer=glorot_normal(),
+        )
+    )
     model.add(SpatialDropout2D(0.4))
     model.add(Activation("relu"))
-    model.add(Convolution2D(64, (3, 3), strides=(2, 2), padding="same", kernel_initializer=glorot_normal()))
+    model.add(
+        Convolution2D(
+            64,
+            (3, 3),
+            strides=(2, 2),
+            padding="same",
+            kernel_initializer=glorot_normal(),
+        )
+    )
     model.add(SpatialDropout2D(0.5))
     model.add(Activation("relu"))
-    model.add(Convolution2D(64, (3, 3), strides=(2, 2), padding="same", kernel_initializer=glorot_normal()))
-    model.add(BatchNormalization())
+    model.add(
+        Convolution2D(
+            64,
+            (3, 3),
+            strides=(2, 2),
+            padding="same",
+            kernel_initializer=glorot_normal(),
+        )
+    )
+    model.add(SpatialDropout2D(0.5))
     model.add(Flatten())
     model.add(Activation("relu"))
-    model.add(Dense(100))
+    model.add(Dense(120))
+    model.add(Dropout(0.2))
     model.add(Activation("relu"))
     model.add(Dense(50))
     model.add(Activation("relu"))
@@ -444,7 +490,9 @@ def create_optpresso_model(shape: List[int], alpha: float = 0.3) -> List[Any]:
     model.add(Dropout(0.5))
 
     # Dense layer of size 1 with linear activation to get that glorious regression
-    model.add(Dense(1, bias_initializer=Constant(MEAN_VALUE)))  # Initialize last layer with aprox mean of data
+    model.add(
+        Dense(1, bias_initializer=Constant(MEAN_VALUE))
+    )  # Initialize last layer with aprox mean of data
     model.add(Activation("linear"))
     # A low learning rate seems better, at least when data was ~100 images
     opt = Adam(learning_rate=1e-4)

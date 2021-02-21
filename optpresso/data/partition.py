@@ -13,7 +13,6 @@ TRAIN_DIR_NAME = "train"
 VALIDATION_DIR_NAME = "validation"
 
 
-
 def find_test_paths(directory: str):
     for root, dirs, files in os.walk(directory):
         try:
@@ -45,7 +44,9 @@ def k_fold_partition(input_dir: str, folds: int = 10) -> TemporaryDirectory:
     return tmpdir
 
 
-def partition_data(input_dir: str, output_dir: str, validation_ratio: float, test_ratio: float = 0.1):
+def partition_data(
+    input_dir: str, output_dir: str, validation_ratio: float, test_ratio: float = 0.1
+):
     if validation_ratio + test_ratio > 1.0 or validation_ratio < 0.0:
         raise RuntimeError(
             f"validation_ratio must be between 0.0 and 1.0, got {validation_ratio}"

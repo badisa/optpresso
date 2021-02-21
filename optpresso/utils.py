@@ -20,7 +20,14 @@ class GroundsLoader:
     data usable for regression, no nasty classification
     """
 
-    __slots__ = ("_directory", "_batch_size", "_paths", "_target_size", "_weights", "_scaling")
+    __slots__ = (
+        "_directory",
+        "_batch_size",
+        "_paths",
+        "_target_size",
+        "_weights",
+        "_scaling",
+    )
 
     def __init__(
         self,

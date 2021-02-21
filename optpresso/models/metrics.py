@@ -1,5 +1,6 @@
 import tensorflow as tf
 
+
 def pull_error(y_true):
     """pull_error should be changed as more data is collected on
     the variance of shot pull times. Expected to return the empirical error.
@@ -8,7 +9,7 @@ def pull_error(y_true):
     Shorter shots have less error inherently, longer shots have greater error
     Err = .1x, where x is the pull time, refer to notebook for std dev graph
     """
-    return .1019 * y_true - .1649
+    return 0.1019 * y_true - 0.1649
 
 
 def adjusted_mse(y_true, y_pred):
