@@ -18,8 +18,7 @@ from keras.layers import (
     LeakyReLU,
     Lambda,
     ELU,
-    Activation,
-    SpatialDropout2D
+    SpatialDropout2D,
 )
 from keras.initializers import Constant, glorot_normal
 
