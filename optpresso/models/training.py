@@ -162,8 +162,6 @@ def train_model(
     else:
         plt.show()
     plt.close()
-    if args.eval and validation is not None:
-        graph_model(output_path, model, validation, write=args.write)
     return fit_hist
 
 
@@ -190,6 +188,9 @@ def train(parent_args: Namespace, leftover: List[str]):
         "--eval",
         action="store_true",
         help="Generate evaluation graphs for the validation data",
+    )
+    parser.add_argument(
+        "--comp", action="store_true", help="Compare against model configured"
     )
     parser.add_argument(
         "--write", action="store_true", help="Write out loss graph to loss_graph.png"
@@ -234,7 +235,7 @@ def train(parent_args: Namespace, leftover: List[str]):
 
     config = load_config()
     comp_model = None
-    if config is not None:
+    if config is not None and args.comp:
         comp_model = load_model(config.model, compile=False)
 
     if args.k_folds is None:
@@ -256,8 +257,12 @@ def train(parent_args: Namespace, leftover: List[str]):
             )
         model = MODEL_CONSTRUCTORS[args.model_name]((args.height, args.width, 3))
         train_model(args, model, generator, validation, callbacks=callbacks)
-        if comp_model is not None and args.eval and validation is not None:
-            graph_model(f"comp-{model_name}", comp_model, validation, write=args.write)
+        if validation is not None and args.eval:
+            graph_model(model_name, model, validation, write=args.write)
+            if comp_model is not None:
+                graph_model(
+                    f"{model_name}-comp", comp_model, validation, write=args.write
+                )
     else:
         folds_dir = k_fold_partition(args.directory, folds=args.k_folds)
         fold_to_path = {}
@@ -307,7 +312,10 @@ def train(parent_args: Namespace, leftover: List[str]):
                 )
                 if comp_model is not None:
                     graph_model(
-                        f"comp-{model_name}-fold-{i}", comp_model, validation, write=args.write
+                        f"{model_name}-comp-fold-{i}-test",
+                        comp_model,
+                        test_set,
+                        write=args.write,
                     )
         print(
             "Average Validation Loss: {}, All: {}".format(
