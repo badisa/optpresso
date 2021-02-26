@@ -37,6 +37,8 @@ Since I would like to better understand Machine Learning, I will attempt to docu
 
 ### Day 86 - [Inspecting data](day86.md)
 
+### Day 96 - [Sub 70 MSE](day96.md)
+
 ## Coffee Sacrificed
 
 The following is a list of coffees that have been used for data collection. Mostly lighter roasts, so this model may be way off for darker roasts.
@@ -49,6 +51,7 @@ The following is a list of coffees that have been used for data collection. Most
 * [Blue Bottle](https://bluebottlecoffee.com/) - Winter Blooms
 * [Boomtown Coffee](https://www.boomtowncoffee.com/) - Poas Honeyed Costa Rican
 * [Boomtown Coffee](https://www.boomtowncoffee.com/) - Spindletop
+* [Little Bear Coffee Co](https://www.littlebearcoffeeco.com/) - Costa Rican
 * [Proud Mary Coffee](https://proudmarycoffee.com/) - Guatemala Natural Pacamara Finca El Carmen
 * [Proud Mary Coffee](https://proudmarycoffee.com/) - Panama Dr. Enders - Lot #173
 * [Proud Mary Coffee](https://proudmarycoffee.com/) - Bernardina Washed
@@ -65,10 +68,12 @@ The following is a list of coffees that have been used for data collection. Most
 * [Onyx Coffee Lab](https://onyxcoffeelab.com/) - Decaf Ethiopian Guji Natural
 * [Onyx Coffee Lab](https://onyxcoffeelab.com/) - Columbia Delagua Jesus Nunez Natural
 * [CandleStick Coffee](https://candlestickcoffee.com/) - Columbia
+* [CandleStick Coffee](https://candlestickcoffee.com/) - Columbia (Decaf)
 * [CandleStick Coffee](https://candlestickcoffee.com/) - Costa Rica
 * [CandleStick Coffee](https://candlestickcoffee.com/) - Guatemala
 * [Madcap Coffee](http://madcapcoffee.com/) - Yenni Reinoso
 * [Madcap Coffee](http://madcapcoffee.com/) - Third Coast
+* [Madcap Coffee](http://madcapcoffee.com/) - Miguel Ortiz Honduras
 * AmazonBasics - Columbia Medium Roast
 * AmazonBasics - Just Bright (DON'T EVER BUY THIS, ITS JUNK)
 * [Vesta Coffee](https://vestacoffee.com/) - Carlos Montero 'Papa' Red Honey
