@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 
 import numpy as np
 
-from sklearn.metrics import r2_score, mean_squared_error
+from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error
 from sklearn.gaussian_process import GaussianProcessRegressor
 
 from optpresso.utils import GroundsLoader
@@ -38,6 +38,11 @@ def write_evaluation(model_path, y_true, y_predict, write: bool = False):
     plt.annotate(
         "mse = {:.2f}".format(mean_squared_error(y_true, y_predict)),
         (0.7, 0.01),
+        xycoords="axes fraction",
+    )
+    plt.annotate(
+        "mad = {:.2f}".format(mean_absolute_error(y_true, y_predict)),
+        (0.7, 0.07),
         xycoords="axes fraction",
     )
     plt.ylabel("Predicted Pull time (s)")
