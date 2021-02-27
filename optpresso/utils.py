@@ -106,6 +106,9 @@ class GroundsLoader:
     def generator(self):
         return self._base_gen(self.get_batch)
 
+    def generator_with_paths(self):
+        return self._base_gen(self.get_batch_with_paths)
+
     def weighted_generator(self):
         return self._base_gen(self.get_weighted_batch)
 
@@ -117,6 +120,9 @@ class GroundsLoader:
             x[i] = img_to_array(load_img(path, target_size=self._target_size))
             y[i] = time
         return x, y
+
+    def get_batch_with_paths(self, start: int, end: int):
+        return [x[1] for x in self._paths[start:end]], self.get_batch(start, end)
 
     def get_weighted_batch(self, start: int, end: int):
         x, y = self.get_batch(start, end)
