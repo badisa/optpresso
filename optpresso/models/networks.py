@@ -8,6 +8,7 @@ The inspiration/code came from the following:
 from typing import List, Any
 from keras.optimizers import Adam
 from keras.models import Sequential
+from keras.losses import Huber
 from keras.layers import (
     Activation,
     Conv2D,
@@ -372,7 +373,7 @@ def create_nvidia_model2(input_shape: List[int], alpha: float = 0.3):
     model.add(Dense(1, bias_initializer=Constant(MEAN_VALUE)))
 
     model.compile(
-        optimizer=Adam(learning_rate=2e-4), loss="mse", metrics=[adjusted_mse]
+        optimizer=Adam(learning_rate=2e-4), loss="mse", metrics=[adjusted_mse, "MeanAbsoluteError", Huber(delta=3.0)]
     )
 
     return model
