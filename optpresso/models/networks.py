@@ -296,75 +296,22 @@ def create_nvidia_model2(input_shape: List[int], alpha: float = 0.3):
 
     model.add(
         Convolution2D(
-            24,
-            (5, 5),
-            padding="same",
-            input_shape=input_shape,
-            kernel_initializer=glorot_normal(),
+            24, (5, 5), strides=(2, 2), padding="same", input_shape=input_shape
         )
     )
-    model.add(BatchNormalization())
     model.add(Activation("relu"))
-    # model.add(SpatialDropout2D(0.3))
-    model.add(
-        Convolution2D(
-            36,
-            (5, 5),
-            strides=(2, 2),
-            padding="same",
-            kernel_initializer=glorot_normal(),
-        )
-    )
-    model.add(BatchNormalization())
-    # model.add(SpatialDropout2D(0.3))
+    model.add(Convolution2D(36, (5, 5), strides=(2, 2), padding="same"))
     model.add(Activation("relu"))
-    model.add(
-        Convolution2D(
-            48,
-            (5, 5),
-            strides=(2, 2),
-            padding="same",
-            kernel_initializer=glorot_normal(),
-        )
-    )
-    model.add(SpatialDropout2D(0.3))
+    model.add(Convolution2D(48, (5, 5), strides=(2, 2), padding="same"))
     model.add(Activation("relu"))
-    model.add(
-        Convolution2D(
-            64,
-            (3, 3),
-            strides=(2, 2),
-            padding="same",
-            kernel_initializer=glorot_normal(),
-        )
-    )
-    model.add(SpatialDropout2D(0.4))
+    model.add(Convolution2D(64, (3, 3), strides=(2, 2), padding="same"))
     model.add(Activation("relu"))
-    model.add(
-        Convolution2D(
-            64,
-            (3, 3),
-            strides=(2, 2),
-            padding="same",
-            kernel_initializer=glorot_normal(),
-        )
-    )
-    model.add(SpatialDropout2D(0.5))
+    model.add(Convolution2D(64, (3, 3), strides=(2, 2), padding="same"))
     model.add(Activation("relu"))
-    model.add(
-        Convolution2D(
-            64,
-            (3, 3),
-            strides=(2, 2),
-            padding="same",
-            kernel_initializer=glorot_normal(),
-        )
-    )
-    model.add(SpatialDropout2D(0.5))
+    model.add(Convolution2D(64, (3, 3), strides=(2, 2), padding="same"))
     model.add(Flatten())
     model.add(Activation("relu"))
-    model.add(Dense(120))
-    model.add(Dropout(0.2))
+    model.add(Dense(100))
     model.add(Activation("relu"))
     model.add(Dense(50))
     model.add(Activation("relu"))
@@ -372,9 +319,7 @@ def create_nvidia_model2(input_shape: List[int], alpha: float = 0.3):
     model.add(Activation("relu"))
     model.add(Dense(1, bias_initializer=Constant(MEAN_VALUE)))
 
-    model.compile(
-        optimizer=Adam(learning_rate=2e-4), loss="mse", metrics=[adjusted_mse, "MeanAbsoluteError", Huber(delta=3.0)]
-    )
+    model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
 
     return model
 
@@ -472,32 +417,91 @@ def create_comma_model_large_dropout(input_shape: List[int], alpha: float = 0.3)
 
 def create_optpresso_model(shape: List[int], alpha: float = 0.3) -> List[Any]:
     model = Sequential()
-    model.add(Conv2D(32, (8, 8), strides=(4, 4), input_shape=shape))
-    model.add(LeakyReLU(alpha=alpha))
 
-    model.add(Conv2D(64, (4, 4), strides=(2, 2)))
-    model.add(LeakyReLU(alpha=alpha))
-    # model.add(MaxPooling2D(pool_size=(2, 2)))
-
-    model.add(Conv2D(128, (2, 2), strides=(1, 1)))
-    model.add(LeakyReLU(alpha=alpha))
-    model.add(Flatten())
-    # this converts our 3D feature maps to 1D feature vectors
-    model.add(Dense(128))
-    model.add(LeakyReLU(alpha=alpha))
-
-    model.add(Dense(128))
-    model.add(LeakyReLU(alpha=alpha))
-    model.add(Dropout(0.5))
-
-    # Dense layer of size 1 with linear activation to get that glorious regression
     model.add(
-        Dense(1, bias_initializer=Constant(MEAN_VALUE))
-    )  # Initialize last layer with aprox mean of data
-    model.add(Activation("linear"))
-    # A low learning rate seems better, at least when data was ~100 images
-    opt = Adam(learning_rate=1e-4)
-    model.compile(optimizer=opt, loss="mse", metrics=["MeanAbsoluteError"])
+        Convolution2D(
+            24,
+            (5, 5),
+            padding="same",
+            input_shape=input_shape,
+            kernel_initializer=glorot_normal(),
+        )
+    )
+    model.add(BatchNormalization())
+    model.add(Activation("relu"))
+    # model.add(SpatialDropout2D(0.3))
+    model.add(
+        Convolution2D(
+            36,
+            (5, 5),
+            strides=(2, 2),
+            padding="same",
+            kernel_initializer=glorot_normal(),
+        )
+    )
+    model.add(BatchNormalization())
+    # model.add(SpatialDropout2D(0.3))
+    model.add(Activation("relu"))
+    model.add(
+        Convolution2D(
+            48,
+            (5, 5),
+            strides=(2, 2),
+            padding="same",
+            kernel_initializer=glorot_normal(),
+        )
+    )
+    model.add(SpatialDropout2D(0.3))
+    model.add(Activation("relu"))
+    model.add(
+        Convolution2D(
+            64,
+            (3, 3),
+            strides=(2, 2),
+            padding="same",
+            kernel_initializer=glorot_normal(),
+        )
+    )
+    model.add(SpatialDropout2D(0.4))
+    model.add(Activation("relu"))
+    model.add(
+        Convolution2D(
+            64,
+            (3, 3),
+            strides=(2, 2),
+            padding="same",
+            kernel_initializer=glorot_normal(),
+        )
+    )
+    model.add(SpatialDropout2D(0.5))
+    model.add(Activation("relu"))
+    model.add(
+        Convolution2D(
+            64,
+            (3, 3),
+            strides=(2, 2),
+            padding="same",
+            kernel_initializer=glorot_normal(),
+        )
+    )
+    model.add(SpatialDropout2D(0.5))
+    model.add(Flatten())
+    model.add(Activation("relu"))
+    model.add(Dense(120))
+    model.add(Dropout(0.2))
+    model.add(Activation("relu"))
+    model.add(Dense(50))
+    model.add(Activation("relu"))
+    model.add(Dense(10))
+    model.add(Activation("relu"))
+    model.add(Dense(1, bias_initializer=Constant(MEAN_VALUE)))
+
+    model.compile(
+        optimizer=Adam(learning_rate=2e-4),
+        loss="mse",
+        metrics=[adjusted_mse, "MeanAbsoluteError", Huber(delta=3.0)],
+    )
+
     return model
 
 
