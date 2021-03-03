@@ -177,12 +177,13 @@ def train_model(
 def train(parent_args: Namespace, leftover: List[str]):
     parser = ArgumentParser(description="Train the Optpresso CNN model")
     parser.add_argument("directory")
-    parser.add_argument("--validation-directory", default=None)
+    parser.add_argument("--validation-dir", default=None, help="Directory containing validation set")
+    parser.add_argument("--test-dir", default=None, help="Directory containing test set")
     parser.add_argument(
         "--k-folds",
         default=None,
         type=int,
-        help="Run K Folds on directory, not supported with --validation-directory flag",
+        help="Run K Folds on directory, not supported with --validation-directory/--test-directory flag",
     )
     parser.add_argument("--batch-size", default=16, type=int)
     parser.add_argument("--epochs", default=200, type=int)
@@ -218,8 +219,8 @@ def train(parent_args: Namespace, leftover: List[str]):
     parser.add_argument("--mode", choices=["patience", "annealing"], default="patience")
     parser.add_argument("--seed", default=None, type=int)
     args = parser.parse_args(leftover)
-    if args.validation_directory is not None and args.k_folds is not None:
-        print("Can't provide K Folds and Validation directory")
+    if args.validation_dir is not None and args.test_dir is not None and args.k_folds is not None:
+        print("Can't provide K Folds and Validation or Test directory")
         sys.exit(1)
     if args.seed is not None:
         set_random_seed(args.seed)
@@ -265,20 +266,29 @@ def train(parent_args: Namespace, leftover: List[str]):
             print(f"No files in directory {args.directory}")
             sys.exit(1)
         validation = None
-        if args.validation_directory:
+        if args.validation_dir:
             # Should rewrite the grounds loader into a Sequence class
             validation = GroundsLoader(
                 args.batch_size,
                 (args.height, args.width),
-                directory=args.validation_directory,
+                directory=args.validation_dir,
             )
         model = MODEL_CONSTRUCTORS[args.model_name]((args.height, args.width, 3))
         train_model(args, model, generator, validation, callbacks=callbacks)
-        if validation is not None and args.eval:
-            graph_model(model_name, model, validation, write=args.write)
+        if args.eval:
+            comparison_set = validation
+            graph_title = model_name + "-validation"
+            if args.test_dir:
+                comparison_set = GroundsLoader(
+                    args.batch_size,
+                    (args.height, args.width),
+                    directory=args.test_dir,
+                )
+                graph_title = model_name + "-test"
+            graph_model(graph_title, model, comparison_set, write=args.write)
             if comp_model is not None:
                 graph_model(
-                    f"{model_name}-comp", comp_model, validation, write=args.write
+                    f"{graph_title}-comp", comp_model, comparison_set, write=args.write
                 )
     else:
         folds_dir = k_fold_partition(args.directory, folds=args.k_folds)

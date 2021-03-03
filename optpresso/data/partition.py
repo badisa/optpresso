@@ -1,7 +1,10 @@
 import os
+import sys
 import math
 import shutil
 import random
+
+from argparse import ArgumentParser
 from tempfile import TemporaryDirectory
 
 from collections import defaultdict
@@ -47,7 +50,7 @@ def k_fold_partition(input_dir: str, folds: int = 10) -> TemporaryDirectory:
 def partition_data(
     input_dir: str, output_dir: str, validation_ratio: float, test_ratio: float = 0.1
 ):
-    if validation_ratio + test_ratio > 1.0 or validation_ratio < 0.0:
+    if validation_ratio + test_ratio > 1.0 or validation_ratio + test_ratio < 0.0:
         raise RuntimeError(
             f"validation_ratio must be between 0.0 and 1.0, got {validation_ratio}"
         )
@@ -68,28 +71,18 @@ def partition_data(
     for time, paths in timings.items():
         # Don't partition them the same way every time
         random.shuffle(paths)
-        to_move = max(1, int(len(paths) * validation_ratio))
-        if to_move != len(paths):
-            time_dir = os.path.join(validation_dir, str(time))
-            if not os.path.isdir(time_dir):
-                os.mkdir(time_dir)
-            for path in paths[:to_move]:
-                new_path = os.path.join(time_dir, os.path.basename(path))
-                if os.path.isfile(new_path):
-                    continue
-                shutil.copy(path, new_path)
-            paths = paths[to_move:]
-        to_move = max(1, int(len(paths) * test_ratio))
-        if to_move != len(paths):
-            time_dir = os.path.join(test_dir, str(time))
-            if not os.path.isdir(time_dir):
-                os.mkdir(time_dir)
-            for path in paths[:to_move]:
-                new_path = os.path.join(time_dir, os.path.basename(path))
-                if os.path.isfile(new_path):
-                    continue
-                shutil.copy(path, new_path)
-            paths = paths[to_move:]
+        for ratio, out_dir in [(validation_ratio, validation_dir), (test_ratio, test_dir)]:
+            to_move = max(1, int(len(paths) * ratio))
+            if to_move != len(paths):  # Never move the full set into the validation/test set
+                time_dir = os.path.join(out_dir, str(time))
+                if not os.path.isdir(time_dir):
+                    os.mkdir(time_dir)
+                for path in paths[:to_move]:
+                    new_path = os.path.join(time_dir, os.path.basename(path))
+                    if os.path.isfile(new_path):
+                        continue
+                    shutil.copy(path, new_path)
+                paths = paths[to_move:]
         time_dir = os.path.join(train_dir, str(time))
         if not os.path.isdir(time_dir):
             os.mkdir(time_dir)
@@ -98,3 +91,19 @@ def partition_data(
             if os.path.isfile(new_path):
                 continue
             shutil.copy(path, new_path)
+
+
+def partition_cmd(args, leftover):
+    parser = ArgumentParser(description="Partition data")
+    parser.add_argument("src", help="Directory to partition")
+    parser.add_argument("dest", help="Where to place partitioned data")
+    parser.add_argument("validation_portion", type=float)
+    parser.add_argument("--test-portion", default=0.0, type=float)
+    partition_args = parser.parse_args(leftover)
+    print(partition_args)
+    total_portion = partition_args.validation_portion + partition_args.test_portion
+    if (total_portion - 1.0) > 0.0:
+        print(f"Proportions must less than 1.0, got {total_portion}")
+        sys.exit(1)
+    print(f"Partitioning {partition_args.src} into {partition_args.dest}")
+    partition_data(partition_args.src, partition_args.dest, partition_args.validation_portion, test_ratio=partition_args.test_portion)
