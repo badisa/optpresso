@@ -32,7 +32,7 @@ from optpresso.models.metrics import adjusted_mse
 MEAN_VALUE = 30
 
 
-def create_comma_model_relu(input_shape: List[int], alpha: float = 0.3):
+def create_comma_model_relu(input_shape: List[int]):
     model = Sequential()
 
     model.add(
@@ -55,7 +55,7 @@ def create_comma_model_relu(input_shape: List[int], alpha: float = 0.3):
     return model
 
 
-def create_comma_model_lrelu(input_shape: List[int], alpha: float = 0.3):
+def create_comma_model_lrelu(input_shape: List[int]):
     model = Sequential()
 
     model.add(
@@ -80,7 +80,7 @@ def create_comma_model_lrelu(input_shape: List[int], alpha: float = 0.3):
     return model
 
 
-def create_comma_model_prelu(input_shape: List[int], alpha: float = 0.3):
+def create_comma_model_prelu(input_shape: List[int]):
     model = Sequential()
 
     model.add(
@@ -105,7 +105,7 @@ def create_comma_model_prelu(input_shape: List[int], alpha: float = 0.3):
     return model
 
 
-def create_comma_model2(input_shape: List[int], alpha: float = 0.3):
+def create_comma_model2(input_shape: List[int]):
     # additional dense layer
 
     model = Sequential()
@@ -132,7 +132,7 @@ def create_comma_model2(input_shape: List[int], alpha: float = 0.3):
     return model
 
 
-def create_comma_model3(input_shape: List[int], alpha: float = 0.3):
+def create_comma_model3(input_shape: List[int]):
     # additional conv layer
     model = Sequential()
 
@@ -158,7 +158,7 @@ def create_comma_model3(input_shape: List[int], alpha: float = 0.3):
     return model
 
 
-def create_comma_model4(input_shape: List[int], alpha: float = 0.3):
+def create_comma_model4(input_shape: List[int]):
     # 2 additional conv layers
     model = Sequential()
 
@@ -186,7 +186,7 @@ def create_comma_model4(input_shape: List[int], alpha: float = 0.3):
     return model
 
 
-def create_comma_model5(input_shape: List[int], alpha: float = 0.3):
+def create_comma_model5(input_shape: List[int]):
     # more filters in first 2 conv layers
     model = Sequential()
 
@@ -210,7 +210,7 @@ def create_comma_model5(input_shape: List[int], alpha: float = 0.3):
     return model
 
 
-def create_comma_model6(input_shape: List[int], alpha: float = 0.3):
+def create_comma_model6(input_shape: List[int]):
     # remove one conv layer
     model = Sequential()
 
@@ -232,7 +232,7 @@ def create_comma_model6(input_shape: List[int], alpha: float = 0.3):
     return model
 
 
-def create_comma_model_bn(input_shape: List[int], alpha: float = 0.3):
+def create_comma_model_bn(input_shape: List[int]):
     model = Sequential()
 
     model.add(
@@ -260,7 +260,7 @@ def create_comma_model_bn(input_shape: List[int], alpha: float = 0.3):
     return model
 
 
-def create_nvidia_model1(input_shape: List[int], alpha: float = 0.3):
+def create_nvidia_model1(input_shape: List[int]):
     model = Sequential()
 
     model.add(
@@ -291,7 +291,7 @@ def create_nvidia_model1(input_shape: List[int], alpha: float = 0.3):
     return model
 
 
-def create_nvidia_model2(input_shape: List[int], alpha: float = 0.3):
+def create_nvidia_model2(input_shape: List[int]):
     model = Sequential()
 
     model.add(
@@ -324,7 +324,7 @@ def create_nvidia_model2(input_shape: List[int], alpha: float = 0.3):
     return model
 
 
-def create_nvidia_model3(input_shape: List[int], alpha: float = 0.3):
+def create_nvidia_model3(input_shape: List[int]):
     model = Sequential()
 
     model.add(
@@ -357,7 +357,7 @@ def create_nvidia_model3(input_shape: List[int], alpha: float = 0.3):
     return model
 
 
-def create_comma_model_large(input_shape: List[int], alpha: float = 0.3):
+def create_comma_model_large(input_shape: List[int]):
     model = Sequential()
 
     model.add(
@@ -386,7 +386,7 @@ def create_comma_model_large(input_shape: List[int], alpha: float = 0.3):
     return model
 
 
-def create_comma_model_large_dropout(input_shape: List[int], alpha: float = 0.3):
+def create_comma_model_large_dropout(input_shape: List[int]):
     model = Sequential()
 
     model.add(
@@ -415,7 +415,7 @@ def create_comma_model_large_dropout(input_shape: List[int], alpha: float = 0.3)
     return model
 
 
-def create_optpresso_model(input_shape: List[int], alpha: float = 0.3) -> List[Any]:
+def create_optpresso_model(input_shape: List[int]) -> List[Any]:
     model = Sequential()
 
     model.add(
