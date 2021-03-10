@@ -177,8 +177,12 @@ def train_model(
 def train(parent_args: Namespace, leftover: List[str]):
     parser = ArgumentParser(description="Train the Optpresso CNN model")
     parser.add_argument("directory")
-    parser.add_argument("--validation-dir", default=None, help="Directory containing validation set")
-    parser.add_argument("--test-dir", default=None, help="Directory containing test set")
+    parser.add_argument(
+        "--validation-dir", default=None, help="Directory containing validation set"
+    )
+    parser.add_argument(
+        "--test-dir", default=None, help="Directory containing test set"
+    )
     parser.add_argument(
         "--k-folds",
         default=None,
@@ -219,7 +223,11 @@ def train(parent_args: Namespace, leftover: List[str]):
     parser.add_argument("--mode", choices=["patience", "annealing"], default="patience")
     parser.add_argument("--seed", default=None, type=int)
     args = parser.parse_args(leftover)
-    if args.validation_dir is not None and args.test_dir is not None and args.k_folds is not None:
+    if (
+        args.validation_dir is not None
+        and args.test_dir is not None
+        and args.k_folds is not None
+    ):
         print("Can't provide K Folds and Validation or Test directory")
         sys.exit(1)
     if args.seed is not None:

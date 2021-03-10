@@ -20,6 +20,7 @@ def graph_model(model_path, model, loader, write: bool = False):
     _, y_true, y_predict = predict_values(model, loader)
     write_evaluation(model_path, y_true, y_predict, write=write)
 
+
 def write_evaluation(model_path, y_true, y_predict, write: bool = False):
     plt.plot(y_true, y_predict, "ro", label="Prediction values", alpha=0.3)
     plt.axline([0, 0], [1, 1])
@@ -56,6 +57,7 @@ def write_evaluation(model_path, y_true, y_predict, write: bool = False):
         plt.savefig(f"eval-{model_name}.png")
     plt.close()
 
+
 def predict_values(model, loader):
     paths = np.empty(len(loader), dtype=object)
     y_predict = np.empty(len(loader), dtype=np.float64)
@@ -63,20 +65,36 @@ def predict_values(model, loader):
     offset = 0
     for fpaths, (x, y) in loader.generator_with_paths():
         count = len(y)
-        y_predict[offset:offset+count] = model.predict(x).squeeze()
-        y_actual[offset:offset+count] = y
-        paths[offset:offset+count] = np.array(fpaths)
+        y_predict[offset : offset + count] = model.predict(x).squeeze()
+        y_actual[offset : offset + count] = y
+        paths[offset : offset + count] = np.array(fpaths)
         offset += count
     return paths, y_actual, y_predict
 
+
 def evalulate_model(parent_args: Namespace, leftover: List[str]):
-    parser = ArgumentParser("Evaluate a directory against either the configure model or a different model")
+    parser = ArgumentParser(
+        "Evaluate a directory against either the configure model or a different model"
+    )
     parser.add_argument("directory")
-    parser.add_argument("--write", action="store_true", help="Write out the graph to file")
-    parser.add_argument("--models", nargs="+", help="Path to a list of models to evaluate")
-    parser.add_argument("--batch-size", default=512, type=int, help="Batch size to evaluate models")
-    parser.add_argument("--outlier-output", default=None, type=str, help="Write out line delimited file of top outliers")
-    parser.add_argument("--num-outlier", default=50, type=int, help="Number of outliers to write out")
+    parser.add_argument(
+        "--write", action="store_true", help="Write out the graph to file"
+    )
+    parser.add_argument(
+        "--models", nargs="+", help="Path to a list of models to evaluate"
+    )
+    parser.add_argument(
+        "--batch-size", default=512, type=int, help="Batch size to evaluate models"
+    )
+    parser.add_argument(
+        "--outlier-output",
+        default=None,
+        type=str,
+        help="Write out line delimited file of top outliers",
+    )
+    parser.add_argument(
+        "--num-outlier", default=50, type=int, help="Number of outliers to write out"
+    )
     args = parser.parse_args(leftover)
     if not os.path.isdir(args.directory):
         print(f"No such directory: {args.directory}")

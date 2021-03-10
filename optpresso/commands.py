@@ -25,21 +25,27 @@ def main():
     # Do the imports like this because tensorflow is a monster
     if args.cmd == TRAIN:
         from optpresso.models.training import train
+
         train(args, leftover)
     elif args.cmd == CAPTURE:
         from optpresso.capture import capture
+
         capture(args, leftover)
     elif args.cmd == PREDICT:
         from optpresso.predict import predict
+
         predict(args, leftover)
     elif args.cmd == EVAL:
         from optpresso.models.eval import evalulate_model
+
         evalulate_model(args, leftover)
     elif args.cmd == INIT:
         from optpresso.data.config import init_optpresso
+
         init_optpresso(args, leftover)
     elif args.cmd == PARTITION:
         from optpresso.data.partition import partition_cmd
+
         partition_cmd(args, leftover)
     else:
         print(f"Unknown cmd: {args.cmd}")
