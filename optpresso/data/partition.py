@@ -71,9 +71,14 @@ def partition_data(
     for time, paths in timings.items():
         # Don't partition them the same way every time
         random.shuffle(paths)
-        for ratio, out_dir in [(validation_ratio, validation_dir), (test_ratio, test_dir)]:
+        for ratio, out_dir in [
+            (validation_ratio, validation_dir),
+            (test_ratio, test_dir),
+        ]:
             to_move = max(1, int(len(paths) * ratio))
-            if to_move != len(paths):  # Never move the full set into the validation/test set
+            if to_move != len(
+                paths
+            ):  # Never move the full set into the validation/test set
                 time_dir = os.path.join(out_dir, str(time))
                 if not os.path.isdir(time_dir):
                     os.mkdir(time_dir)
@@ -93,17 +98,39 @@ def partition_data(
             shutil.copy(path, new_path)
 
 
-def partition_cmd(args, leftover):
+def partition_cmd(parent_args, leftover):
     parser = ArgumentParser(description="Partition data")
     parser.add_argument("src", help="Directory to partition")
     parser.add_argument("dest", help="Where to place partitioned data")
     parser.add_argument("validation_portion", type=float)
     parser.add_argument("--test-portion", default=0.0, type=float)
-    partition_args = parser.parse_args(leftover)
-    print(partition_args)
-    total_portion = partition_args.validation_portion + partition_args.test_portion
+    parser.add_argument(
+        "--update", action="store_true", help="Update an existing partition"
+    )
+    args = parser.parse_args(leftover)
+    total_portion = args.validation_portion + args.test_portion
     if (total_portion - 1.0) > 0.0:
         print(f"Proportions must less than 1.0, got {total_portion}")
         sys.exit(1)
-    print(f"Partitioning {partition_args.src} into {partition_args.dest}")
-    partition_data(partition_args.src, partition_args.dest, partition_args.validation_portion, test_ratio=partition_args.test_portion)
+    print(f"Partitioning {args.src} into {args.dest}")
+    src = os.path.expanduser(args.src)
+    dest = os.path.expanduser(args.dest)
+    tempdir = None
+    if args.update:
+        tempdir = TemporaryDirectory()
+        to_move = set(
+            [os.path.basename(path) for _, path in find_test_paths(src)]
+        ).difference([os.path.basename(path) for _, path in find_test_paths(dest)])
+        for time, path in find_test_paths(src):
+            if os.path.basename(path) not in to_move:
+                continue
+            new_path = os.path.join(tempdir.name, str(time))
+            if not os.path.isdir(new_path):
+                os.mkdir(new_path)
+            shutil.copy(path, os.path.join(new_path, os.path.basename(path)))
+        src = tempdir.name
+    partition_data(
+        src, args.dest, args.validation_portion, test_ratio=args.test_portion
+    )
+    if tempdir is not None:
+        tempdir.cleanup()
