@@ -75,7 +75,7 @@ function captureImage(data, callback) {
 }
 
 function postImage(formData, url, callback) {
-  let canvasOutput = document.getElementById('canvasOutput');
+  let canvasOutput = document.getElementById("canvasOutput");
   formData.append("image", canvasOutput.toDataURL());
   httpPostAsync(url, formData, callback);
 }
@@ -109,9 +109,9 @@ class Video extends (build_default()).Component {
     var videoWidth, videoHeight; // whether streaming video from the camera.
 
     var streaming = false;
-    var video = document.getElementById('video');
-    var canvasOutput = document.getElementById('canvasOutput');
-    var canvasOutputCtx = canvasOutput.getContext('2d');
+    var video = document.getElementById("video");
+    var canvasOutput = document.getElementById("canvasOutput");
+    var canvasOutputCtx = canvasOutput.getContext("2d");
     var stream = null;
 
     function startCamera() {
@@ -152,14 +152,14 @@ class Video extends (build_default()).Component {
         return;
       }
 
-      canvasInput = document.createElement('canvas');
+      canvasInput = document.createElement("canvas");
       canvasInput.width = videoWidth;
       canvasInput.height = videoHeight;
-      canvasInputCtx = canvasInput.getContext('2d');
-      canvasBuffer = document.createElement('canvas');
+      canvasInputCtx = canvasInput.getContext("2d");
+      canvasBuffer = document.createElement("canvas");
       canvasBuffer.width = videoWidth;
       canvasBuffer.height = videoHeight;
-      canvasBufferCtx = canvasBuffer.getContext('2d');
+      canvasBufferCtx = canvasBuffer.getContext("2d");
       requestAnimationFrame(processVideo);
     }
 
@@ -245,7 +245,7 @@ class PredictControl extends (build_default()).Component {
   constructor(props) {
     super(props);
     this.state = {
-      "predictions": []
+      predictions: []
     };
     this.handlePredict = this.handlePredict.bind(this);
     this.clearPredictions = this.clearPredictions.bind(this);
@@ -265,12 +265,11 @@ class PredictControl extends (build_default()).Component {
 
   clearPredictions(event) {
     this.setState({
-      "predictions": []
+      predictions: []
     });
   }
 
   render() {
-    this.props.history.push('/predict/');
     const listItems = this.state.predictions.map(pred => /*#__PURE__*/build_default().createElement("li", null, pred));
     let mean = 0.0;
     let std = 0.0;
@@ -305,9 +304,9 @@ class CaptureControl extends (build_default()).Component {
     this.state = {
       config: this.props.config,
       pullData: {
-        coffee: "",
         pullTime: 30,
         grindSetting: "",
+        coffee: "",
         gramsIn: 18,
         gramsOut: 36,
         flip: true
@@ -380,8 +379,30 @@ class CaptureControl extends (build_default()).Component {
   }
 
   render() {
-    const captureInputs = Object.entries(this.state.pullData).map(([key, value]) => {
-      const labelName = key.replace(' ', '%nbsp;') ? key : "";
+    return /*#__PURE__*/build_default().createElement("div", {
+      class: "container"
+    }, /*#__PURE__*/build_default().createElement("div", {
+      class: "row"
+    }, /*#__PURE__*/build_default().createElement("div", {
+      class: "col-md-5 offset-1 config"
+    }, /*#__PURE__*/build_default().createElement("h3", null, "Configuration"), /*#__PURE__*/build_default().createElement("button", {
+      onClick: evt => this.handleConfigUpdate(evt)
+    }, "Update Config"), /*#__PURE__*/build_default().createElement("hr", null), Object.entries(this.state.config).map(([key, value]) => {
+      const labelName = key.replace(" ", "%nbsp;") ? key : "";
+      return /*#__PURE__*/build_default().createElement("div", {
+        class: "form-group"
+      }, /*#__PURE__*/build_default().createElement("label", null, labelName, ":", /*#__PURE__*/build_default().createElement("input", {
+        type: "text",
+        name: key,
+        value: value,
+        onChange: evt => this.handleChange(evt)
+      })));
+    })), /*#__PURE__*/build_default().createElement("div", {
+      class: "col-md-5 offset-1 config"
+    }, /*#__PURE__*/build_default().createElement("h3", null, "Capture"), /*#__PURE__*/build_default().createElement("button", {
+      onClick: evt => this.handleSubmit(evt)
+    }, "Capture"), /*#__PURE__*/build_default().createElement("hr", null), Object.entries(this.state.pullData).map(([key, value]) => {
+      const labelName = key.replace(" ", "%nbsp;") ? key : "";
 
       if (typeof value === "boolean") {
         return /*#__PURE__*/build_default().createElement("div", {
@@ -402,30 +423,7 @@ class CaptureControl extends (build_default()).Component {
           onChange: evt => this.handleChange(evt)
         })));
       }
-    });
-    return /*#__PURE__*/build_default().createElement("div", {
-      class: "container"
-    }, /*#__PURE__*/build_default().createElement("div", {
-      class: "row"
-    }, /*#__PURE__*/build_default().createElement("div", {
-      class: "col-md-5 offset-1 config"
-    }, /*#__PURE__*/build_default().createElement("h3", null, "Configuration"), /*#__PURE__*/build_default().createElement("button", {
-      onClick: evt => this.handleConfigUpdate(evt)
-    }, "Update Config"), /*#__PURE__*/build_default().createElement("hr", null), Object.entries(this.state.config).map(([key, value]) => {
-      const labelName = key.replace(' ', '%nbsp;') ? key : "";
-      return /*#__PURE__*/build_default().createElement("div", {
-        class: "form-group"
-      }, /*#__PURE__*/build_default().createElement("label", null, labelName, ":", /*#__PURE__*/build_default().createElement("input", {
-        type: "text",
-        name: key,
-        value: value,
-        onChange: evt => this.handleChange(evt)
-      })));
-    })), /*#__PURE__*/build_default().createElement("div", {
-      class: "col-md-5 offset-1 config"
-    }, /*#__PURE__*/build_default().createElement("h3", null, "Capture"), /*#__PURE__*/build_default().createElement("button", {
-      onClick: evt => this.handleSubmit(evt)
-    }, "Capture"), /*#__PURE__*/build_default().createElement("hr", null), captureInputs)));
+    }))));
   }
 
 }
