@@ -415,7 +415,7 @@ def create_comma_model_large_dropout(input_shape: List[int]):
     return model
 
 
-def create_optpresso_model(input_shape: List[int]) -> List[Any]:
+def create_optpresso_model(input_shape: List[int]) -> Sequential:
     model = Sequential()
 
     model.add(
