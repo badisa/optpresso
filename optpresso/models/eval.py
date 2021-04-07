@@ -42,7 +42,7 @@ def write_evaluation(model_path, y_true, y_predict, write: bool = False):
         xycoords="axes fraction",
     )
     plt.annotate(
-        "mad = {:.2f}".format(mean_absolute_error(y_true, y_predict)),
+        "mae = {:.2f}".format(mean_absolute_error(y_true, y_predict)),
         (0.7, 0.07),
         xycoords="axes fraction",
     )
