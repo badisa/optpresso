@@ -48,10 +48,23 @@ The following is a list of coffees that have been used for data collection. Most
 * [Barrington Coffee Roasting](https://barringtoncoffee.com/) - The Natural
 * [Barrington Coffee Roasting](https://barringtoncoffee.com/) - Gold
 * [Barrington Coffee Roasting](https://barringtoncoffee.com/) - 413
+* [Barrington Coffee Roasting](https://barringtoncoffee.com/) - Hygge
 * [Blue Bottle](https://bluebottlecoffee.com/) - Winter Blooms
 * [Boomtown Coffee](https://www.boomtowncoffee.com/) - Poas Honeyed Costa Rican
 * [Boomtown Coffee](https://www.boomtowncoffee.com/) - Spindletop
 * [Little Bear Coffee Co](https://www.littlebearcoffeeco.com/) - Costa Rican
+* [Little Bear Coffee Co](https://www.littlebearcoffeeco.com/) - DR Congo
+* [Little Bear Coffee Co](https://www.littlebearcoffeeco.com/) - All Sick
+* [Luna Coffee](https://enjoylunacoffee.com/) - Marshmallow Magic
+* [Luna Coffee](https://enjoylunacoffee.com/) - Jose Guillermo Toro Narino Colombia
+* [Luna Coffee](https://enjoylunacoffee.com/) - Salazar Family Cauca Colombia
+* [Facsimile](https://www.facsimile.coffee/) - Rwanda Kinini
+* [Facsimile](https://www.facsimile.coffee/) - Columbia Aguas Claras
+* [Facsimile](https://www.facsimile.coffee/) - Ethiopian Abera Degela
+* [Facsimile](https://www.facsimile.coffee/) - Peru Flores
+* [Facsimile](https://www.facsimile.coffee/) - Ecuador Guillermo Lomas
+* [Facsimile](https://www.facsimile.coffee/) - Kenya Gatomboya
+* [Facsimile](https://www.facsimile.coffee/) - Kenya Karindundu
 * [Proud Mary Coffee](https://proudmarycoffee.com/) - Guatemala Natural Pacamara Finca El Carmen
 * [Proud Mary Coffee](https://proudmarycoffee.com/) - Panama Dr. Enders - Lot #173
 * [Proud Mary Coffee](https://proudmarycoffee.com/) - Bernardina Washed
@@ -71,6 +84,10 @@ The following is a list of coffees that have been used for data collection. Most
 * [CandleStick Coffee](https://candlestickcoffee.com/) - Columbia (Decaf)
 * [CandleStick Coffee](https://candlestickcoffee.com/) - Costa Rica
 * [CandleStick Coffee](https://candlestickcoffee.com/) - Guatemala
+* [CandleStick Coffee](https://candlestickcoffee.com/) - Rwanda
+* [Slow Burn Coffee Roasters](https://www.slowburncoffee.com/) - Kenya Kaliluni AA
+* [Square Mile Coffee Roasters](https://shop.squaremilecoffee.com/) - Peru Aroma Del Valle
+* [Square Mile Coffee Roasters](https://shop.squaremilecoffee.com/) - Columbia Calamar
 * [Madcap Coffee](http://madcapcoffee.com/) - Yenni Reinoso
 * [Madcap Coffee](http://madcapcoffee.com/) - Third Coast
 * [Madcap Coffee](http://madcapcoffee.com/) - Miguel Ortiz Honduras
