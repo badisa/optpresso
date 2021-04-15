@@ -163,6 +163,7 @@ def train_model(
     plt.plot(x, fit_hist.history["val_loss"], label=val_label)
     plt.plot(x, fit_hist.history["loss"], label=train_label)
     plt.legend(loc="upper right")
+    plt.title(f"Loss: {name}")
     if args.write:
         if fold is None:
             plt.savefig(f"{name}_loss_graph.png")
@@ -214,7 +215,7 @@ def train(parent_args: Namespace, leftover: List[str]):
     )
     parser.add_argument(
         "--patience",
-        default=30,
+        default=20,
         type=int,
     )
     parser.add_argument(

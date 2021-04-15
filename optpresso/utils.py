@@ -1,5 +1,5 @@
 import os
-from random import shuffle, seed
+from random import seed
 from typing import Optional, List
 from collections import defaultdict
 
@@ -95,7 +95,7 @@ class GroundsLoader:
 
     def _base_gen(self, meth):
         total_size = len(self._paths)
-        shuffle(self._paths)
+        np.random.shuffle(self._paths)
         batch_start = 0
         batch_end = self._batch_size
         while batch_start < total_size:
