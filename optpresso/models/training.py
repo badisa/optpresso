@@ -17,7 +17,7 @@ from keras.callbacks import (
     Callback,
 )
 
-from optpresso.utils import GroundsLoader, set_random_seed
+from optpresso.utils import GroundsLoader, set_random_seed, random_flip_transform, random_zoom_transform
 from optpresso.data.partition import find_test_paths, k_fold_partition
 from optpresso.models.networks import MODEL_CONSTRUCTORS
 from optpresso.models.eval import graph_model
@@ -191,7 +191,7 @@ def train(parent_args: Namespace, leftover: List[str]):
         help="Run K Folds on directory, not supported with --validation-directory/--test-directory flag",
     )
     parser.add_argument("--batch-size", default=16, type=int)
-    parser.add_argument("--epochs", default=200, type=int)
+    parser.add_argument("--epochs", default=500, type=int)
     parser.add_argument("--height", default=240, type=int)
     parser.add_argument("--width", default=320, type=int)
     parser.add_argument(
@@ -221,7 +221,7 @@ def train(parent_args: Namespace, leftover: List[str]):
     parser.add_argument(
         "--output-path", default="model.h5", help="Output path of the model"
     )
-    parser.add_argument("--mode", choices=["patience", "annealing"], default="patience")
+    parser.add_argument("--mode", choices=["patience", "annealing", "checkpoint"], default="patience")
     parser.add_argument("--seed", default=None, type=int)
     args = parser.parse_args(leftover)
     if (
@@ -239,11 +239,20 @@ def train(parent_args: Namespace, leftover: List[str]):
         callbacks.append(
             EarlyStopping(
                 monitor="val_loss",
-                min_delta=0.5,
+                min_delta=0.05,
                 patience=args.patience,
                 mode="min",
                 restore_best_weights=True,
             )
+        )
+    elif args.mode == "checkpoint":
+        callbacks.append(
+            ModelCheckpoint(
+                filepath=model_name + "-{epoch}-{val_loss}.h5",
+                save_best_only=True,
+                mode="min",
+                monitor="val_loss"
+            ),
         )
     elif args.mode == "annealing":
         cycles = 5
@@ -270,6 +279,7 @@ def train(parent_args: Namespace, leftover: List[str]):
             args.batch_size,
             (args.height, args.width),
             directory=args.directory,
+            mean_val=[203.74569647, 152.45776761, 82.80802851]
         )
         if len(generator) <= 0:
             print(f"No files in directory {args.directory}")
@@ -281,6 +291,7 @@ def train(parent_args: Namespace, leftover: List[str]):
                 args.batch_size,
                 (args.height, args.width),
                 directory=args.validation_dir,
+                mean_val=[203.74569647, 152.45776761, 82.80802851]
             )
         model = MODEL_CONSTRUCTORS[args.model_name]((args.height, args.width, 3))
         train_model(args, model, generator, validation, callbacks=callbacks)
@@ -307,11 +318,12 @@ def train(parent_args: Namespace, leftover: List[str]):
             fold_to_path[i] = [
                 x[1] for x in find_test_paths(os.path.join(folds_dir.name, str(i)))
             ]
-        test_set = GroundsLoader(
-            args.batch_size,
-            (args.height, args.width),
-            paths=fold_to_path.pop(test_fold),
-        )
+        # test_set = GroundsLoader(
+        #     args.batch_size,
+        #     (args.height, args.width),
+        #     paths=fold_to_path.pop(test_fold),
+        #     mean_val=[203.74569647, 152.45776761, 82.80802851]
+        # )
         fold_min = []
         for i in range(args.k_folds):
             if i == test_fold:
@@ -326,6 +338,7 @@ def train(parent_args: Namespace, leftover: List[str]):
                 args.batch_size,
                 (args.height, args.width),
                 paths=test_paths,
+                mean_val=[203.74569647, 152.45776761, 82.80802851]
             )
             if len(generator) <= 0:
                 print(f"No files in k-fold paths: {test_paths}")
@@ -335,6 +348,7 @@ def train(parent_args: Namespace, leftover: List[str]):
                 args.batch_size,
                 (args.height, args.width),
                 paths=fold_to_path[i],
+                mean_val=[203.74569647, 152.45776761, 82.80802851]
             )
             clear_session()
             model = MODEL_CONSTRUCTORS[args.model_name]((args.height, args.width, 3))
@@ -344,13 +358,13 @@ def train(parent_args: Namespace, leftover: List[str]):
             fold_min.append(min(fit_hist.history["val_loss"]))
             if args.eval:
                 graph_model(
-                    f"{model_name}-fold-{i}-test", model, test_set, write=args.write
+                    f"{model_name}-fold-{i}-test", model, validation, write=args.write
                 )
                 if comp_model is not None:
                     graph_model(
                         f"{model_name}-comp-fold-{i}-test",
                         comp_model,
-                        test_set,
+                        validation,
                         write=args.write,
                     )
         print(

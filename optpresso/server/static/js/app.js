@@ -276,7 +276,6 @@ class CaptureControl extends React.Component {
         coffee: "",
         gramsIn: 18,
         gramsOut: 36,
-        flip: true,
       },
     };
 

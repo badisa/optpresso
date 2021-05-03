@@ -30,7 +30,7 @@ def find_test_paths(directory: str):
 
 
 def k_fold_partition(input_dir: str, folds: int = 10) -> TemporaryDirectory:
-    paths = list(find_test_paths(input_dir))
+    paths = [x for x in find_test_paths(input_dir) if "flip" not in x[1]]
     random.shuffle(paths)
     tmpdir = TemporaryDirectory()
     batch_size = math.ceil(len(paths) / folds)
@@ -57,8 +57,12 @@ def partition_data(
     if not os.path.isdir(output_dir):
         os.mkdir(output_dir)
     timings = defaultdict(list)
+    flips = {}
     for time, path in find_test_paths(input_dir):
-        timings[time].append(path)
+        if "flip" in path:
+            flips[os.path.basename(path)] = path
+        else:
+            timings[time].append(path)
     validation_dir = os.path.join(output_dir, VALIDATION_DIR_NAME)
     if not os.path.isdir(validation_dir):
         os.mkdir(validation_dir)
@@ -84,18 +88,20 @@ def partition_data(
                     os.mkdir(time_dir)
                 for path in paths[:to_move]:
                     new_path = os.path.join(time_dir, os.path.basename(path))
-                    if os.path.isfile(new_path):
-                        continue
                     shutil.copy(path, new_path)
                 paths = paths[to_move:]
         time_dir = os.path.join(train_dir, str(time))
         if not os.path.isdir(time_dir):
             os.mkdir(time_dir)
         for path in paths:
-            new_path = os.path.join(time_dir, os.path.basename(path))
-            if os.path.isfile(new_path):
-                continue
+            dir_name = os.path.dirname(path)
+            name, ext = os.path.splitext(os.path.basename(path))
+            new_path = os.path.join(time_dir, f"{name}{ext}")
             shutil.copy(path, new_path)
+            for flip in range(3):
+                path_name = f"{name}-flip-{flip}{ext}"
+                if path_name in flips:
+                    shutil.copy(flips[path_name], os.path.join(time_dir, path_name))
 
 
 def partition_cmd(parent_args, leftover):

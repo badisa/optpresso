@@ -26,6 +26,7 @@ from keras.initializers import Constant, glorot_normal
 from keras.layers.advanced_activations import PReLU
 from keras.layers.convolutional import Convolution2D
 from keras.layers.normalization import BatchNormalization
+from keras.layers.experimental.preprocessing import Rescaling, RandomZoom, RandomRotation, RandomFlip
 
 from optpresso.models.metrics import adjusted_mse
 
@@ -417,14 +418,16 @@ def create_comma_model_large_dropout(input_shape: List[int]):
 
 def create_optpresso_model(input_shape: List[int]) -> Sequential:
     model = Sequential()
+    model.add(Rescaling(1.0/255, input_shape=input_shape))
+    model.add(RandomFlip())
+    model.add(RandomRotation(1))
+    # model.add(RandomZoom(0.1))
 
     model.add(
         Convolution2D(
             24,
             (5, 5),
             padding="same",
-            input_shape=input_shape,
-            kernel_initializer=glorot_normal(),
         )
     )
     model.add(BatchNormalization())
@@ -436,7 +439,6 @@ def create_optpresso_model(input_shape: List[int]) -> Sequential:
             (5, 5),
             strides=(2, 2),
             padding="same",
-            kernel_initializer=glorot_normal(),
         )
     )
     model.add(BatchNormalization())

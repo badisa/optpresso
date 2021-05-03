@@ -42,10 +42,12 @@ args = None
 
 OUTPUTS = ["train", "validation", "test"]
 
+
 @app.route("/")
 def do_get():
     with open(os.path.join(TEMPLATES_DIR, "index.html"), "r") as ifs:
         return ifs.read()
+
 
 @app.route("/static/<path>")
 def serve_static(path):
@@ -55,6 +57,7 @@ def serve_static(path):
             return ifs.read()
     else:
         print("Oh no", static_path)
+
 
 @app.route("/config/", methods=["POST", "GET"])
 def get_config():
@@ -85,7 +88,9 @@ def predict():
     try:
         with open(path, "wb") as ofs:
             ofs.write(resp.file.read())
-        keras_frame = img_to_array(load_img(path, target_size=(model.input_shape[1], model.input_shape[2])))
+        keras_frame = img_to_array(
+            load_img(path, target_size=(model.input_shape[1], model.input_shape[2]))
+        )
     finally:
         os.remove(path)
     pred = model.predict(np.array([keras_frame]))
@@ -104,13 +109,11 @@ def capture():
     pull_time = int(pull_time)
     img = request.form["image"]
     resp = urlopen(img)
-    # Forms!
-    flip = request.form["flip"].lower() == "true"
 
     machine = request.form["machine"]
     now = int(time.time())
-    name = f"{now}-{machine}"
     ext = ".png"
+    name = f"{now}-{machine}{ext}"
     fs, path = mkstemp(suffix=ext)
     os.close(fs)
     try:
@@ -121,47 +124,30 @@ def capture():
         os.remove(path)
     # Simple way of storing more information about the image
     metadata = PngInfo()
-    fields_to_not_attach = {"image", "flip"}
+    fields_to_not_attach = {"image"}
     for key, value in request.form.items():
         if key in fields_to_not_attach:
             continue
         metadata.add_text(key, value)
-    imgs = [(f"{name}{ext}", img)]
-    # Hacky copypasta
-    if flip:
-        mirror = img.transpose(Image.FLIP_LEFT_RIGHT)
-        imgs.append((f"{name}-flip-0{ext}", mirror))
-        flip = img.transpose(Image.FLIP_TOP_BOTTOM)
-        imgs.append((f"{name}-flip-1{ext}", flip))
-        img = img.transpose(Image.FLIP_LEFT_RIGHT).transpose(Image.FLIP_TOP_BOTTOM)
-        imgs.append((f"{name}-flip-2{ext}", img))
+
+    output_dir = os.path.join(args.capture_dir, str(pull_time))
     # Don't do this every request
-    perform_split = args.capture_split
-    split_ratios = []
-    ratio_total = 0
-    if perform_split:
+    if args.capture_split:
         split_ratios = [int(x) for x in args.split_ratio.split(",")]
         ratio_total = sum(split_ratios)
-    for name, img in imgs:
-        if perform_split:
-            rand = random.randint(0, ratio_total)
-            limit = 0
-            for i, split in enumerate(split_ratios):
-                limit += split
-                if rand <= limit:
-                    path = os.path.join(args.capture_dir, OUTPUTS[i])
-                    if not os.path.isdir(path):
-                        os.mkdir(path)
-                    path = os.path.join(path, str(pull_time))
-                    if not os.path.isdir(path):
-                        os.mkdir(path)
-                    img.save(os.path.join(path, name), pnginfo=metadata)
-                    break
-        else:
-            path = os.path.join(args.capture_dir, str(pull_time))
-            if not os.path.isdir(path):
-                os.mkdir(path)
-            img.save(os.path.join(path, name), pnginfo=metadata)
+        rand = random.randint(0, ratio_total)
+        limit = 0
+        for i, split in split_ratios:
+            limit += split
+            if rand <= limit:
+                output_dir = os.path.join(args.capture_dir, OUTPUTS[i])
+                if not os.path.isdir(output_dir):
+                    os.mkdir(output_dir)
+                output_dir = os.path.join(output_dir, str(pull_time))
+                break
+    if not os.path.isdir(output_dir):
+        os.mkdir(output_dir)
+    img.save(os.path.join(output_dir, name), pnginfo=metadata)
     return {}
 
 
@@ -169,12 +155,24 @@ def serve_server(parent_args, leftover):
     global args
     global model
     parser = ArgumentParser(description="Optpresso Web UI")
-    parser.add_argument("capture_dir", default=".", help="Directory to write out captured images to")
+    parser.add_argument(
+        "capture_dir", default=".", help="Directory to write out captured images to"
+    )
     parser.add_argument("--browser", action="store_true", help="Open the browser")
     parser.add_argument("--port", default=8888, type=int, help="Port to serve on")
-    parser.add_argument("--seed", default=0, type=int, help="Seed for placement of captured images")
-    parser.add_argument("--capture-split", action="store_true", help="Split the images between a validation, train and test directory")
-    parser.add_argument("--split-ratio", default="7,2,1", help="Ratios of train, validation and test, default is '7,2,1', should sum to 10")
+    parser.add_argument(
+        "--seed", default=0, type=int, help="Seed for placement of captured images"
+    )
+    parser.add_argument(
+        "--capture-split",
+        action="store_true",
+        help="Split the images between a validation, train and test directory",
+    )
+    parser.add_argument(
+        "--split-ratio",
+        default="7,2,1",
+        help="Ratios of train, validation and test, default is '7,2,1', should sum to 10",
+    )
     args = parser.parse_args(leftover)
     if len(args.split_ratio.split(",")) != 3:
         print("Split Ratio requires 3 comma delimited integers, such as 7,2,1")
