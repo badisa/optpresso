@@ -248,7 +248,7 @@ def train(parent_args: Namespace, leftover: List[str]):
     elif args.mode == "checkpoint":
         callbacks.append(
             ModelCheckpoint(
-                filepath=model_name + "-{epoch}-{val_loss}.h5",
+                filepath=os.path.join(model_name, model_name + "-{epoch}-{val_loss:.3f}.h5"),
                 save_best_only=True,
                 mode="min",
                 monitor="val_loss"

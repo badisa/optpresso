@@ -2,10 +2,11 @@ import os
 import sys
 import math
 import shutil
-import random
 
 from argparse import ArgumentParser
 from tempfile import TemporaryDirectory
+
+import numpy as np
 
 from collections import defaultdict
 
@@ -31,19 +32,25 @@ def find_test_paths(directory: str):
 
 def k_fold_partition(input_dir: str, folds: int = 10) -> TemporaryDirectory:
     paths = [x for x in find_test_paths(input_dir) if "flip" not in x[1]]
-    random.shuffle(paths)
+    timings = defaultdict(list)
+    for time, path in find_test_paths(input_dir):
+        if "flip" in path:
+            continue
+        timings[time].append(path)
+    for paths in timings.values():
+        np.random.shuffle(paths)
     tmpdir = TemporaryDirectory()
     batch_size = math.ceil(len(paths) / folds)
-    fold = 0
-    for offset in range(0, len(paths), batch_size):
+    for fold in range(folds):
         fold_dir = os.path.join(tmpdir.name, str(fold))
-        os.mkdir(fold_dir)
-        for time, path in paths[offset : offset + batch_size]:
+        os.makedirs(fold_dir)
+        for time, paths in timings.items():
             output_dir = os.path.join(fold_dir, str(time))
             if not os.path.isdir(output_dir):
                 os.mkdir(output_dir)
-            shutil.copy(path, os.path.join(output_dir, os.path.basename(path)))
-        fold += 1
+            count = math.ceil(len(paths) / folds)
+            for path in paths[count*fold: (count*fold)+count]:
+                shutil.copy(path, os.path.join(output_dir, os.path.basename(path)))
     return tmpdir
 
 
@@ -74,7 +81,7 @@ def partition_data(
         os.mkdir(test_dir)
     for time, paths in timings.items():
         # Don't partition them the same way every time
-        random.shuffle(paths)
+        np.random.shuffle(paths)
         for ratio, out_dir in [
             (validation_ratio, validation_dir),
             (test_ratio, test_dir),

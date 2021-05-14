@@ -28,7 +28,7 @@ def random_flip_transform(img):
     return img
 
 
-def random_zoom_transform(img, max_factor: float = 0.1):
+def random_zoom_transform(img, max_factor: float = 0.05):
     """
     img: Image
     max_factor: float - maximum amount of zoom, defaults to 0.1 or 10%
@@ -53,7 +53,6 @@ def compute_image_mean(loader) -> np.array:
     for x, _ in loader.generator():
         for y in x:
             mean += np.mean(y, axis=(0, 1)) / n
-    print(mean)
     return mean
 
 class GroundsLoader:

@@ -28,7 +28,7 @@ from keras.layers.convolutional import Convolution2D
 from keras.layers.normalization import BatchNormalization
 from keras.layers.experimental.preprocessing import Rescaling, RandomZoom, RandomRotation, RandomFlip
 
-from optpresso.models.metrics import adjusted_mse
+from optpresso.models.metrics import adjusted_mse, correlation_coefficient_loss, psuedo_huber_loss
 
 MEAN_VALUE = 30
 
@@ -450,10 +450,9 @@ def create_optpresso_model(input_shape: List[int]) -> Sequential:
             (5, 5),
             strides=(2, 2),
             padding="same",
-            kernel_initializer=glorot_normal(),
         )
     )
-    model.add(SpatialDropout2D(0.3))
+    # model.add(SpatialDropout2D(0.1))
     model.add(Activation("relu"))
     model.add(
         Convolution2D(
@@ -461,10 +460,9 @@ def create_optpresso_model(input_shape: List[int]) -> Sequential:
             (3, 3),
             strides=(2, 2),
             padding="same",
-            kernel_initializer=glorot_normal(),
         )
     )
-    model.add(SpatialDropout2D(0.4))
+    # model.add(SpatialDropout2D(0.1))
     model.add(Activation("relu"))
     model.add(
         Convolution2D(
@@ -472,10 +470,9 @@ def create_optpresso_model(input_shape: List[int]) -> Sequential:
             (3, 3),
             strides=(2, 2),
             padding="same",
-            kernel_initializer=glorot_normal(),
         )
     )
-    model.add(SpatialDropout2D(0.5))
+    # model.add(SpatialDropout2D(0.1))
     model.add(Activation("relu"))
     model.add(
         Convolution2D(
@@ -483,25 +480,29 @@ def create_optpresso_model(input_shape: List[int]) -> Sequential:
             (3, 3),
             strides=(2, 2),
             padding="same",
-            kernel_initializer=glorot_normal(),
         )
     )
-    model.add(SpatialDropout2D(0.5))
+    # model.add(SpatialDropout2D(0.1))
     model.add(Flatten())
     model.add(Activation("relu"))
-    model.add(Dense(120))
-    model.add(Dropout(0.2))
+    model.add(Dense(1024))
+    model.add(Dropout(0.5))
     model.add(Activation("relu"))
-    model.add(Dense(50))
+    model.add(Dense(1024))
+    model.add(Dropout(0.5))
     model.add(Activation("relu"))
-    model.add(Dense(10))
+    model.add(Dense(512))
+    model.add(Dropout(0.5))
+    model.add(Activation("relu"))
+    model.add(Dense(128))
+    model.add(Dropout(0.5))
     model.add(Activation("relu"))
     model.add(Dense(1, bias_initializer=Constant(MEAN_VALUE)))
 
     model.compile(
         optimizer=Adam(learning_rate=2e-4),
-        loss="mse",
-        metrics=[adjusted_mse, "MeanAbsoluteError", Huber(delta=3.0)],
+        loss=psuedo_huber_loss,
+        metrics=[correlation_coefficient_loss, "mse"],
     )
 
     return model
