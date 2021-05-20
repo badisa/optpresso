@@ -16,7 +16,7 @@ from keras.callbacks import (
     Callback,
 )
 
-from optpresso.utils import GroundsLoader, set_random_seed, random_flip_transform, random_zoom_transform
+from optpresso.utils import GroundsLoader, set_random_seed
 from optpresso.data.partition import find_test_paths, k_fold_partition
 from optpresso.models.networks import MODEL_CONSTRUCTORS
 from optpresso.models.eval import graph_model
@@ -222,7 +222,9 @@ def train(parent_args: Namespace, leftover: List[str]):
     parser.add_argument(
         "--output-path", default="model.h5", help="Output path of the model"
     )
-    parser.add_argument("--mode", choices=["patience", "annealing", "checkpoint"], default="patience")
+    parser.add_argument(
+        "--mode", choices=["patience", "annealing", "checkpoint"], default="patience"
+    )
     parser.add_argument("--seed", default=None, type=int)
     args = parser.parse_args(leftover)
     if (

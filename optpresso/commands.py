@@ -21,7 +21,9 @@ def main():
         os.environ[TF_LOG_LEVEL] = "2"
     # Don't add help, complicates things
     parser = ArgumentParser(description="OptPresso: ML for espresso", add_help=False)
-    parser.add_argument("cmd", choices=[TRAIN, CAPTURE, PREDICT, EVAL, INIT, PARTITION, SERVE])
+    parser.add_argument(
+        "cmd", choices=[TRAIN, CAPTURE, PREDICT, EVAL, INIT, PARTITION, SERVE]
+    )
     # Args to be added, probably
     args, leftover = parser.parse_known_args()
 
@@ -52,6 +54,7 @@ def main():
         partition_cmd(args, leftover)
     elif args.cmd == "serve":
         from optpresso.server import serve_server
+
         serve_server(args, leftover)
     else:
         print(f"Unknown cmd: {args.cmd}")

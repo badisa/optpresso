@@ -49,7 +49,7 @@ def k_fold_partition(input_dir: str, folds: int = 10) -> TemporaryDirectory:
             if not os.path.isdir(output_dir):
                 os.mkdir(output_dir)
             count = math.ceil(len(paths) / folds)
-            for path in paths[count*fold: (count*fold)+count]:
+            for path in paths[count * fold : (count * fold) + count]:
                 shutil.copy(path, os.path.join(output_dir, os.path.basename(path)))
     return tmpdir
 

@@ -32,7 +32,6 @@ from keras.layers.experimental.preprocessing import (
     RandomZoom,
     RandomRotation,
     RandomFlip,
-    Normalization,
 )
 
 from optpresso.models.metrics import (
@@ -430,14 +429,15 @@ def create_comma_model_large_dropout(input_shape: List[int]):
 
 def create_optpresso_model(input_shape: List[int]) -> Sequential:
     model = Sequential()
-    model.add(Rescaling(1.0/255, input_shape=input_shape))
+    model.add(Input(shape=input_shape))
+    model.add(SubtractMeanLayer(mean=MEAN_IMG_VALUES))
+    model.add(Rescaling(1.0 / 255))
     model.add(RandomFlip())
     model.add(RandomRotation(1))
-    # model.add(RandomZoom(0.1))
 
     model.add(
         Convolution2D(
-            24,
+            32,
             (5, 5),
             padding="same",
         )
@@ -447,13 +447,13 @@ def create_optpresso_model(input_shape: List[int]) -> Sequential:
     # model.add(SpatialDropout2D(0.3))
     model.add(
         Convolution2D(
-            36,
+            48,
             (5, 5),
             strides=(2, 2),
             padding="same",
         )
     )
-    model.add(BatchNormalization())
+    # model.add(BatchNormalization())
     # model.add(SpatialDropout2D(0.3))
     model.add(Activation("relu"))
     model.add(
@@ -488,7 +488,7 @@ def create_optpresso_model(input_shape: List[int]) -> Sequential:
     model.add(Activation("relu"))
     model.add(
         Convolution2D(
-            64,
+            128,
             (3, 3),
             strides=(2, 2),
             padding="same",
@@ -497,16 +497,13 @@ def create_optpresso_model(input_shape: List[int]) -> Sequential:
     # model.add(SpatialDropout2D(0.1))
     model.add(Flatten())
     model.add(Activation("relu"))
-    model.add(Dense(1024))
-    model.add(Dropout(0.5))
-    model.add(Activation("relu"))
-    model.add(Dense(1024))
-    model.add(Dropout(0.5))
-    model.add(Activation("relu"))
     model.add(Dense(512))
     model.add(Dropout(0.5))
     model.add(Activation("relu"))
-    model.add(Dense(128))
+    model.add(Dense(256))
+    model.add(Dropout(0.5))
+    model.add(Activation("relu"))
+    model.add(Dense(64))
     model.add(Dropout(0.5))
     model.add(Activation("relu"))
     model.add(Dense(1, bias_initializer=Constant(MEAN_PULL_TIME)))
