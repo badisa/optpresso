@@ -9,7 +9,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from keras.backend import clear_session
-from keras.models import load_model
 from keras.callbacks import (
     ModelCheckpoint,
     EarlyStopping,
@@ -22,6 +21,8 @@ from optpresso.data.partition import find_test_paths, k_fold_partition
 from optpresso.models.networks import MODEL_CONSTRUCTORS
 from optpresso.models.eval import graph_model
 from optpresso.data.config import load_config
+from optpresso.constants import MEAN_IMG_VALUES
+from optpresso.models.serialization import load_model
 
 
 class CycleWeightSaver(Callback):
@@ -279,7 +280,7 @@ def train(parent_args: Namespace, leftover: List[str]):
             args.batch_size,
             (args.height, args.width),
             directory=args.directory,
-            mean_val=[203.74569647, 152.45776761, 82.80802851]
+            # mean_val=MEAN_IMG_VALUES
         )
         if len(generator) <= 0:
             print(f"No files in directory {args.directory}")
@@ -291,7 +292,7 @@ def train(parent_args: Namespace, leftover: List[str]):
                 args.batch_size,
                 (args.height, args.width),
                 directory=args.validation_dir,
-                mean_val=[203.74569647, 152.45776761, 82.80802851]
+                # mean_val=MEAN_IMG_VALUES
             )
         model = MODEL_CONSTRUCTORS[args.model_name]((args.height, args.width, 3))
         train_model(args, model, generator, validation, callbacks=callbacks)
@@ -338,7 +339,7 @@ def train(parent_args: Namespace, leftover: List[str]):
                 args.batch_size,
                 (args.height, args.width),
                 paths=test_paths,
-                mean_val=[203.74569647, 152.45776761, 82.80802851]
+                # mean_val=MEAN_IMG_VALUES
             )
             if len(generator) <= 0:
                 print(f"No files in k-fold paths: {test_paths}")
@@ -348,7 +349,7 @@ def train(parent_args: Namespace, leftover: List[str]):
                 args.batch_size,
                 (args.height, args.width),
                 paths=fold_to_path[i],
-                mean_val=[203.74569647, 152.45776761, 82.80802851]
+                # mean_val=MEAN_IMG_VALUES
             )
             clear_session()
             model = MODEL_CONSTRUCTORS[args.model_name]((args.height, args.width, 3))

@@ -22,17 +22,20 @@ def adjusted_mse(y_true, y_pred):
     output = tf.cast(diff > y_sq_err, diff.dtype) * diff
     return tf.reduce_mean(output, axis=-1)
 
+
 def psuedo_huber_loss(y_true, y_pred):
+    """Modified Huber Loss, thanks to @maxentile for this!"""
     diff = K.abs(y_true - y_pred)
     return 6 * (K.sqrt(1 + (diff / 6) ** 2) - 1)
+
 
 def correlation_coefficient_loss(y_true, y_pred):
     x = y_true
     y = y_pred
     mx = K.mean(x)
     my = K.mean(y)
-    xm, ym = x-mx, y-my
-    r_num = K.sum(tf.multiply(xm,ym))
+    xm, ym = x - mx, y - my
+    r_num = K.sum(tf.multiply(xm, ym))
     r_den = K.sqrt(tf.multiply(K.sum(K.square(xm)), K.sum(K.square(ym))))
     r = r_num / r_den
 

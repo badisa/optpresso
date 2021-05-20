@@ -3,8 +3,6 @@ import sys
 from typing import List
 from argparse import ArgumentParser, Namespace
 
-from keras.models import load_model
-
 import matplotlib.pyplot as plt
 
 import numpy as np
@@ -14,6 +12,7 @@ from sklearn.gaussian_process import GaussianProcessRegressor
 
 from optpresso.utils import GroundsLoader
 from optpresso.data.config import load_config
+from optpresso.models.serialization import load_model
 
 
 def graph_model(model_path, model, loader, write: bool = False):

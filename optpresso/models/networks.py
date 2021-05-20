@@ -20,17 +20,29 @@ from keras.layers import (
     Lambda,
     ELU,
     SpatialDropout2D,
+    Input,
 )
 from keras.initializers import Constant, glorot_normal
 
 from keras.layers.advanced_activations import PReLU
 from keras.layers.convolutional import Convolution2D
 from keras.layers.normalization import BatchNormalization
-from keras.layers.experimental.preprocessing import Rescaling, RandomZoom, RandomRotation, RandomFlip
+from keras.layers.experimental.preprocessing import (
+    Rescaling,
+    RandomZoom,
+    RandomRotation,
+    RandomFlip,
+    Normalization,
+)
 
-from optpresso.models.metrics import adjusted_mse, correlation_coefficient_loss, psuedo_huber_loss
+from optpresso.models.metrics import (
+    adjusted_mse,
+    correlation_coefficient_loss,
+    psuedo_huber_loss,
+)
+from optpresso.models.layers import SubtractMeanLayer
 
-MEAN_VALUE = 30
+from optpresso.constants import MEAN_PULL_TIME, MEAN_IMG_VALUES, VAR_IMG_VALUES
 
 
 def create_comma_model_relu(input_shape: List[int]):
@@ -49,7 +61,7 @@ def create_comma_model_relu(input_shape: List[int]):
     model.add(Activation("relu"))
     model.add(Dense(512))
     model.add(Activation("relu"))
-    model.add(Dense(1, bias_initializer=Constant(MEAN_VALUE)))
+    model.add(Dense(1, bias_initializer=Constant(MEAN_PULL_TIME)))
 
     model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
 
@@ -74,7 +86,7 @@ def create_comma_model_lrelu(input_shape: List[int]):
     model.add(Dense(512))
     # model.add(Dropout(.5))
     model.add(LeakyReLU())
-    model.add(Dense(1, bias_initializer=Constant(MEAN_VALUE)))
+    model.add(Dense(1, bias_initializer=Constant(MEAN_PULL_TIME)))
 
     model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
 
@@ -99,7 +111,7 @@ def create_comma_model_prelu(input_shape: List[int]):
     model.add(Dense(512))
     # model.add(Dropout(.5))
     model.add(PReLU())
-    model.add(Dense(1, bias_initializer=Constant(MEAN_VALUE)))
+    model.add(Dense(1, bias_initializer=Constant(MEAN_PULL_TIME)))
 
     model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
 
@@ -126,7 +138,7 @@ def create_comma_model2(input_shape: List[int]):
     model.add(Activation("relu"))
     model.add(Dense(256))
     model.add(Activation("relu"))
-    model.add(Dense(1, bias_initializer=Constant(MEAN_VALUE)))
+    model.add(Dense(1, bias_initializer=Constant(MEAN_PULL_TIME)))
 
     model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
 
@@ -152,7 +164,7 @@ def create_comma_model3(input_shape: List[int]):
     model.add(Activation("relu"))
     model.add(Dense(512))
     model.add(Activation("relu"))
-    model.add(Dense(1, bias_initializer=Constant(MEAN_VALUE)))
+    model.add(Dense(1, bias_initializer=Constant(MEAN_PULL_TIME)))
 
     model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
 
@@ -180,7 +192,7 @@ def create_comma_model4(input_shape: List[int]):
     model.add(Activation("relu"))
     model.add(Dense(512))
     model.add(Activation("relu"))
-    model.add(Dense(1, bias_initializer=Constant(MEAN_VALUE)))
+    model.add(Dense(1, bias_initializer=Constant(MEAN_PULL_TIME)))
 
     model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
 
@@ -204,7 +216,7 @@ def create_comma_model5(input_shape: List[int]):
     model.add(Activation("relu"))
     model.add(Dense(512))
     model.add(Activation("relu"))
-    model.add(Dense(1, bias_initializer=Constant(MEAN_VALUE)))
+    model.add(Dense(1, bias_initializer=Constant(MEAN_PULL_TIME)))
 
     model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
 
@@ -226,7 +238,7 @@ def create_comma_model6(input_shape: List[int]):
     model.add(Activation("relu"))
     model.add(Dense(256))
     model.add(Activation("relu"))
-    model.add(Dense(1, bias_initializer=Constant(MEAN_VALUE)))
+    model.add(Dense(1, bias_initializer=Constant(MEAN_PULL_TIME)))
 
     model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
 
@@ -254,7 +266,7 @@ def create_comma_model_bn(input_shape: List[int]):
     model.add(Dense(512))
     model.add(BatchNormalization())
     model.add(Activation("relu"))
-    model.add(Dense(1, bias_initializer=Constant(MEAN_VALUE)))
+    model.add(Dense(1, bias_initializer=Constant(MEAN_PULL_TIME)))
 
     model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
 
@@ -285,7 +297,7 @@ def create_nvidia_model1(input_shape: List[int]):
     model.add(Activation("relu"))
     model.add(Dense(10))
     model.add(Activation("relu"))
-    model.add(Dense(1, bias_initializer=Constant(MEAN_VALUE)))
+    model.add(Dense(1, bias_initializer=Constant(MEAN_PULL_TIME)))
 
     model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
 
@@ -318,7 +330,7 @@ def create_nvidia_model2(input_shape: List[int]):
     model.add(Activation("relu"))
     model.add(Dense(10))
     model.add(Activation("relu"))
-    model.add(Dense(1, bias_initializer=Constant(MEAN_VALUE)))
+    model.add(Dense(1, bias_initializer=Constant(MEAN_PULL_TIME)))
 
     model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
 
@@ -351,7 +363,7 @@ def create_nvidia_model3(input_shape: List[int]):
     model.add(Activation("relu"))
     model.add(Dense(64))
     model.add(Activation("relu"))
-    model.add(Dense(1, bias_initializer=Constant(MEAN_VALUE)))
+    model.add(Dense(1, bias_initializer=Constant(MEAN_PULL_TIME)))
 
     model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
 
@@ -380,7 +392,7 @@ def create_comma_model_large(input_shape: List[int]):
     # model.add(Dropout(.5))
     # model.add(ELU())
     model.add(Activation("relu"))
-    model.add(Dense(1, bias_initializer=Constant(MEAN_VALUE)))
+    model.add(Dense(1, bias_initializer=Constant(MEAN_PULL_TIME)))
 
     model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
 
@@ -409,7 +421,7 @@ def create_comma_model_large_dropout(input_shape: List[int]):
     model.add(Dropout(0.5))
     # model.add(ELU())
     model.add(Activation("relu"))
-    model.add(Dense(1, bias_initializer=Constant(MEAN_VALUE)))
+    model.add(Dense(1, bias_initializer=Constant(MEAN_PULL_TIME)))
 
     model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
 
@@ -497,7 +509,7 @@ def create_optpresso_model(input_shape: List[int]) -> Sequential:
     model.add(Dense(128))
     model.add(Dropout(0.5))
     model.add(Activation("relu"))
-    model.add(Dense(1, bias_initializer=Constant(MEAN_VALUE)))
+    model.add(Dense(1, bias_initializer=Constant(MEAN_PULL_TIME)))
 
     model.compile(
         optimizer=Adam(learning_rate=2e-4),

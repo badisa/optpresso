@@ -14,7 +14,6 @@ from dataclasses import asdict, fields
 import cv2
 import numpy as np
 
-from keras.models import load_model
 from flask import Flask, request, send_from_directory
 from markupsafe import escape
 from keras.preprocessing.image import img_to_array, load_img
@@ -24,6 +23,7 @@ from PIL.PngImagePlugin import PngInfo
 import optpresso
 from optpresso.utils import set_random_seed
 from optpresso.data.config import load_config, OptpressoConfig
+from optpresso.models.serialization import load_model
 
 
 optpresso_dir = os.path.dirname(os.path.dirname(optpresso.__file__))
