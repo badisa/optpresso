@@ -31,11 +31,8 @@ def find_test_paths(directory: str):
 
 
 def k_fold_partition(input_dir: str, folds: int = 10) -> TemporaryDirectory:
-    paths = [x for x in find_test_paths(input_dir) if "flip" not in x[1]]
     timings = defaultdict(list)
     for time, path in find_test_paths(input_dir):
-        if "flip" in path:
-            continue
         timings[time].append(path)
     for paths in timings.values():
         np.random.shuffle(paths)
@@ -64,12 +61,8 @@ def partition_data(
     if not os.path.isdir(output_dir):
         os.mkdir(output_dir)
     timings = defaultdict(list)
-    flips = {}
     for time, path in find_test_paths(input_dir):
-        if "flip" in path:
-            flips[os.path.basename(path)] = path
-        else:
-            timings[time].append(path)
+        timings[time].append(path)
     validation_dir = os.path.join(output_dir, VALIDATION_DIR_NAME)
     if not os.path.isdir(validation_dir):
         os.mkdir(validation_dir)
@@ -105,10 +98,6 @@ def partition_data(
             name, ext = os.path.splitext(os.path.basename(path))
             new_path = os.path.join(time_dir, f"{name}{ext}")
             shutil.copy(path, new_path)
-            for flip in range(3):
-                path_name = f"{name}-flip-{flip}{ext}"
-                if path_name in flips:
-                    shutil.copy(flips[path_name], os.path.join(time_dir, path_name))
 
 
 def partition_cmd(parent_args, leftover):

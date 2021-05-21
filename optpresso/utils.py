@@ -25,6 +25,7 @@ def compute_image_mean(loader) -> np.array:
             mean += np.mean(y, axis=(0, 1)) / n
     return mean
 
+
 class GroundsLoader:
     """Generator that provides lots of images of ground coffee with
     data usable for regression, no nasty classification
@@ -37,8 +38,6 @@ class GroundsLoader:
         "_target_size",
         "_weights",
         "_scaling",
-        "_transforms",
-        "_mean_value",
     )
 
     def __init__(
@@ -48,24 +47,17 @@ class GroundsLoader:
         directory: Optional[str] = None,
         paths: Optional[List[str]] = None,
         scaling: int = 1.0,
-        mean_val: Optional[List] = None,
     ):
         self._directory = directory
         self._batch_size = batch_size
         self._paths = []
         self._target_size = target_size
         self._weights = None
-        if mean_val is None:
-            self._mean_value = np.zeros(3)
-        else:
-            self._mean_value = np.asarray(mean_val)
         if directory is None and paths is None:
             raise RuntimeError("Must provide directory or paths")
         self._scaling = scaling
         if directory is not None:
             for time, path in find_test_paths(directory):
-                if "flip" in path:
-                    continue
                 self._paths.append((time * scaling, path))
         if paths is not None:
             for path in paths:
