@@ -251,10 +251,12 @@ def train(parent_args: Namespace, leftover: List[str]):
     elif args.mode == "checkpoint":
         callbacks.append(
             ModelCheckpoint(
-                filepath=os.path.join(model_name, model_name + "-{epoch}-{val_loss:.3f}.h5"),
+                filepath=os.path.join(
+                    model_name, model_name + "-{epoch}-{val_loss:.3f}.h5"
+                ),
                 save_best_only=True,
                 mode="min",
-                monitor="val_loss"
+                monitor="val_loss",
             ),
         )
     elif args.mode == "annealing":
@@ -316,7 +318,7 @@ def train(parent_args: Namespace, leftover: List[str]):
     else:
         folds_dir = k_fold_partition(args.directory, folds=args.k_folds)
         fold_to_path = {}
-        test_fold = random.randint(0, args.k_folds - 1)
+        # test_fold = random.randint(0, args.k_folds - 1)
         for i in range(args.k_folds):
             fold_to_path[i] = [
                 x[1] for x in find_test_paths(os.path.join(folds_dir.name, str(i)))
@@ -329,8 +331,8 @@ def train(parent_args: Namespace, leftover: List[str]):
         # )
         fold_min = []
         for i in range(args.k_folds):
-            if i == test_fold:
-                continue
+            # if i == test_fold:
+            #     continue
             test_paths = []
             for key, paths in fold_to_path.items():
                 if key == i:
