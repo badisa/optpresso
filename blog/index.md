@@ -39,6 +39,8 @@ Since I would like to better understand Machine Learning, I will attempt to docu
 
 ### Day 96 - [Sub 70 MSE](day96.md)
 
+### Day 181 - [Sub 70 MSE Again!](day181.md)
+
 ## Coffee Sacrificed
 
 The following is a list of coffees that have been used for data collection. Mostly lighter roasts, so this model may be way off for darker roasts.
