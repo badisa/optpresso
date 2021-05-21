@@ -308,8 +308,7 @@ class CaptureControl extends (build_default()).Component {
         grindSetting: "",
         coffee: "",
         gramsIn: 18,
-        gramsOut: 36,
-        flip: true
+        gramsOut: 36
       }
     };
     this.handleChange = this.handleChange.bind(this);

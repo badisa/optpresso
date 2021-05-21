@@ -130,7 +130,6 @@ def capture():
             continue
         metadata.add_text(key, value)
 
-    output_dir = os.path.join(args.capture_dir, str(pull_time))
     # Don't do this every request
     if args.capture_split:
         split_ratios = [int(x) for x in args.split_ratio.split(",")]
@@ -145,8 +144,10 @@ def capture():
                     os.mkdir(output_dir)
                 output_dir = os.path.join(output_dir, str(pull_time))
                 break
-    if not os.path.isdir(output_dir):
-        os.mkdir(output_dir)
+    else:
+        output_dir = os.path.join(args.capture_dir, str(pull_time))
+        if not os.path.isdir(output_dir):
+            os.mkdir(output_dir)
     img.save(os.path.join(output_dir, name), pnginfo=metadata)
     return {}
 
