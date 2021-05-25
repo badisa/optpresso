@@ -146,8 +146,8 @@ def capture():
                 break
     else:
         output_dir = os.path.join(args.capture_dir, str(pull_time))
-        if not os.path.isdir(output_dir):
-            os.mkdir(output_dir)
+    if not os.path.isdir(output_dir):
+        os.mkdir(output_dir)
     img.save(os.path.join(output_dir, name), pnginfo=metadata)
     return {}
 
