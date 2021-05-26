@@ -20,7 +20,7 @@ from keras.layers import (
     Lambda,
     ELU,
     SpatialDropout2D,
-    Input,
+    InputLayer,
 )
 from keras.initializers import Constant, glorot_normal
 
@@ -429,7 +429,7 @@ def create_comma_model_large_dropout(input_shape: List[int]):
 
 def create_optpresso_model(input_shape: List[int]) -> Sequential:
     model = Sequential()
-    model.add(Input(shape=input_shape))
+    model.add(InputLayer(input_shape=input_shape))
     model.add(SubtractMeanLayer(mean=MEAN_IMG_VALUES))
     model.add(Rescaling(1.0 / 255))
     model.add(RandomFlip())
