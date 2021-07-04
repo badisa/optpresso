@@ -497,10 +497,10 @@ def create_optpresso_model(input_shape: List[int]) -> Sequential:
     # model.add(SpatialDropout2D(0.1))
     model.add(Flatten())
     model.add(Activation("relu"))
-    model.add(Dense(512))
+    model.add(Dense(256))
     model.add(Dropout(0.5))
     model.add(Activation("relu"))
-    model.add(Dense(256))
+    model.add(Dense(128))
     model.add(Dropout(0.5))
     model.add(Activation("relu"))
     model.add(Dense(64))
@@ -509,7 +509,7 @@ def create_optpresso_model(input_shape: List[int]) -> Sequential:
     model.add(Dense(1, bias_initializer=Constant(MEAN_PULL_TIME)))
 
     model.compile(
-        optimizer=Adam(learning_rate=2e-4),
+        optimizer=Adam(learning_rate=3e-4),
         loss=psuedo_huber_loss,
         metrics=[correlation_coefficient_loss, "mse"],
     )
