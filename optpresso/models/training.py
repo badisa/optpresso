@@ -130,6 +130,7 @@ def train_model(
     fold: Optional[int] = None,
 ):
     validation_gen = None
+    validation_steps = 0
     if args.weighted:
         training_gen = training.weighted_training_gen()
         if validation is not None:
@@ -138,6 +139,7 @@ def train_model(
         training_gen = training.training_gen()
         if validation is not None:
             validation_gen = validation.training_gen()
+            validation_steps = int(math.ceil(len(validation)) / args.batch_size)
     fit_hist = model.fit(
         training_gen,
         epochs=args.epochs,
@@ -146,7 +148,7 @@ def train_model(
         callbacks=callbacks,
         validation_data=validation_gen,
         validation_batch_size=args.batch_size,
-        validation_steps=int(math.ceil(len(validation)) / args.batch_size),
+        validation_steps=validation_steps,
     )
     output_path = args.output_path
     name, ext = os.path.splitext(output_path)
@@ -308,11 +310,12 @@ def train(parent_args: Namespace, leftover: List[str]):
                     directory=args.test_dir,
                 )
                 graph_title = model_name + "-test"
-            graph_model(graph_title, model, comparison_set, write=args.write)
-            if comp_model is not None:
-                graph_model(
-                    f"{graph_title}-comp", comp_model, comparison_set, write=args.write
-                )
+            if comparison_set is not None:
+                graph_model(graph_title, model, comparison_set, write=args.write)
+                if comp_model is not None:
+                    graph_model(
+                        f"{graph_title}-comp", comp_model, comparison_set, write=args.write
+                    )
     else:
         folds_dir = k_fold_partition(args.directory, folds=args.k_folds)
         fold_to_path = {}
