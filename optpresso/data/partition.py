@@ -78,11 +78,11 @@ def partition_data(
         for ratio, out_dir in [
             (validation_ratio, validation_dir),
             (test_ratio, test_dir),
+            (1.0, train_dir), # Put the rest in the train directory
         ]:
             to_move = max(1, int(len(paths) * ratio))
-            if to_move != len(
-                paths
-            ):  # Never move the full set into the validation/test set
+            # Never move the full set into the validation/test set
+            if ratio >= 1.0 or to_move != len(paths):
                 time_dir = os.path.join(out_dir, str(time))
                 if not os.path.isdir(time_dir):
                     os.mkdir(time_dir)
@@ -90,14 +90,6 @@ def partition_data(
                     new_path = os.path.join(time_dir, os.path.basename(path))
                     shutil.copy(path, new_path)
                 paths = paths[to_move:]
-        time_dir = os.path.join(train_dir, str(time))
-        if not os.path.isdir(time_dir):
-            os.mkdir(time_dir)
-        for path in paths:
-            dir_name = os.path.dirname(path)
-            name, ext = os.path.splitext(os.path.basename(path))
-            new_path = os.path.join(time_dir, f"{name}{ext}")
-            shutil.copy(path, new_path)
 
 
 def partition_cmd(parent_args, leftover):
@@ -109,21 +101,24 @@ def partition_cmd(parent_args, leftover):
     parser.add_argument(
         "--update", action="store_true", help="Update an existing partition"
     )
+    parser.add_argument("--seed", default=814, type=int, help="Seed the shuffling of the data")
     args = parser.parse_args(leftover)
     total_portion = args.validation_portion + args.test_portion
     if (total_portion - 1.0) > 0.0:
         print(f"Proportions must less than 1.0, got {total_portion}")
         sys.exit(1)
     print(f"Partitioning {args.src} into {args.dest}")
+    np.random.seed(args.seed)
     src = os.path.expanduser(args.src)
     dest = os.path.expanduser(args.dest)
     tempdir = None
     if args.update:
         tempdir = TemporaryDirectory()
+        src_paths = list(find_test_paths(src))
         to_move = set(
-            [os.path.basename(path) for _, path in find_test_paths(src)]
+            [os.path.basename(path) for _, path in src_paths]
         ).difference([os.path.basename(path) for _, path in find_test_paths(dest)])
-        for time, path in find_test_paths(src):
+        for time, path in src_paths:
             if os.path.basename(path) not in to_move:
                 continue
             new_path = os.path.join(tempdir.name, str(time))

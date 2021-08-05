@@ -41,7 +41,7 @@ from optpresso.models.metrics import (
 )
 from optpresso.models.layers import SubtractMeanLayer
 
-from optpresso.constants import MEAN_PULL_TIME, MEAN_IMG_VALUES, VAR_IMG_VALUES
+from optpresso.constants import MEAN_PULL_TIME, MEAN_IMG_VALUES
 
 
 def create_comma_model_relu(input_shape: List[int]):

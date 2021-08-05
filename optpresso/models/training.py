@@ -284,7 +284,6 @@ def train(parent_args: Namespace, leftover: List[str]):
             args.batch_size,
             (args.height, args.width),
             directory=args.directory,
-            # mean_val=MEAN_IMG_VALUES
         )
         if len(generator) <= 0:
             print(f"No files in directory {args.directory}")
@@ -296,7 +295,6 @@ def train(parent_args: Namespace, leftover: List[str]):
                 args.batch_size,
                 (args.height, args.width),
                 directory=args.validation_dir,
-                # mean_val=MEAN_IMG_VALUES
             )
         model = MODEL_CONSTRUCTORS[args.model_name]((args.height, args.width, 3))
         train_model(args, model, generator, validation, callbacks=callbacks)
