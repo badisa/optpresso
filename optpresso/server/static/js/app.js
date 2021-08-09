@@ -4,9 +4,18 @@ import ReactDOM from "react-dom";
 import "../sass/style.scss";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+import Video from "./video.js";
+import {median, mean, std} from "./math.js";
+
 setGlobal({
-  mode: "capture",
   config: {},
+  pullData: {
+    pullTime: 30,
+    grindSetting: "",
+    coffee: "",
+    gramsIn: 18,
+    gramsOut: 36,
+  },
 });
 
 function predictPullTime(callback) {
@@ -31,7 +40,7 @@ function postImage(formData, url, callback) {
 function httpPostAsync(url, formData, callback) {
   var xmlHttp = new XMLHttpRequest();
   xmlHttp.onreadystatechange = function () {
-    if (xmlHttp.readyState == 4 && xmlHttp.status % 200 < 100)
+    if (xmlHttp.readyState == 4 && xmlHttp.status < 300)
       callback(xmlHttp.responseText);
   };
   xmlHttp.open("POST", url, true); // true for asynchronous
@@ -41,109 +50,11 @@ function httpPostAsync(url, formData, callback) {
 function httpGetAsync(url, callback) {
   var xmlHttp = new XMLHttpRequest();
   xmlHttp.onreadystatechange = function () {
-    if (xmlHttp.readyState == 4 && xmlHttp.status % 200 < 100)
+    if (xmlHttp.readyState == 4 && xmlHttp.status < 300)
       callback(xmlHttp.responseText);
   };
   xmlHttp.open("GET", url, true); // true for asynchronous
   xmlHttp.send();
-}
-
-class Video extends React.Component {
-  componentDidMount() {
-    var videoWidth, videoHeight;
-
-    // whether streaming video from the camera.
-    var streaming = false;
-
-    var video = document.getElementById("video");
-    var canvasOutput = document.getElementById("canvasOutput");
-    var canvasOutputCtx = canvasOutput.getContext("2d");
-    var stream = null;
-
-    function startCamera() {
-      if (streaming) return;
-      navigator.mediaDevices
-        .getUserMedia({ video: true, audio: false })
-        .then(function (s) {
-          stream = s;
-          video.srcObject = s;
-          video.play();
-        })
-        .catch(function (err) {
-          console.log("An error occured! " + err);
-        });
-
-      video.addEventListener(
-        "canplay",
-        function (ev) {
-          if (!streaming) {
-            videoWidth = video.videoWidth;
-            videoHeight = video.videoHeight;
-            video.setAttribute("width", videoWidth);
-            video.setAttribute("height", videoHeight);
-            canvasOutput.width = videoWidth;
-            canvasOutput.height = videoHeight;
-            streaming = true;
-          }
-          startVideoProcessing();
-        },
-        false
-      );
-    }
-
-    var canvasInput = null;
-    var canvasInputCtx = null;
-
-    var canvasBuffer = null;
-    var canvasBufferCtx = null;
-
-    function startVideoProcessing() {
-      if (!streaming) {
-        console.warn("Please startup your webcam");
-        return;
-      }
-      canvasInput = document.createElement("canvas");
-      canvasInput.width = videoWidth;
-      canvasInput.height = videoHeight;
-      canvasInputCtx = canvasInput.getContext("2d");
-
-      canvasBuffer = document.createElement("canvas");
-      canvasBuffer.width = videoWidth;
-      canvasBuffer.height = videoHeight;
-      canvasBufferCtx = canvasBuffer.getContext("2d");
-
-      requestAnimationFrame(processVideo);
-    }
-
-    function processVideo() {
-      canvasInputCtx.drawImage(video, 0, 0, videoWidth, videoHeight);
-      var imageData = canvasInputCtx.getImageData(
-        0,
-        0,
-        videoWidth,
-        videoHeight
-      );
-      canvasOutputCtx.drawImage(canvasInput, 0, 0, videoWidth, videoHeight);
-      requestAnimationFrame(processVideo);
-    }
-
-    startCamera();
-  }
-
-  render() {
-    return (
-      <div>
-        <div class="container">
-          <canvas class="center-block" id="canvasOutput"></canvas>
-        </div>
-        <div class="invisible">
-          <video id="video" class="hidden">
-            Your browser does not support the video tag.
-          </video>
-        </div>
-      </div>
-    );
-  }
 }
 
 class Nav extends React.Component {
@@ -152,11 +63,19 @@ class Nav extends React.Component {
     this.setPredict = this.setPredict.bind(this);
     this.setCapture = this.setCapture.bind(this);
   }
-  setPredict() {
+  setPredict(event) {
+    event.preventDefault();
     this.props.setMode("predict");
+    window.history.pushState({}, "", "/predict/");
+     const navEvent = new PopStateEvent('popstate');
+    window.dispatchEvent(navEvent);
   }
   setCapture() {
+    event.preventDefault();
     this.props.setMode("capture");
+    window.history.pushState({}, "", "/capture/");
+    const navEvent = new PopStateEvent('popstate');
+    window.dispatchEvent(navEvent);
   }
   render() {
     return (
@@ -179,7 +98,7 @@ class Nav extends React.Component {
               <li class="nav-item">
                 <a
                   className={`nav-link ${
-                    this.props.mode == "capture" ? "active" : ""
+                    window.location.pathname != "/predict/" ? "active" : ""
                   }`}
                   href="#"
                   onClick={this.setCapture}
@@ -190,7 +109,7 @@ class Nav extends React.Component {
               <li class="nav-item">
                 <a
                   className={`nav-link ${
-                    this.props.mode == "predict" ? "active" : ""
+                    window.location.pathname == "/predict/" ? "active" : ""
                   }`}
                   href="#"
                   onClick={this.setPredict}
@@ -232,29 +151,30 @@ class PredictControl extends React.Component {
 
   render() {
     const listItems = this.state.predictions.map((pred) => <li>{pred}</li>);
-    let mean = 0.0;
-    let std = 0.0;
+    let avg = 0.0;
+    let std_val = 0.0;
+    let med = 0.0;
     if (this.state.predictions.length > 1) {
-      mean =
-        this.state.predictions.reduce((a, b) => a + b, 0) /
-        this.state.predictions.length;
-      std = Math.sqrt(
-        this.state.predictions.reduce((a, b) => a + Math.pow(b - mean, 2), 0) /
-          this.state.predictions.length
-      );
+      avg = mean(this.state.predictions);
+      med = median(this.state.predictions);
+      std_val = std(this.state.predictions);
     }
-    mean = Number(mean.toFixed(2));
-    std = Number(std.toFixed(2));
+    avg = Number(avg.toFixed(2));
+    std_val = Number(std_val.toFixed(2));
+    med = Number(med.toFixed(2));
     return (
       <div class="container">
         <div class="row">
           <div class="col-md-5 offset-1 config">
             <h3>Predictions</h3>
-            Mean:{mean}
+            <button onClick={this.clearPredictions}>Clear</button>
+            <hr></hr>
+            Median:{med}
             <br></br>
-            Std: {std}
+            Mean:{avg}
+            <br></br>
+            Std: {std_val}
             <ul>{listItems}</ul>
-            <button onClick={this.clearPredictions}>Clear Predictions</button>
           </div>
           <div class="col-md-5 offset-1 config">
             <button onClick={this.handlePredict}>Predict</button>
@@ -270,13 +190,7 @@ class CaptureControl extends React.Component {
     super(props);
     this.state = {
       config: this.props.config,
-      pullData: {
-        pullTime: 30,
-        grindSetting: "",
-        coffee: "",
-        gramsIn: 18,
-        gramsOut: 36,
-      },
+      pullData: this.props.pullData,
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -327,6 +241,7 @@ class CaptureControl extends React.Component {
           [event.target.name]: val,
         },
       });
+      this.props.setPullData({...this.state.pullData, [event.target.name]: val});
     }
   }
 
@@ -409,9 +324,14 @@ class CaptureControl extends React.Component {
   }
 }
 
+
 function CaptureComponent() {
   const [mode, setMode] = useGlobal("mode");
   const [config, setConfig] = useGlobal("config");
+  const [pullData, setPullData] = useGlobal("pullData");
+
+  const [currentPath, setCurrentPath] = useState(window.location.pathname);
+
   const getExistingConfig = () => {
     httpGetAsync("/config/", function (data) {
       const savedConfig = JSON.parse(data);
@@ -420,12 +340,19 @@ function CaptureComponent() {
   };
   React.useEffect(() => {
     getExistingConfig();
+    const onLocationChange = () => {
+      // update path state to current window URL
+      setCurrentPath(window.location.pathname);
+    }
+
+    // listen for popstate event
+    window.addEventListener('popstate', onLocationChange);
   }, []);
   let controls;
-  if (mode === "predict") {
+  if (window.location.pathname == "/predict/") {
     controls = <PredictControl config={config} setConfig={setConfig} />;
   } else {
-    controls = <CaptureControl config={config} setConfig={setConfig} />;
+    controls = <CaptureControl config={config} setConfig={setConfig} pullData={pullData} setPullData={setPullData}/>;
   }
   return (
     <main>

@@ -3,7 +3,7 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 623:
+/***/ 261:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 // ESM COMPAT FLAG
@@ -49,60 +49,8 @@ var bootstrap_min_update = injectStylesIntoStyleTag_default()(bootstrap_min/* de
 
 
 /* harmony default export */ const css_bootstrap_min = (bootstrap_min/* default.locals */.Z.locals || {});
-;// CONCATENATED MODULE: ./optpresso/server/static/js/app.js
+;// CONCATENATED MODULE: ./optpresso/server/static/js/video.js
 
-
-
-
-(0,build.setGlobal)({
-  mode: "capture",
-  config: {}
-});
-
-function predictPullTime(callback) {
-  let form = new FormData();
-  postImage(form, "/predict/", callback);
-}
-
-function captureImage(data, callback) {
-  let form = new FormData();
-
-  for (const [key, value] of Object.entries(data)) {
-    form.append(key, value);
-  }
-
-  postImage(form, "/capture/", callback);
-}
-
-function postImage(formData, url, callback) {
-  let canvasOutput = document.getElementById("canvasOutput");
-  formData.append("image", canvasOutput.toDataURL());
-  httpPostAsync(url, formData, callback);
-}
-
-function httpPostAsync(url, formData, callback) {
-  var xmlHttp = new XMLHttpRequest();
-
-  xmlHttp.onreadystatechange = function () {
-    if (xmlHttp.readyState == 4 && xmlHttp.status % 200 < 100) callback(xmlHttp.responseText);
-  };
-
-  xmlHttp.open("POST", url, true); // true for asynchronous
-
-  xmlHttp.send(formData);
-}
-
-function httpGetAsync(url, callback) {
-  var xmlHttp = new XMLHttpRequest();
-
-  xmlHttp.onreadystatechange = function () {
-    if (xmlHttp.readyState == 4 && xmlHttp.status % 200 < 100) callback(xmlHttp.responseText);
-  };
-
-  xmlHttp.open("GET", url, true); // true for asynchronous
-
-  xmlHttp.send();
-}
 
 class Video extends (build_default()).Component {
   componentDidMount() {
@@ -188,6 +136,86 @@ class Video extends (build_default()).Component {
   }
 
 }
+;// CONCATENATED MODULE: ./optpresso/server/static/js/math.js
+function median(numbers) {
+  const sorted = numbers.slice().sort((a, b) => a - b);
+  const middle = Math.floor(sorted.length / 2);
+
+  if (sorted.length % 2 === 0) {
+    return (sorted[middle - 1] + sorted[middle]) / 2;
+  }
+
+  return sorted[middle];
+}
+function mean(numbers) {
+  return numbers.reduce((a, b) => a + b, 0) / numbers.length;
+}
+function std(numbers) {
+  let avg = mean(numbers);
+  return Math.sqrt(numbers.reduce((a, b) => a + Math.pow(b - avg, 2), 0) / numbers.length);
+}
+;// CONCATENATED MODULE: ./optpresso/server/static/js/app.js
+
+
+
+
+
+
+(0,build.setGlobal)({
+  config: {},
+  pullData: {
+    pullTime: 30,
+    grindSetting: "",
+    coffee: "",
+    gramsIn: 18,
+    gramsOut: 36
+  }
+});
+
+function predictPullTime(callback) {
+  let form = new FormData();
+  postImage(form, "/predict/", callback);
+}
+
+function captureImage(data, callback) {
+  let form = new FormData();
+
+  for (const [key, value] of Object.entries(data)) {
+    form.append(key, value);
+  }
+
+  postImage(form, "/capture/", callback);
+}
+
+function postImage(formData, url, callback) {
+  let canvasOutput = document.getElementById("canvasOutput");
+  formData.append("image", canvasOutput.toDataURL());
+  httpPostAsync(url, formData, callback);
+}
+
+function httpPostAsync(url, formData, callback) {
+  var xmlHttp = new XMLHttpRequest();
+
+  xmlHttp.onreadystatechange = function () {
+    if (xmlHttp.readyState == 4 && xmlHttp.status < 300) callback(xmlHttp.responseText);
+  };
+
+  xmlHttp.open("POST", url, true); // true for asynchronous
+
+  xmlHttp.send(formData);
+}
+
+function httpGetAsync(url, callback) {
+  var xmlHttp = new XMLHttpRequest();
+
+  xmlHttp.onreadystatechange = function () {
+    if (xmlHttp.readyState == 4 && xmlHttp.status < 300) callback(xmlHttp.responseText);
+  };
+
+  xmlHttp.open("GET", url, true); // true for asynchronous
+
+  xmlHttp.send();
+}
 
 class Nav extends (build_default()).Component {
   constructor(props) {
@@ -196,12 +224,20 @@ class Nav extends (build_default()).Component {
     this.setCapture = this.setCapture.bind(this);
   }
 
-  setPredict() {
+  setPredict(event) {
+    event.preventDefault();
     this.props.setMode("predict");
+    window.history.pushState({}, "", "/predict/");
+    const navEvent = new PopStateEvent('popstate');
+    window.dispatchEvent(navEvent);
   }
 
   setCapture() {
+    event.preventDefault();
     this.props.setMode("capture");
+    window.history.pushState({}, "", "/capture/");
+    const navEvent = new PopStateEvent('popstate');
+    window.dispatchEvent(navEvent);
   }
 
   render() {
@@ -227,13 +263,13 @@ class Nav extends (build_default()).Component {
     }, /*#__PURE__*/build_default().createElement("li", {
       class: "nav-item"
     }, /*#__PURE__*/build_default().createElement("a", {
-      className: `nav-link ${this.props.mode == "capture" ? "active" : ""}`,
+      className: `nav-link ${window.location.pathname != "/predict/" ? "active" : ""}`,
       href: "#",
       onClick: this.setCapture
     }, "Capture")), /*#__PURE__*/build_default().createElement("li", {
       class: "nav-item"
     }, /*#__PURE__*/build_default().createElement("a", {
-      className: `nav-link ${this.props.mode == "predict" ? "active" : ""}`,
+      className: `nav-link ${window.location.pathname == "/predict/" ? "active" : ""}`,
       href: "#",
       onClick: this.setPredict
     }, "Predict"))))));
@@ -271,25 +307,28 @@ class PredictControl extends (build_default()).Component {
 
   render() {
     const listItems = this.state.predictions.map(pred => /*#__PURE__*/build_default().createElement("li", null, pred));
-    let mean = 0.0;
-    let std = 0.0;
+    let avg = 0.0;
+    let std_val = 0.0;
+    let med = 0.0;
 
     if (this.state.predictions.length > 1) {
-      mean = this.state.predictions.reduce((a, b) => a + b, 0) / this.state.predictions.length;
-      std = Math.sqrt(this.state.predictions.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / this.state.predictions.length);
+      avg = mean(this.state.predictions);
+      med = median(this.state.predictions);
+      std_val = std(this.state.predictions);
     }
 
-    mean = Number(mean.toFixed(2));
-    std = Number(std.toFixed(2));
+    avg = Number(avg.toFixed(2));
+    std_val = Number(std_val.toFixed(2));
+    med = Number(med.toFixed(2));
     return /*#__PURE__*/build_default().createElement("div", {
       class: "container"
     }, /*#__PURE__*/build_default().createElement("div", {
       class: "row"
     }, /*#__PURE__*/build_default().createElement("div", {
       class: "col-md-5 offset-1 config"
-    }, /*#__PURE__*/build_default().createElement("h3", null, "Predictions"), "Mean:", mean, /*#__PURE__*/build_default().createElement("br", null), "Std: ", std, /*#__PURE__*/build_default().createElement("ul", null, listItems), /*#__PURE__*/build_default().createElement("button", {
+    }, /*#__PURE__*/build_default().createElement("h3", null, "Predictions"), /*#__PURE__*/build_default().createElement("button", {
       onClick: this.clearPredictions
-    }, "Clear Predictions")), /*#__PURE__*/build_default().createElement("div", {
+    }, "Clear"), /*#__PURE__*/build_default().createElement("hr", null), "Median:", med, /*#__PURE__*/build_default().createElement("br", null), "Mean:", avg, /*#__PURE__*/build_default().createElement("br", null), "Std: ", std_val, /*#__PURE__*/build_default().createElement("ul", null, listItems)), /*#__PURE__*/build_default().createElement("div", {
       class: "col-md-5 offset-1 config"
     }, /*#__PURE__*/build_default().createElement("button", {
       onClick: this.handlePredict
@@ -303,13 +342,7 @@ class CaptureControl extends (build_default()).Component {
     super(props);
     this.state = {
       config: this.props.config,
-      pullData: {
-        pullTime: 30,
-        grindSetting: "",
-        coffee: "",
-        gramsIn: 18,
-        gramsOut: 36
-      }
+      pullData: this.props.pullData
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -362,6 +395,9 @@ class CaptureControl extends (build_default()).Component {
         pullData: { ...this.state.pullData,
           [event.target.name]: val
         }
+      });
+      this.props.setPullData({ ...this.state.pullData,
+        [event.target.name]: val
       });
     }
   }
@@ -430,6 +466,8 @@ class CaptureControl extends (build_default()).Component {
 function CaptureComponent() {
   const [mode, setMode] = (0,build.useGlobal)("mode");
   const [config, setConfig] = (0,build.useGlobal)("config");
+  const [pullData, setPullData] = (0,build.useGlobal)("pullData");
+  const [currentPath, setCurrentPath] = (0,build.useState)(window.location.pathname);
 
   const getExistingConfig = () => {
     httpGetAsync("/config/", function (data) {
@@ -440,10 +478,18 @@ function CaptureComponent() {
 
   build_default().useEffect(() => {
     getExistingConfig();
+
+    const onLocationChange = () => {
+      // update path state to current window URL
+      setCurrentPath(window.location.pathname);
+    }; // listen for popstate event
+
+
+    window.addEventListener('popstate', onLocationChange);
   }, []);
   let controls;
 
-  if (mode === "predict") {
+  if (window.location.pathname == "/predict/") {
     controls = /*#__PURE__*/build_default().createElement(PredictControl, {
       config: config,
       setConfig: setConfig
@@ -451,7 +497,9 @@ function CaptureComponent() {
   } else {
     controls = /*#__PURE__*/build_default().createElement(CaptureControl, {
       config: config,
-      setConfig: setConfig
+      setConfig: setConfig,
+      pullData: pullData,
+      setPullData: setPullData
     });
   }
 
@@ -3062,7 +3110,7 @@ exports.default = useForceUpdate;
 /******/ 	// module exports must be returned from runtime so entry inlining is disabled
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(623);
+/******/ 	return __webpack_require__(261);
 /******/ })()
 
 ));
