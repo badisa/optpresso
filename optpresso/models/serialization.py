@@ -9,9 +9,9 @@ from optpresso.models.metrics import (
 
 custom_objects = {
     "SubtractMeanLayer": SubtractMeanLayer,
-    "psuedo_huber": psuedo_huber_loss,
-    "correlation_loss": correlation_coefficient_loss,
-    "adjusted_mse_loss": adjusted_mse,
+    "psuedo_huber_loss": psuedo_huber_loss,
+    "correlation_coefficient_loss": correlation_coefficient_loss,
+    "adjusted_mse": adjusted_mse,
 }
 
 
