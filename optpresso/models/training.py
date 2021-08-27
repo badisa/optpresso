@@ -252,6 +252,8 @@ def train(parent_args: Namespace, leftover: List[str]):
             )
         )
     elif args.mode == "checkpoint":
+        if not os.path.isdir(model_name):
+            os.mkdir(model_name)
         callbacks.append(
             ModelCheckpoint(
                 filepath=os.path.join(
