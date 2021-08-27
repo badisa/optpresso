@@ -135,6 +135,7 @@ def train_model(
         training_gen = training.weighted_training_gen()
         if validation is not None:
             validation_gen = validation.weighted_training_gen()
+            validation_steps = int(math.ceil(len(validation)) / args.batch_size)
     else:
         training_gen = training.training_gen()
         if validation is not None:
