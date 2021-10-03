@@ -20,6 +20,7 @@ setup(
         "matplotlib==3.3.3",
         "keras==2.4.3",
         "pydot==1.4.1",
+        "scipy==1.7.1",
         "opencv-python==4.4.0.46",
         "flask==1.1.2",
     ],
