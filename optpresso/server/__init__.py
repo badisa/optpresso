@@ -16,7 +16,7 @@ import numpy as np
 
 from flask import Flask, request, send_from_directory
 from markupsafe import escape
-from keras.preprocessing.image import img_to_array, load_img
+from tensorflow.keras.preprocessing.image import img_to_array, load_img
 from PIL import Image
 from PIL.PngImagePlugin import PngInfo
 

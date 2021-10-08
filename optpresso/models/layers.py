@@ -1,5 +1,5 @@
-from keras.utils import register_keras_serializable
-from keras.layers import Layer
+from tensorflow.keras.utils import register_keras_serializable
+from tensorflow.keras.layers import Layer
 
 
 @register_keras_serializable()

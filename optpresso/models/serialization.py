@@ -1,4 +1,4 @@
-from keras.models import load_model as keras_load
+from tensorflow.keras.models import load_model as keras_load
 
 from optpresso.models.layers import SubtractMeanLayer
 from optpresso.models.metrics import (

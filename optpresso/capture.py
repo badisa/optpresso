@@ -6,7 +6,7 @@ from argparse import Namespace, ArgumentParser
 
 import cv2
 from PIL import Image
-from keras.preprocessing.image import load_img
+from tensorflow.keras.preprocessing.image import load_img
 
 
 def flip_image(path: str, flip_img: bool = True, mirror_img: bool = False):

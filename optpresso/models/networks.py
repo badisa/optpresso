@@ -5,37 +5,27 @@ The inspiration/code came from the following:
 - https://blog.keras.io/building-powerful-image-classification-models-using-very-little-data.html
 - https://github.com/udacity/self-driving-car/tree/master/steering-models/community-models/rambo
 """
-from typing import List, Any
-from keras.optimizers import Adam
-from keras.models import Sequential
-from keras.losses import Huber
-from keras.layers import (
+from typing import List
+from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import (
     Activation,
-    Conv2D,
-    MaxPooling2D,
     Flatten,
     Dense,
     Dropout,
     LeakyReLU,
-    Lambda,
-    ELU,
-    SpatialDropout2D,
     InputLayer,
+    Convolution2D,
+    BatchNormalization
 )
-from keras.initializers import Constant, glorot_normal
-
-from keras.layers.advanced_activations import PReLU
-from keras.layers.convolutional import Convolution2D
-from keras.layers.normalization import BatchNormalization
-from keras.layers.experimental.preprocessing import (
+from tensorflow.keras.initializers import Constant
+from tensorflow.keras.layers.experimental.preprocessing import (
     Rescaling,
-    RandomZoom,
     RandomRotation,
     RandomFlip,
 )
 
 from optpresso.models.metrics import (
-    adjusted_mse,
     correlation_coefficient_loss,
     psuedo_huber_loss,
 )
@@ -511,7 +501,7 @@ def create_optpresso_model(input_shape: List[int]) -> Sequential:
     model.compile(
         optimizer=Adam(learning_rate=3e-4),
         loss=psuedo_huber_loss,
-        metrics=[correlation_coefficient_loss, "mse"],
+        metrics=["mse"],
     )
 
     return model

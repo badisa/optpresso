@@ -1,15 +1,14 @@
 import os
 import sys
 import math
-import random
 from typing import List, Any, Optional, Dict
 from argparse import Namespace, ArgumentParser
 
 import numpy as np
 import matplotlib.pyplot as plt
 
-from keras.backend import clear_session
-from keras.callbacks import (
+from tensorflow.keras.backend import clear_session
+from tensorflow.keras.callbacks import (
     ModelCheckpoint,
     EarlyStopping,
     LearningRateScheduler,
@@ -21,7 +20,6 @@ from optpresso.data.partition import find_test_paths, k_fold_partition
 from optpresso.models.networks import MODEL_CONSTRUCTORS
 from optpresso.models.eval import graph_model
 from optpresso.data.config import load_config
-from optpresso.constants import MEAN_IMG_VALUES
 from optpresso.models.serialization import load_model
 
 
