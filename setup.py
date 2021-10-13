@@ -20,6 +20,7 @@ setup(
         "matplotlib==3.3.3",
         "scipy==1.7.1",
         "opencv-python==4.4.0.46",
+        "astropy==4.3.1",
         "flask==1.1.2",
     ],
     packages=find_packages(),
