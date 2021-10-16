@@ -18,13 +18,19 @@ VALIDATION_DIR_NAME = "validation"
 
 
 def find_test_paths(directory: str):
+    valid_exts = set(IMG_EXTS)
+    for ext in IMG_EXTS:
+        if isinstance(ext, bytes):
+            valid_exts.add(ext.decode("utf8"))
+        else:
+            valid_exts.add(ext.encode("utf8"))
     for root, dirs, files in os.walk(directory):
         try:
             pull_time = int(os.path.basename(root))
         except (TypeError, ValueError):
             continue
         for file in files:
-            if os.path.splitext(file)[1].lower() not in IMG_EXTS:
+            if os.path.splitext(file)[1].lower() not in valid_exts:
                 continue
             data_path = os.path.join(root, file)
             yield pull_time, data_path

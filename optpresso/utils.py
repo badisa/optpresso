@@ -1,4 +1,5 @@
 import os
+from tempfile import NamedTemporaryFile
 from random import seed, choices
 from typing import Optional, List, Callable
 from collections import defaultdict
@@ -8,11 +9,13 @@ from numpy.random import seed as np_seed
 
 from PIL import Image
 
-from keras.preprocessing.image import img_to_array, load_img
 
 from optpresso.data.partition import find_test_paths
 
+from tensorflow import int8, float32
 from tensorflow.random import set_seed
+from tensorflow.data import AUTOTUNE, Dataset
+from tensorflow.keras.preprocessing.image import img_to_array, load_img
 
 IMG_EXTS = [".jpg", ".png"]
 
@@ -25,6 +28,9 @@ def compute_image_mean(loader) -> np.array:
             mean += np.mean(y, axis=(0, 1)) / n
     return mean
 
+def boring_iterator(directory, target_size):
+    for time, path in find_test_paths(directory):
+        yield img_to_array(load_img(path, target_size=(target_size[0], target_size[1]))), (time, )
 
 class GroundsLoader:
     """Generator that provides lots of images of ground coffee with
@@ -68,6 +74,18 @@ class GroundsLoader:
                     continue
                 self._paths.append((time * scaling, path))
 
+    def to_tensorflow_dataset(self):
+        ds = Dataset.from_generator(
+            self._flattened_gen,
+            output_types=(int8, float32),
+            output_shapes=((self._target_size[0], self._target_size[1], 3), (1, ))
+        )
+        ds = ds.cache()
+        ds = ds.shuffle(1000)
+        ds = ds.batch(self._batch_size, num_parallel_calls=AUTOTUNE)
+        ds = ds.prefetch(10)
+        return ds
+
     @property
     def weights(self):
         """
@@ -92,6 +110,11 @@ class GroundsLoader:
 
     def __len__(self):
         return len(self._paths)
+
+    def _flattened_gen(self):
+        size = (self._target_size[0], self._target_size[1])
+        for time, path in self._paths:
+            yield img_to_array(load_img(path, target_size=size)), (time, )
 
     def training_gen(self):
         while True:

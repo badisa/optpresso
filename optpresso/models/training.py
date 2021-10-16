@@ -128,26 +128,14 @@ def train_model(
     fold: Optional[int] = None,
 ):
     validation_gen = None
-    validation_steps = 0
-    if args.weighted:
-        training_gen = training.weighted_training_gen()
-        if validation is not None:
-            validation_gen = validation.weighted_training_gen()
-            validation_steps = int(math.ceil(len(validation)) / args.batch_size)
-    else:
-        training_gen = training.training_gen()
-        if validation is not None:
-            validation_gen = validation.training_gen()
-            validation_steps = int(math.ceil(len(validation)) / args.batch_size)
+    training_gen = training.to_tensorflow_dataset()
+    if validation is not None:
+        validation_gen = validation.to_tensorflow_dataset()
     fit_hist = model.fit(
         training_gen,
         epochs=args.epochs,
-        steps_per_epoch=int(math.ceil(len(training) / args.batch_size)),
-        batch_size=args.batch_size,
         callbacks=callbacks,
         validation_data=validation_gen,
-        validation_batch_size=args.batch_size,
-        validation_steps=validation_steps,
     )
     output_path = args.output_path
     name, ext = os.path.splitext(output_path)
@@ -196,11 +184,11 @@ def train(parent_args: Namespace, leftover: List[str]):
     parser.add_argument("--epochs", default=500, type=int)
     parser.add_argument("--height", default=240, type=int)
     parser.add_argument("--width", default=320, type=int)
-    parser.add_argument(
-        "--weighted",
-        action="store_true",
-        help="Use sample weights to aim for better fit for tail ends of data",
-    )
+    # parser.add_argument(
+    #     "--weighted",
+    #     action="store_true",
+    #     help="Use sample weights to aim for better fit for tail ends of data",
+    # )
     parser.add_argument(
         "--eval",
         action="store_true",
@@ -320,21 +308,13 @@ def train(parent_args: Namespace, leftover: List[str]):
     else:
         folds_dir = k_fold_partition(args.directory, folds=args.k_folds)
         fold_to_path = {}
-        # test_fold = random.randint(0, args.k_folds - 1)
         for i in range(args.k_folds):
             fold_to_path[i] = [
                 x[1] for x in find_test_paths(os.path.join(folds_dir.name, str(i)))
             ]
-        # test_set = GroundsLoader(
-        #     args.batch_size,
-        #     (args.height, args.width),
-        #     paths=fold_to_path.pop(test_fold),
-        #     mean_val=[203.74569647, 152.45776761, 82.80802851]
-        # )
+
         fold_min = []
         for i in range(args.k_folds):
-            # if i == test_fold:
-            #     continue
             test_paths = []
             for key, paths in fold_to_path.items():
                 if key == i:
@@ -345,7 +325,6 @@ def train(parent_args: Namespace, leftover: List[str]):
                 args.batch_size,
                 (args.height, args.width),
                 paths=test_paths,
-                # mean_val=MEAN_IMG_VALUES
             )
             if len(generator) <= 0:
                 print(f"No files in k-fold paths: {test_paths}")
@@ -355,7 +334,6 @@ def train(parent_args: Namespace, leftover: List[str]):
                 args.batch_size,
                 (args.height, args.width),
                 paths=fold_to_path[i],
-                # mean_val=MEAN_IMG_VALUES
             )
             clear_session()
             model = MODEL_CONSTRUCTORS[args.model_name]((args.height, args.width, 3))
