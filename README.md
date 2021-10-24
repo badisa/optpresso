@@ -39,7 +39,7 @@ of inputs is intended to evaluate the effectiveness of different capture techniq
 
 The following are 'microscopes' that have been used to collect data. There is a reference image within the Google drive [folder](https://drive.google.com/drive/folders/1MTZe69StPiZw1J9uAkJloxB7YduGlczp?usp=sharing) to show the approximate size of the frame. The tallest line in the image indicates 1/10th of an inch, making the width covered by the sensor 0.15 of an inch.
 
-* [Cheap Microscope](https://www.amazon.com/gp/product/B085XZVFGT/ref=ppx_yo_dt_b_asin_title_o03_s00?ie=UTF8&psc=1)
+* [Cheap Microscope](https://www.amazon.com/gp/product/B085XZVFGT/)
 
 ## But I own a \<insert espresso machine here\>!
 
@@ -54,11 +54,16 @@ $ conda create -n optpresso python=3.7
 $ pip install -e .
 ```
 
+To install requirements for testing, development and the notebooks, install the additional requirements.
+
+```
+$ pip install -r requirements.txt
+```
+
 Once you have installed `optpresso` you will want to download the model (named optpresso.h5) [here](https://drive.google.com/drive/folders/1MTZe69StPiZw1J9uAkJloxB7YduGlczp?usp=sharing). Once it is downloaded you can initialize your optpresso and get started.
 
 ```
 $ optpresso init path/to/downloaded/model.h5
-
 ```
 
 ## Usage
