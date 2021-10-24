@@ -81,9 +81,9 @@ class GroundsLoader:
             output_shapes=((self._target_size[0], self._target_size[1], 3), (1, ))
         )
         ds = ds.cache()
-        ds = ds.shuffle(1000)
+        ds = ds.shuffle(len(self._paths), reshuffle_each_iteration=True)
         ds = ds.batch(self._batch_size, num_parallel_calls=AUTOTUNE)
-        ds = ds.prefetch(10)
+        ds = ds.prefetch(AUTOTUNE)
         return ds
 
     @property
