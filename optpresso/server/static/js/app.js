@@ -234,6 +234,7 @@ class CaptureControl extends React.Component {
           [event.target.name]: val,
         },
       });
+      this.props.setConfig({...this.state.config, [event.target.name]: val})
     } else {
       this.setState({
         pullData: {

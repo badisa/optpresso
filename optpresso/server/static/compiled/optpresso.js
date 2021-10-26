@@ -390,6 +390,9 @@ class CaptureControl extends (build_default()).Component {
           [event.target.name]: val
         }
       });
+      this.props.setConfig({ ...this.state.config,
+        [event.target.name]: val
+      });
     } else {
       this.setState({
         pullData: { ...this.state.pullData,
