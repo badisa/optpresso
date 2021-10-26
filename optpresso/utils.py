@@ -12,7 +12,7 @@ from PIL import Image
 
 from optpresso.data.partition import find_test_paths
 
-from tensorflow import int8, float32
+from tensorflow import float16, float32
 from tensorflow.random import set_seed
 from tensorflow.data import AUTOTUNE, Dataset
 from tensorflow.keras.preprocessing.image import img_to_array, load_img
@@ -77,7 +77,7 @@ class GroundsLoader:
     def to_tensorflow_dataset(self):
         ds = Dataset.from_generator(
             self._flattened_gen,
-            output_types=(int8, float32),
+            output_types=(float16, float32),
             output_shapes=((self._target_size[0], self._target_size[1], 3), (1, ))
         )
         ds = ds.cache()
