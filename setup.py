@@ -13,6 +13,7 @@ setup(
     name="optpresso",
     version=version,
     install_requires=[
+        "wandb==0.12.6",
         "pandas==1.1.4",
         "scikit-learn==0.23.2",
         "tensorflow==2.6.*",

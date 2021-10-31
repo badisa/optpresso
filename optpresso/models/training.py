@@ -22,6 +22,9 @@ from optpresso.models.eval import graph_model
 from optpresso.data.config import load_config
 from optpresso.models.serialization import load_model
 
+import wandb
+from wandb.keras import WandbCallback
+
 
 class CycleWeightSaver(Callback):
     def __init__(
@@ -131,6 +134,12 @@ def train_model(
     training_gen = training.to_tensorflow_dataset()
     if validation is not None:
         validation_gen = validation.to_tensorflow_dataset()
+    wandb.config.update({
+        "batch_size": args.batch_size,
+        "epochs": args.epochs,
+        "train_size": len(training),
+        "validation_set": 0 if validation is None else len(validation)
+    })
     fit_hist = model.fit(
         training_gen,
         epochs=args.epochs,
@@ -223,10 +232,11 @@ def train(parent_args: Namespace, leftover: List[str]):
     ):
         print("Can't provide K Folds and Validation or Test directory")
         sys.exit(1)
+    wandb.init(project="optpresso", entity="optpresso")
     if args.seed is not None:
         set_random_seed(args.seed)
     model_name, ext = os.path.splitext(args.output_path)
-    callbacks = []
+    callbacks = [WandbCallback()]
     if args.mode == "patience":
         callbacks.append(
             EarlyStopping(
