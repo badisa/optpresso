@@ -14,6 +14,8 @@ from tensorflow.keras.callbacks import (
     LearningRateScheduler,
     Callback,
 )
+from tensorflow.keras.optimizers import Adam
+
 
 from optpresso.utils import GroundsLoader, set_random_seed
 from optpresso.data.partition import find_test_paths, k_fold_partition
@@ -21,6 +23,10 @@ from optpresso.models.networks import MODEL_CONSTRUCTORS
 from optpresso.models.eval import graph_model
 from optpresso.data.config import load_config
 from optpresso.models.serialization import load_model
+from optpresso.models.metrics import (
+    correlation_coefficient_loss,
+    psuedo_huber_loss,
+)
 
 import wandb
 from wandb.keras import WandbCallback
@@ -127,9 +133,11 @@ def train_model(
     model,
     training,
     validation,
+    learning_rate: float = 3e-4,
     callbacks: Optional[List[Any]] = None,
     fold: Optional[int] = None,
 ):
+
     validation_gen = None
     training_gen = training.to_tensorflow_dataset()
     if validation is not None:
@@ -138,8 +146,14 @@ def train_model(
         "batch_size": args.batch_size,
         "epochs": args.epochs,
         "train_size": len(training),
-        "validation_set": 0 if validation is None else len(validation)
+        "validation_set": 0 if validation is None else len(validation),
+        "learning_rate": learning_rate
     })
+    model.compile(
+        optimizer=Adam(learning_rate=learning_rate),
+        loss=psuedo_huber_loss,
+        metrics=["mse", "mae", psuedo_huber_loss],
+    )
     fit_hist = model.fit(
         training_gen,
         epochs=args.epochs,

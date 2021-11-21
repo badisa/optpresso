@@ -6,7 +6,6 @@ The inspiration/code came from the following:
 - https://github.com/udacity/self-driving-car/tree/master/steering-models/community-models/rambo
 """
 from typing import List
-from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import (
     Activation,
@@ -25,16 +24,12 @@ from tensorflow.keras.layers.experimental.preprocessing import (
     RandomFlip,
 )
 
-from optpresso.models.metrics import (
-    correlation_coefficient_loss,
-    psuedo_huber_loss,
-)
 from optpresso.models.layers import SubtractMeanLayer
 
 from optpresso.constants import MEAN_PULL_TIME, MEAN_IMG_VALUES
 
 
-def create_comma_model_relu(input_shape: List[int]):
+def create_comma_model_relu(input_shape: List):
     model = Sequential()
 
     model.add(
@@ -52,12 +47,10 @@ def create_comma_model_relu(input_shape: List[int]):
     model.add(Activation("relu"))
     model.add(Dense(1, bias_initializer=Constant(MEAN_PULL_TIME)))
 
-    model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
-
     return model
 
 
-def create_comma_model_lrelu(input_shape: List[int]):
+def create_comma_model_lrelu(input_shape: List):
     model = Sequential()
 
     model.add(
@@ -77,12 +70,10 @@ def create_comma_model_lrelu(input_shape: List[int]):
     model.add(LeakyReLU())
     model.add(Dense(1, bias_initializer=Constant(MEAN_PULL_TIME)))
 
-    model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
-
     return model
 
 
-def create_comma_model_prelu(input_shape: List[int]):
+def create_comma_model_prelu(input_shape: List):
     model = Sequential()
 
     model.add(
@@ -102,12 +93,10 @@ def create_comma_model_prelu(input_shape: List[int]):
     model.add(PReLU())
     model.add(Dense(1, bias_initializer=Constant(MEAN_PULL_TIME)))
 
-    model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
-
     return model
 
 
-def create_comma_model2(input_shape: List[int]):
+def create_comma_model2(input_shape: List):
     # additional dense layer
 
     model = Sequential()
@@ -129,12 +118,10 @@ def create_comma_model2(input_shape: List[int]):
     model.add(Activation("relu"))
     model.add(Dense(1, bias_initializer=Constant(MEAN_PULL_TIME)))
 
-    model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
-
     return model
 
 
-def create_comma_model3(input_shape: List[int]):
+def create_comma_model3(input_shape: List):
     # additional conv layer
     model = Sequential()
 
@@ -155,12 +142,10 @@ def create_comma_model3(input_shape: List[int]):
     model.add(Activation("relu"))
     model.add(Dense(1, bias_initializer=Constant(MEAN_PULL_TIME)))
 
-    model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
-
     return model
 
 
-def create_comma_model4(input_shape: List[int]):
+def create_comma_model4(input_shape: List):
     # 2 additional conv layers
     model = Sequential()
 
@@ -183,12 +168,10 @@ def create_comma_model4(input_shape: List[int]):
     model.add(Activation("relu"))
     model.add(Dense(1, bias_initializer=Constant(MEAN_PULL_TIME)))
 
-    model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
-
     return model
 
 
-def create_comma_model5(input_shape: List[int]):
+def create_comma_model5(input_shape: List):
     # more filters in first 2 conv layers
     model = Sequential()
 
@@ -207,12 +190,10 @@ def create_comma_model5(input_shape: List[int]):
     model.add(Activation("relu"))
     model.add(Dense(1, bias_initializer=Constant(MEAN_PULL_TIME)))
 
-    model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
-
     return model
 
 
-def create_comma_model6(input_shape: List[int]):
+def create_comma_model6(input_shape: List):
     # remove one conv layer
     model = Sequential()
 
@@ -229,12 +210,10 @@ def create_comma_model6(input_shape: List[int]):
     model.add(Activation("relu"))
     model.add(Dense(1, bias_initializer=Constant(MEAN_PULL_TIME)))
 
-    model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
-
     return model
 
 
-def create_comma_model_bn(input_shape: List[int]):
+def create_comma_model_bn(input_shape: List):
     model = Sequential()
 
     model.add(
@@ -257,12 +236,10 @@ def create_comma_model_bn(input_shape: List[int]):
     model.add(Activation("relu"))
     model.add(Dense(1, bias_initializer=Constant(MEAN_PULL_TIME)))
 
-    model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
-
     return model
 
 
-def create_nvidia_model1(input_shape: List[int]):
+def create_nvidia_model1(input_shape: List):
     model = Sequential()
 
     model.add(
@@ -288,12 +265,10 @@ def create_nvidia_model1(input_shape: List[int]):
     model.add(Activation("relu"))
     model.add(Dense(1, bias_initializer=Constant(MEAN_PULL_TIME)))
 
-    model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
-
     return model
 
 
-def create_nvidia_model2(input_shape: List[int]):
+def create_nvidia_model2(input_shape: List):
     model = Sequential()
 
     model.add(
@@ -321,12 +296,10 @@ def create_nvidia_model2(input_shape: List[int]):
     model.add(Activation("relu"))
     model.add(Dense(1, bias_initializer=Constant(MEAN_PULL_TIME)))
 
-    model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
-
     return model
 
 
-def create_nvidia_model3(input_shape: List[int]):
+def create_nvidia_model3(input_shape: List):
     model = Sequential()
 
     model.add(
@@ -354,12 +327,10 @@ def create_nvidia_model3(input_shape: List[int]):
     model.add(Activation("relu"))
     model.add(Dense(1, bias_initializer=Constant(MEAN_PULL_TIME)))
 
-    model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
-
     return model
 
 
-def create_comma_model_large(input_shape: List[int]):
+def create_comma_model_large(input_shape: List):
     model = Sequential()
 
     model.add(
@@ -383,12 +354,10 @@ def create_comma_model_large(input_shape: List[int]):
     model.add(Activation("relu"))
     model.add(Dense(1, bias_initializer=Constant(MEAN_PULL_TIME)))
 
-    model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
-
     return model
 
 
-def create_comma_model_large_dropout(input_shape: List[int]):
+def create_comma_model_large_dropout(input_shape: List):
     model = Sequential()
 
     model.add(
@@ -412,12 +381,10 @@ def create_comma_model_large_dropout(input_shape: List[int]):
     model.add(Activation("relu"))
     model.add(Dense(1, bias_initializer=Constant(MEAN_PULL_TIME)))
 
-    model.compile(optimizer=Adam(learning_rate=3e-4), loss="mse")
-
     return model
 
 
-def create_optpresso_model(input_shape: List[int]) -> Sequential:
+def create_optpresso_model(input_shape: List) -> Sequential:
     model = Sequential()
     model.add(InputLayer(input_shape=input_shape))
     model.add(SubtractMeanLayer(mean=MEAN_IMG_VALUES))
@@ -497,12 +464,6 @@ def create_optpresso_model(input_shape: List[int]) -> Sequential:
     model.add(Dropout(0.5))
     model.add(Activation("relu"))
     model.add(Dense(1, bias_initializer=Constant(MEAN_PULL_TIME)))
-
-    model.compile(
-        optimizer=Adam(learning_rate=3e-4),
-        loss=psuedo_huber_loss,
-        metrics=["mse"],
-    )
 
     return model
 
