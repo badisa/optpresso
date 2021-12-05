@@ -147,7 +147,9 @@ def train_model(
         "epochs": args.epochs,
         "train_size": len(training),
         "validation_set": 0 if validation is None else len(validation),
-        "learning_rate": learning_rate
+        "learning_rate": learning_rate,
+        "weighted": args.weighted,
+        "target_size": [args.height, args.width],
     })
     model.compile(
         optimizer=Adam(learning_rate=learning_rate),
@@ -207,11 +209,11 @@ def train(parent_args: Namespace, leftover: List[str]):
     parser.add_argument("--epochs", default=500, type=int)
     parser.add_argument("--height", default=240, type=int)
     parser.add_argument("--width", default=320, type=int)
-    # parser.add_argument(
-    #     "--weighted",
-    #     action="store_true",
-    #     help="Use sample weights to aim for better fit for tail ends of data",
-    # )
+    parser.add_argument(
+        "--weighted",
+        action="store_true",
+        help="Use sample weights to aim for better fit for tail ends of data",
+    )
     parser.add_argument(
         "--eval",
         action="store_true",
@@ -299,6 +301,7 @@ def train(parent_args: Namespace, leftover: List[str]):
             args.batch_size,
             (args.height, args.width),
             directory=args.directory,
+            weighted=args.weighted,
         )
         if len(generator) <= 0:
             print(f"No files in directory {args.directory}")
@@ -349,6 +352,7 @@ def train(parent_args: Namespace, leftover: List[str]):
                 args.batch_size,
                 (args.height, args.width),
                 paths=test_paths,
+                weighted=args.weighted,
             )
             if len(generator) <= 0:
                 print(f"No files in k-fold paths: {test_paths}")

@@ -44,6 +44,7 @@ class GroundsLoader:
         "_target_size",
         "_weights",
         "_scaling",
+        "_weighted"
     )
 
     def __init__(
@@ -53,12 +54,14 @@ class GroundsLoader:
         directory: Optional[str] = None,
         paths: Optional[List[str]] = None,
         scaling: int = 1.0,
+        weighted: bool = False,
     ):
         self._directory = directory
         self._batch_size = batch_size
         self._paths = []
         self._target_size = target_size
         self._weights = None
+        self._weighted = weighted
         if directory is None and paths is None:
             raise RuntimeError("Must provide directory or paths")
         self._scaling = scaling
@@ -75,11 +78,18 @@ class GroundsLoader:
                 self._paths.append((time * scaling, path))
 
     def to_tensorflow_dataset(self):
-        ds = Dataset.from_generator(
-            self._flattened_gen,
-            output_types=(float16, float32),
-            output_shapes=((self._target_size[0], self._target_size[1], 3), (1, ))
-        )
+        if not self._weighted:
+            ds = Dataset.from_generator(
+                self._flattened_gen,
+                output_types=(float16, float32),
+                output_shapes=((self._target_size[0], self._target_size[1], 3), (1, ))
+            )
+        else:
+            ds = Dataset.from_generator(
+                self._flattened_gen,
+                output_types=(float16, float32, float32),
+                output_shapes=((self._target_size[0], self._target_size[1], 3), (1, ), (1, ))
+            )
         ds = ds.cache()
         ds = ds.shuffle(len(self._paths), reshuffle_each_iteration=True)
         ds = ds.batch(self._batch_size, num_parallel_calls=AUTOTUNE)
@@ -114,7 +124,14 @@ class GroundsLoader:
     def _flattened_gen(self):
         size = (self._target_size[0], self._target_size[1])
         for time, path in self._paths:
-            yield img_to_array(load_img(path, target_size=size)), (time, )
+            try:
+                img = img_to_array(load_img(path, target_size=size))
+                if self._weighted:
+                    yield img, (time, ), (self.weights[int(time)], )
+                else:
+                    yield img, (time, )
+            except Exception as e:
+                raise RuntimeError(f"Unable to handle image: {path}") from e
 
     def training_gen(self):
         while True:
