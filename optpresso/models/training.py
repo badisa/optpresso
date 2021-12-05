@@ -205,7 +205,7 @@ def train(parent_args: Namespace, leftover: List[str]):
         type=int,
         help="Run K Folds on directory, not supported with --validation-directory/--test-directory flag",
     )
-    parser.add_argument("--batch-size", default=16, type=int)
+    parser.add_argument("--batch-size", default=128, type=int)
     parser.add_argument("--epochs", default=500, type=int)
     parser.add_argument("--height", default=240, type=int)
     parser.add_argument("--width", default=320, type=int)
