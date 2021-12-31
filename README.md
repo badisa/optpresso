@@ -63,7 +63,7 @@ $ pip install -r requirements.txt
 Once you have installed `optpresso` you will want to download the model (named optpresso.h5) [here](https://drive.google.com/drive/folders/1MTZe69StPiZw1J9uAkJloxB7YduGlczp?usp=sharing). Once it is downloaded you can initialize your optpresso and get started.
 
 ```
-$ optpresso init path/to/downloaded/model.h5
+$ optpresso config init path/to/downloaded/model.h5
 ```
 
 ## Usage

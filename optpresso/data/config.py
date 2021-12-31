@@ -15,6 +15,10 @@ from sklearn.gaussian_process import GaussianProcessRegressor
 DEFAULT_CONFIG_DIR = os.path.expanduser("~/.optpresso")
 OPTPRESSO_CONFIG_ENV = "OPTPRESSO_DIR"
 
+INIT = "init"
+UPDATE = "update"
+CONFIG = "config"
+
 
 @dataclass
 class OptpressoConfig:
@@ -59,7 +63,7 @@ class OptpressoConfig:
         if OPTPRESSO_CONFIG_ENV in os.environ:
             directory = os.environ[OPTRESSO_CONFIG_ENV]
         directory = os.path.expanduser(directory)
-        path = os.path.join(directory, "config")
+        path = os.path.join(directory, CONFIG)
         with open(path, "w") as ofs:
             json.dump(asdict(self), ofs)
 
@@ -69,7 +73,7 @@ def load_config() -> Optional[OptpressoConfig]:
     if OPTPRESSO_CONFIG_ENV in os.environ:
         directory = os.environ[OPTRESSO_CONFIG_ENV]
     directory = os.path.expanduser(directory)
-    path = os.path.join(directory, "config")
+    path = os.path.join(directory, CONFIG)
     if not os.path.isfile(path):
         return None
     with open(path, "r") as ifs:
@@ -77,8 +81,17 @@ def load_config() -> Optional[OptpressoConfig]:
     return OptpressoConfig(**config)
 
 
-def init_optpresso(parent_args: Namespace, leftover: List[str]):
-    parser = ArgumentParser(description="Initialize Optpresso")
+def config_optpresso(parent_args: Namespace, leftover: List[str]):
+    parser = ArgumentParser(description="Configure Optpresso")
+    parser.add_argument(
+        "subcmd", help="Configuration command", choices=["init", "update"]
+    )
+    args, leftover = parser.parse_known_args(leftover)
+    update_config(parent_args, leftover, init=args.subcmd == INIT)
+
+
+def update_config(parent_args: Namespace, leftover: List[str], init: bool = True):
+    parser = ArgumentParser(description="Set Optpresso config")
     parser.add_argument(
         "model",
         help="Model to use as default, check the README for a link to the default model",
@@ -107,10 +120,11 @@ def init_optpresso(parent_args: Namespace, leftover: List[str]):
     )
     args = parser.parse_args(leftover)
     config_dir = os.path.expanduser(args.dir)
-    config_path = os.path.join(config_dir, "config")
-    if os.path.isdir(config_dir) and os.path.isfile(config_path):
-        print(f"Optpresso already configured at {config_dir}")
-        sys.exit(1)
+    config_path = os.path.join(config_dir, CONFIG)
+    if init:
+        if os.path.isdir(config_dir) and os.path.isfile(config_path):
+            print(f"Optpresso already configured at {config_dir}")
+            sys.exit(1)
     if not os.path.isdir(config_dir):
         os.mkdir(config_dir)
     model_path = args.model

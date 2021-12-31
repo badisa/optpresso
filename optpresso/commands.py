@@ -4,7 +4,7 @@ import sys
 from argparse import ArgumentParser
 
 
-INIT = "init"
+CONFIG = "config"
 EVAL = "eval"
 TRAIN = "train"
 SERVE = "serve"
@@ -22,7 +22,7 @@ def main():
     # Don't add help, complicates things
     parser = ArgumentParser(description="OptPresso: ML for espresso", add_help=False)
     parser.add_argument(
-        "cmd", choices=[TRAIN, CAPTURE, PREDICT, EVAL, INIT, PARTITION, SERVE]
+        "cmd", choices=[TRAIN, CAPTURE, PREDICT, EVAL, CONFIG, PARTITION, SERVE]
     )
     # Args to be added, probably
     args, leftover = parser.parse_known_args()
@@ -44,10 +44,10 @@ def main():
         from optpresso.models.eval import evalulate_model
 
         evalulate_model(args, leftover)
-    elif args.cmd == INIT:
-        from optpresso.data.config import init_optpresso
+    elif args.cmd == CONFIG:
+        from optpresso.data.config import config_optpresso
 
-        init_optpresso(args, leftover)
+        config_optpresso(args, leftover)
     elif args.cmd == PARTITION:
         from optpresso.data.partition import partition_cmd
 
