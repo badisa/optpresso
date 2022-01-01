@@ -84,7 +84,7 @@ def partition_data(
         for ratio, out_dir in [
             (validation_ratio, validation_dir),
             (test_ratio, test_dir),
-            (1.0, train_dir), # Put the rest in the train directory
+            (1.0, train_dir),  # Put the rest in the train directory
         ]:
             to_move = max(1, int(len(paths) * ratio))
             # Never move the full set into the validation/test set
@@ -107,7 +107,9 @@ def partition_cmd(parent_args, leftover):
     parser.add_argument(
         "--update", action="store_true", help="Update an existing partition"
     )
-    parser.add_argument("--seed", default=814, type=int, help="Seed the shuffling of the data")
+    parser.add_argument(
+        "--seed", default=814, type=int, help="Seed the shuffling of the data"
+    )
     args = parser.parse_args(leftover)
     total_portion = args.validation_portion + args.test_portion
     if (total_portion - 1.0) > 0.0:
@@ -121,9 +123,9 @@ def partition_cmd(parent_args, leftover):
     if args.update:
         tempdir = TemporaryDirectory()
         src_paths = list(find_test_paths(src))
-        to_move = set(
-            [os.path.basename(path) for _, path in src_paths]
-        ).difference([os.path.basename(path) for _, path in find_test_paths(dest)])
+        to_move = set([os.path.basename(path) for _, path in src_paths]).difference(
+            [os.path.basename(path) for _, path in find_test_paths(dest)]
+        )
         for time, path in src_paths:
             if os.path.basename(path) not in to_move:
                 continue

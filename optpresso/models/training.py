@@ -224,6 +224,9 @@ def train(parent_args: Namespace, leftover: List[str]):
         "--mode", choices=["patience", "annealing", "checkpoint"], default="patience"
     )
     parser.add_argument("--seed", default=None, type=int)
+    parser.add_argument(
+        "--base-model", default=None, type=str, help="Model to train further against"
+    )
     args = parser.parse_args(leftover)
     if (
         args.validation_dir is not None
@@ -302,7 +305,10 @@ def train(parent_args: Namespace, leftover: List[str]):
                 (args.height, args.width),
                 directory=args.validation_dir,
             )
-        model = MODEL_CONSTRUCTORS[args.model_name]((args.height, args.width, 3))
+        if args.base_model is not None:
+            model = load_model(args.base_model, compile=False)
+        else:
+            model = MODEL_CONSTRUCTORS[args.model_name]((args.height, args.width, 3))
         train_model(args, model, generator, validation, callbacks=callbacks)
         if args.eval:
             comparison_set = validation

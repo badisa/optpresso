@@ -28,9 +28,13 @@ def compute_image_mean(loader) -> np.array:
             mean += np.mean(y, axis=(0, 1)) / n
     return mean
 
+
 def boring_iterator(directory, target_size):
     for time, path in find_test_paths(directory):
-        yield img_to_array(load_img(path, target_size=(target_size[0], target_size[1]))), (time, )
+        yield img_to_array(
+            load_img(path, target_size=(target_size[0], target_size[1]))
+        ), (time,)
+
 
 class GroundsLoader:
     """Generator that provides lots of images of ground coffee with
@@ -44,7 +48,7 @@ class GroundsLoader:
         "_target_size",
         "_weights",
         "_scaling",
-        "_weighted"
+        "_weighted",
     )
 
     def __init__(
@@ -82,13 +86,17 @@ class GroundsLoader:
             ds = Dataset.from_generator(
                 self._flattened_gen,
                 output_types=(float16, float32),
-                output_shapes=((self._target_size[0], self._target_size[1], 3), (1, ))
+                output_shapes=((self._target_size[0], self._target_size[1], 3), (1,)),
             )
         else:
             ds = Dataset.from_generator(
                 self._flattened_gen,
                 output_types=(float16, float32, float32),
-                output_shapes=((self._target_size[0], self._target_size[1], 3), (1, ), (1, ))
+                output_shapes=(
+                    (self._target_size[0], self._target_size[1], 3),
+                    (1,),
+                    (1,),
+                ),
             )
         ds = ds.cache()
         ds = ds.shuffle(len(self._paths), reshuffle_each_iteration=True)
@@ -127,9 +135,9 @@ class GroundsLoader:
             try:
                 img = img_to_array(load_img(path, target_size=size))
                 if self._weighted:
-                    yield img, (time, ), (self.weights[int(time)], )
+                    yield img, (time,), (self.weights[int(time)],)
                 else:
-                    yield img, (time, )
+                    yield img, (time,)
             except Exception as e:
                 raise RuntimeError(f"Unable to handle image: {path}") from e
 
