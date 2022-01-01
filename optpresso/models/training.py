@@ -142,15 +142,19 @@ def train_model(
     training_gen = training.to_tensorflow_dataset()
     if validation is not None:
         validation_gen = validation.to_tensorflow_dataset()
-    wandb.config.update({
-        "batch_size": args.batch_size,
-        "epochs": args.epochs,
-        "train_size": len(training),
-        "validation_set": 0 if validation is None else len(validation),
-        "learning_rate": learning_rate,
-        "weighted": args.weighted,
-        "target_size": [args.height, args.width],
-    })
+    wandb.config.update(
+        {
+            "batch_size": args.batch_size,
+            "epochs": args.epochs,
+            "train_size": len(training),
+            "validation_set": 0 if validation is None else len(validation),
+            "learning_rate": learning_rate,
+            "weighted": args.weighted,
+            "target_size": [args.height, args.width],
+            "finetuning": args.base_model is not None,
+            "fold": fold,
+        }
+    )
     model.compile(
         optimizer=Adam(learning_rate=learning_rate),
         loss=psuedo_huber_loss,
@@ -167,26 +171,6 @@ def train_model(
     if fold is not None:
         output_path = f"{name}-fold-{fold}{ext}"
     model.save(output_path)
-    x = np.linspace(
-        0, len(fit_hist.history["val_loss"]), len(fit_hist.history["val_loss"])
-    )
-    val_label = "Validation Loss"
-    train_label = "Training Loss"
-    if fold is not None:
-        val_label += f" Fold {fold}"
-        train_label += f" Fold {fold}"
-    plt.plot(x, fit_hist.history["val_loss"], label=val_label)
-    plt.plot(x, fit_hist.history["loss"], label=train_label)
-    plt.legend(loc="upper right")
-    plt.title(f"Loss: {name}")
-    if args.write:
-        if fold is None:
-            plt.savefig(f"{name}_loss_graph.png")
-        else:
-            plt.savefig(f"{name}_loss_graph_fold_{fold}.png")
-    else:
-        plt.show()
-    plt.close()
     return fit_hist
 
 
@@ -248,11 +232,16 @@ def train(parent_args: Namespace, leftover: List[str]):
     ):
         print("Can't provide K Folds and Validation or Test directory")
         sys.exit(1)
-    wandb.init(project="optpresso", entity="optpresso")
     if args.seed is not None:
         set_random_seed(args.seed)
     model_name, ext = os.path.splitext(args.output_path)
-    callbacks = [WandbCallback()]
+
+    group_id = None
+    callbacks = []
+    if args.k_folds is None:
+        wandb.init(project="optpresso", entity="optpresso")
+        callbacks.append(WandbCallback())
+
     if args.mode == "patience":
         callbacks.append(
             EarlyStopping(
@@ -271,9 +260,9 @@ def train(parent_args: Namespace, leftover: List[str]):
                 filepath=os.path.join(
                     model_name, model_name + "-{epoch}-{val_loss:.3f}.h5"
                 ),
-                save_best_only=True,
                 mode="min",
                 monitor="val_loss",
+                save_best_only=True,
             ),
         )
     elif args.mode == "annealing":
@@ -308,7 +297,6 @@ def train(parent_args: Namespace, leftover: List[str]):
             sys.exit(1)
         validation = None
         if args.validation_dir:
-            # Should rewrite the grounds loader into a Sequence class
             validation = GroundsLoader(
                 args.batch_size,
                 (args.height, args.width),
@@ -330,9 +318,14 @@ def train(parent_args: Namespace, leftover: List[str]):
                 graph_model(graph_title, model, comparison_set, write=args.write)
                 if comp_model is not None:
                     graph_model(
-                        f"{graph_title}-comp", comp_model, comparison_set, write=args.write
+                        f"{graph_title}-comp",
+                        comp_model,
+                        comparison_set,
+                        write=args.write,
                     )
     else:
+        exp_id = wandb.util.generate_id()
+        group_id = f"{exp_id} k folds"
         folds_dir = k_fold_partition(args.directory, folds=args.k_folds)
         fold_to_path = {}
         for i in range(args.k_folds):
@@ -342,6 +335,10 @@ def train(parent_args: Namespace, leftover: List[str]):
 
         fold_min = []
         for i in range(args.k_folds):
+            folds_callbacks = callbacks.copy()
+            wandb.init(project="optpresso", entity="optpresso", group=group_id)
+            folds_callbacks.append(WandbCallback())
+            os.environ["WANDB_RUN_GROUP"] = f"{group_id} fold {i}"
             test_paths = []
             for key, paths in fold_to_path.items():
                 if key == i:
@@ -357,16 +354,14 @@ def train(parent_args: Namespace, leftover: List[str]):
             if len(generator) <= 0:
                 print(f"No files in k-fold paths: {test_paths}")
                 sys.exit(1)
-            # Should rewrite the grounds loader into a Sequence class
             validation = GroundsLoader(
                 args.batch_size,
                 (args.height, args.width),
                 paths=fold_to_path[i],
             )
-            clear_session()
             model = MODEL_CONSTRUCTORS[args.model_name]((args.height, args.width, 3))
             fit_hist = train_model(
-                args, model, generator, validation, callbacks=callbacks, fold=i
+                args, model, generator, validation, callbacks=folds_callbacks, fold=i
             )
             fold_min.append(min(fit_hist.history["val_loss"]))
             if args.eval:
@@ -380,6 +375,9 @@ def train(parent_args: Namespace, leftover: List[str]):
                         validation,
                         write=args.write,
                     )
+            clear_session()
+            wandb.finish()
+
         print(
             "Average Validation Loss: {}, All: {}".format(
                 np.array(fold_min).mean(), fold_min
