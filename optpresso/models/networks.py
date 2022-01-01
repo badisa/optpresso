@@ -15,7 +15,8 @@ from tensorflow.keras.layers import (
     LeakyReLU,
     InputLayer,
     Convolution2D,
-    BatchNormalization
+    BatchNormalization,
+    SpatialDropout2D,
 )
 from tensorflow.keras.initializers import Constant
 from tensorflow.keras.layers.experimental.preprocessing import (
@@ -441,7 +442,6 @@ def create_optpresso_model(input_shape: List) -> Sequential:
             padding="same",
         )
     )
-    # model.add(SpatialDropout2D(0.1))
     model.add(Activation("relu"))
     model.add(
         Convolution2D(
@@ -451,13 +451,22 @@ def create_optpresso_model(input_shape: List) -> Sequential:
             padding="same",
         )
     )
-    # model.add(SpatialDropout2D(0.1))
+    # model.add(SpatialDropout2D(0.15))
+    model.add(Activation("relu"))
+    model.add(
+        Convolution2D(
+            128,
+            (3, 3),
+            strides=(2, 2),
+            padding="same",
+        )
+    )
     model.add(Flatten())
     model.add(Activation("relu"))
-    model.add(Dense(256))
+    model.add(Dense(128))
     model.add(Dropout(0.5))
     model.add(Activation("relu"))
-    model.add(Dense(128))
+    model.add(Dense(96))
     model.add(Dropout(0.5))
     model.add(Activation("relu"))
     model.add(Dense(64))
