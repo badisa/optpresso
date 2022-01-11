@@ -25,7 +25,7 @@ def adjusted_mse(y_true, y_pred):
 
 def psuedo_huber_loss(y_true, y_pred):
     """Modified Huber Loss, thanks to @maxentile for this!"""
-    fall_off = 6
+    fall_off = 3
     diff = K.abs(y_true - y_pred)
     return fall_off * (K.sqrt(1 + (diff / fall_off) ** 2) - 1)
 
