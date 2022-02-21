@@ -15,7 +15,7 @@ setup(
     install_requires=[
         "wandb==0.12.6",
         "pandas==1.1.4",
-        "scikit-learn==0.23.2",
+        "scikit-learn==1.0.2",
         "tensorflow==2.6.*",
         "numpy==1.19.*",
         "matplotlib==3.3.3",
