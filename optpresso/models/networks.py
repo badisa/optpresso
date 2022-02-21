@@ -16,7 +16,7 @@ from tensorflow.keras.layers import (
     InputLayer,
     Convolution2D,
     BatchNormalization,
-    SpatialDropout2D,
+    PReLU,
 )
 from tensorflow.keras.initializers import Constant
 from tensorflow.keras.layers.experimental.preprocessing import (

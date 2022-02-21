@@ -1,11 +1,9 @@
 import os
 import sys
-import math
 from typing import List, Any, Optional, Dict
 from argparse import Namespace, ArgumentParser
 
 import numpy as np
-import matplotlib.pyplot as plt
 
 from tensorflow.keras.backend import clear_session
 from tensorflow.keras.callbacks import (
@@ -24,7 +22,6 @@ from optpresso.models.eval import graph_model
 from optpresso.data.config import load_config
 from optpresso.models.serialization import load_model
 from optpresso.models.metrics import (
-    correlation_coefficient_loss,
     psuedo_huber_loss,
 )
 
@@ -74,7 +71,7 @@ class CycleWeightSaver(Callback):
 
     def on_train_end(self, logs: Optional[Dict[str, Any]] = None):
         if logs is None:
-            print(f"No logs for epoch {epoch}")
+            print("No logs")
             return
         if self.monitor not in logs:
             print(f"Unable to find metric {self.monitor}")
@@ -124,7 +121,6 @@ class CyclicCosineAnnealing:
         t_d_m = self.epoches / self.num_cycles
         numerator = np.pi * (epoch % t_d_m)
         lr = (self.initial_rate / 2) * (np.cos(numerator / t_d_m) + 1)
-        print("New Learning Rate", lr)
         return lr
 
 

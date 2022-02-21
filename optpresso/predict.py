@@ -6,11 +6,11 @@ from argparse import ArgumentParser, Namespace
 
 import numpy as np
 
-from optpresso.models.serialization import load_model
 from tensorflow.keras.preprocessing.image import img_to_array, load_img
 
 import cv2
 
+from optpresso.models.serialization import load_model
 from optpresso.data.config import load_config, OptpressoConfig
 from optpresso.capture import get_user_input
 

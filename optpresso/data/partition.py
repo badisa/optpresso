@@ -43,7 +43,6 @@ def k_fold_partition(input_dir: str, folds: int = 10) -> TemporaryDirectory:
     for paths in timings.values():
         np.random.shuffle(paths)
     tmpdir = TemporaryDirectory()
-    batch_size = math.ceil(len(paths) / folds)
     for fold in range(folds):
         fold_dir = os.path.join(tmpdir.name, str(fold))
         os.makedirs(fold_dir)

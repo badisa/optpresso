@@ -1,14 +1,10 @@
 import os
-from tempfile import NamedTemporaryFile
-from random import seed, choices
+from random import seed
 from typing import Optional, List, Callable
 from collections import defaultdict
 
 import numpy as np
 from numpy.random import seed as np_seed
-
-from PIL import Image
-
 
 from optpresso.data.partition import find_test_paths
 
@@ -27,13 +23,6 @@ def compute_image_mean(loader) -> np.array:
         for y in x:
             mean += np.mean(y, axis=(0, 1)) / n
     return mean
-
-
-def boring_iterator(directory, target_size):
-    for time, path in find_test_paths(directory):
-        yield img_to_array(
-            load_img(path, target_size=(target_size[0], target_size[1]))
-        ), (time,)
 
 
 class GroundsLoader:
@@ -107,13 +96,13 @@ class GroundsLoader:
     @property
     def weights(self):
         """
-        Returns a numpy array indexed by integer time to the correspoding
+        Returns a numpy array indexed by integer time to the corresponding
         weights.
         """
         if self._weights is None:
             bins = defaultdict(int)
             max_time = 0
-            for time, path in self._paths:
+            for time, _ in self._paths:
                 bins[int(time)] += 1
                 max_time = max(max_time, time)
             max_count = max(bins.values())
@@ -152,7 +141,7 @@ class GroundsLoader:
             for batch in self.weighted_generator():
                 yield batch
 
-    def _base_gen(self, meth):
+    def _base_gen(self, meth: Callable):
         total_size = len(self._paths)
         np.random.shuffle(self._paths)
         batch_start = 0

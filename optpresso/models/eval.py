@@ -8,7 +8,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error
-from sklearn.gaussian_process import GaussianProcessRegressor
 
 from optpresso.utils import GroundsLoader
 from optpresso.data.config import load_config

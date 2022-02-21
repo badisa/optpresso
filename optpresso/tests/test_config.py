@@ -1,7 +1,5 @@
 import pytest
 
-import numpy as np
-
 from optpresso.data.config import OptpressoConfig
 
 

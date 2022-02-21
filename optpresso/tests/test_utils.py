@@ -1,5 +1,3 @@
-import pytest
-
 from optpresso.utils import GroundsLoader
 
 

@@ -3,7 +3,7 @@ import sys
 import json
 import shutil
 
-from typing import List, Any, Optional
+from typing import List, Optional
 from dataclasses import dataclass, asdict
 from argparse import Namespace, ArgumentParser
 
@@ -61,7 +61,7 @@ class OptpressoConfig:
     def save(self):
         directory = DEFAULT_CONFIG_DIR
         if OPTPRESSO_CONFIG_ENV in os.environ:
-            directory = os.environ[OPTRESSO_CONFIG_ENV]
+            directory = os.environ[OPTPRESSO_CONFIG_ENV]
         directory = os.path.expanduser(directory)
         path = os.path.join(directory, CONFIG)
         with open(path, "w") as ofs:
@@ -71,7 +71,7 @@ class OptpressoConfig:
 def load_config() -> Optional[OptpressoConfig]:
     directory = DEFAULT_CONFIG_DIR
     if OPTPRESSO_CONFIG_ENV in os.environ:
-        directory = os.environ[OPTRESSO_CONFIG_ENV]
+        directory = os.environ[OPTPRESSO_CONFIG_ENV]
     directory = os.path.expanduser(directory)
     path = os.path.join(directory, CONFIG)
     if not os.path.isfile(path):

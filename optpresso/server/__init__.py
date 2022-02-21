@@ -1,28 +1,23 @@
 import os
 import sys
-import json
 import time
 import random
 import webbrowser
 
-from typing import Dict
 from tempfile import mkstemp
 from urllib.request import urlopen
 from argparse import ArgumentParser
 from dataclasses import asdict, fields
 
-import cv2
 import numpy as np
 
-from flask import Flask, request, send_from_directory
-from markupsafe import escape
+from flask import Flask, request
 from tensorflow.keras.preprocessing.image import img_to_array, load_img
-from PIL import Image
 from PIL.PngImagePlugin import PngInfo
 
 import optpresso
 from optpresso.utils import set_random_seed
-from optpresso.data.config import load_config, OptpressoConfig
+from optpresso.data.config import load_config
 from optpresso.models.serialization import load_model
 
 
