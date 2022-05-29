@@ -156,6 +156,7 @@ def serve_server(parent_args, leftover):
     )
     parser.add_argument("--browser", action="store_true", help="Open the browser")
     parser.add_argument("--port", default=8888, type=int, help="Port to serve on")
+    parser.add_argument("--host", default="localhost", help="Host")
     parser.add_argument(
         "--seed", default=0, type=int, help="Seed for placement of captured images"
     )
@@ -185,4 +186,8 @@ def serve_server(parent_args, leftover):
     model = load_model(config.model, compile=False)
     if args.browser:
         webbrowser.open_new_tab(f"http://localhost:{args.port}")
-    app.run(port=args.port)
+    ssl_context = None
+    if args.host != "localhost":
+        print("Provided non-localhost, using adhoc SSL")
+        ssl_context = "adhoc"
+    app.run(host=args.host, port=args.port, ssl_context=ssl_context)
