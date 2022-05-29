@@ -19,9 +19,11 @@ IMG_EXTS = [".jpg", ".png"]
 def compute_image_mean(loader) -> np.array:
     n = len(loader)
     mean = np.zeros(3)
+    count = 0
     for x, _ in loader.generator():
-        for y in x:
-            mean += np.mean(y, axis=(0, 1)) / n
+        mean += np.mean(x, axis=(0, 1, 2))
+        count += 1
+    mean /= count
     return mean
 
 
