@@ -2,11 +2,27 @@ import React, { useState, useGlobal, setGlobal, addCallback } from "reactn";
 import ReactDOM from "react-dom";
 
 export default class Video extends React.Component {
-  componentDidMount() {
-    var videoWidth, videoHeight;
 
-    // whether streaming video from the camera.
-    var streaming = false;
+  constructor(props) {
+    super(props);
+    this.state = {
+      streaming: false,
+    };
+
+    this.startVideo = this.startVideo.bind(this);
+  }
+
+  componentDidMount() {
+    this.startVideo();
+  }
+
+  startVideo() {
+    var self = this;
+    var state = this.state;
+    if (state.streaming) {
+      this.setState({streaming: false});
+    }
+    var videoWidth, videoHeight;
 
     var video = document.getElementById("video");
     var canvasOutput = document.getElementById("canvasOutput");
@@ -14,7 +30,7 @@ export default class Video extends React.Component {
     var stream = null;
 
     function startCamera() {
-      if (streaming) return;
+      if (state.streaming) return;
       navigator.mediaDevices
         .getUserMedia({ video: true, audio: false })
         .then(function (s) {
@@ -24,21 +40,33 @@ export default class Video extends React.Component {
         })
         .catch(function (err) {
           console.log("An error occured! " + err);
+          self.setState({streaming: false});
         });
 
       video.addEventListener(
         "canplay",
         function (ev) {
-          if (!streaming) {
+          if (!state.streaming) {
             videoWidth = video.videoWidth;
             videoHeight = video.videoHeight;
             video.setAttribute("width", videoWidth);
             video.setAttribute("height", videoHeight);
             canvasOutput.width = videoWidth;
             canvasOutput.height = videoHeight;
-            streaming = true;
+            self.setState({streaming: true});
+            state.streaming = true;
           }
           startVideoProcessing();
+        },
+        false
+      );
+
+      video.addEventListener(
+        "suspend",
+        function (ev) {
+          if (state.streaming) {
+            self.setState({streaming: false});
+          }
         },
         false
       );
@@ -51,7 +79,7 @@ export default class Video extends React.Component {
     var canvasBufferCtx = null;
 
     function startVideoProcessing() {
-      if (!streaming) {
+      if (!state.streaming) {
         console.warn("Please startup your webcam");
         return;
       }
@@ -86,9 +114,12 @@ export default class Video extends React.Component {
   render() {
     return (
       <div>
-        <div class="container">
+        <div class="container center-block">
           <canvas class="center-block" id="canvasOutput"></canvas>
         </div>
+        {!this.state.streaming &&
+          <button id="cameraReset" class="center-block" onClick={(evt) => this.startVideo()}>Reset Video</button>
+        }
         <div class="invisible">
           <video id="video" class="hidden">
             Your browser does not support the video tag.

@@ -53,17 +53,36 @@ var bootstrap_min_update = injectStylesIntoStyleTag_default()(bootstrap_min/* de
 
 
 class Video extends (build_default()).Component {
-  componentDidMount() {
-    var videoWidth, videoHeight; // whether streaming video from the camera.
+  constructor(props) {
+    super(props);
+    this.state = {
+      streaming: false
+    };
+    this.startVideo = this.startVideo.bind(this);
+  }
 
-    var streaming = false;
+  componentDidMount() {
+    this.startVideo();
+  }
+
+  startVideo() {
+    var self = this;
+    var state = this.state;
+
+    if (state.streaming) {
+      this.setState({
+        streaming: false
+      });
+    }
+
+    var videoWidth, videoHeight;
     var video = document.getElementById("video");
     var canvasOutput = document.getElementById("canvasOutput");
     var canvasOutputCtx = canvasOutput.getContext("2d");
     var stream = null;
 
     function startCamera() {
-      if (streaming) return;
+      if (state.streaming) return;
       navigator.mediaDevices.getUserMedia({
         video: true,
         audio: false
@@ -73,19 +92,32 @@ class Video extends (build_default()).Component {
         video.play();
       }).catch(function (err) {
         console.log("An error occured! " + err);
+        self.setState({
+          streaming: false
+        });
       });
       video.addEventListener("canplay", function (ev) {
-        if (!streaming) {
+        if (!state.streaming) {
           videoWidth = video.videoWidth;
           videoHeight = video.videoHeight;
           video.setAttribute("width", videoWidth);
           video.setAttribute("height", videoHeight);
           canvasOutput.width = videoWidth;
           canvasOutput.height = videoHeight;
-          streaming = true;
+          self.setState({
+            streaming: true
+          });
+          state.streaming = true;
         }
 
         startVideoProcessing();
+      }, false);
+      video.addEventListener("suspend", function (ev) {
+        if (state.streaming) {
+          self.setState({
+            streaming: false
+          });
+        }
       }, false);
     }
 
@@ -95,7 +127,7 @@ class Video extends (build_default()).Component {
     var canvasBufferCtx = null;
 
     function startVideoProcessing() {
-      if (!streaming) {
+      if (!state.streaming) {
         console.warn("Please startup your webcam");
         return;
       }
@@ -123,11 +155,15 @@ class Video extends (build_default()).Component {
 
   render() {
     return /*#__PURE__*/build_default().createElement("div", null, /*#__PURE__*/build_default().createElement("div", {
-      class: "container"
+      class: "container center-block"
     }, /*#__PURE__*/build_default().createElement("canvas", {
       class: "center-block",
       id: "canvasOutput"
-    })), /*#__PURE__*/build_default().createElement("div", {
+    })), !this.state.streaming && /*#__PURE__*/build_default().createElement("button", {
+      id: "cameraReset",
+      class: "center-block",
+      onClick: evt => this.startVideo()
+    }, "Reset Video"), /*#__PURE__*/build_default().createElement("div", {
       class: "invisible"
     }, /*#__PURE__*/build_default().createElement("video", {
       id: "video",
@@ -547,7 +583,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, "/*!\n * Bootstrap v4.6.0 (https://getb
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "canvas{border:1px solid black}.invisible{display:none}.text-center{text-align:center}.center-block{display:block;margin:auto}#canvasOutput{margin-bottom:2em;background-color:black;box-shadow:0px 0px 15px black}.row .config{background-color:gray;border-radius:0.3em;padding:1em;box-shadow:0px 0px 5px gray}label{padding-right:10px;width:25%;vertical-align:top;font:16px 'Lucida Grande', sans-serif}body{padding-top:6rem}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "canvas{border:1px solid black}.invisible{display:none}.text-center{text-align:center}.center-block{display:block;margin:auto}#cameraReset{margin-bottom:2em}#canvasOutput{margin-bottom:2em;background-color:black;box-shadow:0px 0px 15px black}.row .config{background-color:gray;border-radius:0.3em;padding:1em;box-shadow:0px 0px 5px gray}label{padding-right:10px;width:25%;vertical-align:top;font:16px 'Lucida Grande', sans-serif}body{padding-top:6rem}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
