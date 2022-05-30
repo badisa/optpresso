@@ -210,14 +210,14 @@ def train(parent_args: Namespace, leftover: List[str]):
     )
     parser.add_argument(
         "--patience",
-        default=20,
+        default=None,
         type=int,
     )
     parser.add_argument(
         "--output-path", default="model.h5", help="Output path of the model"
     )
     parser.add_argument(
-        "--mode", choices=["patience", "annealing", "checkpoint"], default="patience"
+        "--mode", choices=["annealing", "checkpoint"], default="checkpoint"
     )
     parser.add_argument("--seed", default=None, type=int)
     parser.add_argument(
@@ -241,17 +241,7 @@ def train(parent_args: Namespace, leftover: List[str]):
         wandb.init(project="optpresso", entity="optpresso")
         callbacks.append(WandbCallback())
 
-    if args.mode == "patience":
-        callbacks.append(
-            EarlyStopping(
-                monitor="val_loss",
-                min_delta=0.05,
-                patience=args.patience,
-                mode="min",
-                restore_best_weights=True,
-            )
-        )
-    elif args.mode == "checkpoint":
+    if args.mode == "checkpoint":
         if not os.path.isdir(model_name):
             os.mkdir(model_name)
         callbacks.append(
@@ -277,6 +267,16 @@ def train(parent_args: Namespace, leftover: List[str]):
                     save_prefix=f"{model_name}-cycle-",
                 ),
             ]
+        )
+    if args.patience is not None:
+        callbacks.append(
+            EarlyStopping(
+                monitor="val_loss",
+                min_delta=0.001,
+                patience=args.patience,
+                mode="min",
+                restore_best_weights=True,
+            )
         )
 
     config = load_config()
