@@ -11,7 +11,7 @@ from dataclasses import asdict, fields
 
 import numpy as np
 
-from flask import Flask, request
+from flask import Flask, request, redirect
 from tensorflow.keras.preprocessing.image import img_to_array, load_img
 from PIL.PngImagePlugin import PngInfo
 
@@ -39,10 +39,13 @@ OUTPUTS = ["train", "validation", "test"]
 
 
 @app.route("/")
-def do_get():
+def index():
     with open(os.path.join(TEMPLATES_DIR, "index.html"), "r") as ifs:
         return ifs.read()
 
+@app.errorhandler(404)
+def page_not_found(e):
+    return redirect("/")
 
 @app.route("/static/<path>")
 def serve_static(path):
@@ -51,8 +54,7 @@ def serve_static(path):
         with open(static_path) as ifs:
             return ifs.read()
     else:
-        print("Oh no", static_path)
-
+        return {"error": path}, 404
 
 @app.route("/api/config/", methods=["POST", "GET"])
 def get_config():

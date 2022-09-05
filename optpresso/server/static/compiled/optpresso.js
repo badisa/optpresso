@@ -2809,7 +2809,7 @@ function std(numbers) {
 
 function predictPullTime(callback) {
   let form = new FormData();
-  postImage(form, "api/cnn/predict/", callback);
+  postImage(form, "/api/cnn/predict/", callback);
 }
 
 function captureImage(data, callback) {
@@ -2819,7 +2819,7 @@ function captureImage(data, callback) {
     form.append(key, value);
   }
 
-  postImage(form, "api/cnn/capture/", callback);
+  postImage(form, "/api/cnn/capture/", callback);
 }
 
 function postImage(formData, url, callback) {
