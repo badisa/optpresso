@@ -68,14 +68,7 @@ $ optpresso config init path/to/downloaded/model.h5
 
 ## Usage
 
-It is possible to use Optpresso via two different means. Either using the CLI with the following commands:
-
-```
-$ optpresso predict --camera 0  # For predictions
-$ optpresso capture 0  # For capturing images
-```
-
-Or you can use the Web UI which has more advanced features and generally easier to use.
+Use the Web UI to capture and predict images
 
 ```
 $ optpresso serve /path/to/capture/to [--capture-split] [--seed=0] [--browser] [--port=888] [--split-ratio=7,2,1]

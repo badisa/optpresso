@@ -1,5 +1,5 @@
 -e .
 
-black
+black[jupyter]
 jupyter==1.0.0
 pytest

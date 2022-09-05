@@ -8,8 +8,6 @@ CONFIG = "config"
 EVAL = "eval"
 TRAIN = "train"
 SERVE = "serve"
-CAPTURE = "capture"
-PREDICT = "predict"
 PARTITION = "partition"
 
 TF_LOG_LEVEL = "TF_CPP_MIN_LOG_LEVEL"
@@ -22,7 +20,7 @@ def main():
     # Don't add help, complicates things
     parser = ArgumentParser(description="OptPresso: ML for espresso", add_help=False)
     parser.add_argument(
-        "cmd", choices=[TRAIN, CAPTURE, PREDICT, EVAL, CONFIG, PARTITION, SERVE]
+        "cmd", choices=[TRAIN, EVAL, CONFIG, PARTITION, SERVE]
     )
     # Args to be added, probably
     args, leftover = parser.parse_known_args()
@@ -32,12 +30,6 @@ def main():
         from optpresso.models.training import train
 
         train(args, leftover)
-    elif args.cmd == CAPTURE:
-        from optpresso.capture import capture
-
-        capture(args, leftover)
-    elif args.cmd == PREDICT:
-        from optpresso.predict import predict
 
         predict(args, leftover)
     elif args.cmd == EVAL:
