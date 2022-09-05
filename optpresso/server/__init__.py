@@ -54,7 +54,7 @@ def serve_static(path):
         print("Oh no", static_path)
 
 
-@app.route("/config/", methods=["POST", "GET"])
+@app.route("/api/config/", methods=["POST", "GET"])
 def get_config():
     if request.method == "POST":
         config_fields = [x.name for x in fields(config)]
@@ -73,8 +73,11 @@ def get_config():
         return data
 
 
-@app.route("/predict/", methods=["POST"])
+@app.route("/api/cnn/predict/", methods=["POST"])
 def predict():
+    global model
+    if model is None:
+        model = load_model(config.model, compile=False)
     img = request.form["image"]
     resp = urlopen(img)
     # Support windows, its a total hack
@@ -92,7 +95,7 @@ def predict():
     return {"prediction": float(pred[0][0])}
 
 
-@app.route("/capture/", methods=["POST"])
+@app.route("/api/cnn/capture/", methods=["POST"])
 def capture():
     if args is None:
         raise RuntimeError("Something horribly wrong has happened")
@@ -149,7 +152,6 @@ def capture():
 
 def serve_server(parent_args, leftover):
     global args
-    global model
     parser = ArgumentParser(description="Optpresso Web UI")
     parser.add_argument(
         "capture_dir", default=".", help="Directory to write out captured images to"
@@ -183,7 +185,6 @@ def serve_server(parent_args, leftover):
         sys.exit(1)
     if args.capture_split:
         args.capture_dir = os.path.expanduser(args.capture_dir)
-    model = load_model(config.model, compile=False)
     if args.browser:
         webbrowser.open_new_tab(f"http://localhost:{args.port}")
     ssl_context = None

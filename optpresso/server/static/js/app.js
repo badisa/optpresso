@@ -20,7 +20,7 @@ setGlobal({
 
 function predictPullTime(callback) {
   let form = new FormData();
-  postImage(form, "/predict/", callback);
+  postImage(form, "api/cnn/predict/", callback);
 }
 
 function captureImage(data, callback) {
@@ -28,7 +28,7 @@ function captureImage(data, callback) {
   for (const [key, value] of Object.entries(data)) {
     form.append(key, value);
   }
-  postImage(form, "/capture/", callback);
+  postImage(form, "api/cnn/capture/", callback);
 }
 
 function postImage(formData, url, callback) {
@@ -217,7 +217,7 @@ class CaptureControl extends React.Component {
       }
       form.append(key, value);
     }
-    httpPostAsync("/config/", form, () => {
+    httpPostAsync("api/config/", form, () => {
       event.target.disabled = false;
     });
   }

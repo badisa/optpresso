@@ -1,556 +1,6 @@
-(function(e, a) { for(var i in a) e[i] = a[i]; if(a.__esModule) Object.defineProperty(e, "__esModule", { value: true }); }(window,
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
-
-/***/ 261:
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-// ESM COMPAT FLAG
-__webpack_require__.r(__webpack_exports__);
-
-// EXTERNAL MODULE: ./node_modules/reactn/build/index.js
-var build = __webpack_require__(383);
-var build_default = /*#__PURE__*/__webpack_require__.n(build);
-// EXTERNAL MODULE: ./node_modules/react-dom/index.js
-var react_dom = __webpack_require__(935);
-// EXTERNAL MODULE: ./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js
-var injectStylesIntoStyleTag = __webpack_require__(379);
-var injectStylesIntoStyleTag_default = /*#__PURE__*/__webpack_require__.n(injectStylesIntoStyleTag);
-// EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./optpresso/server/static/sass/style.scss
-var style = __webpack_require__(717);
-;// CONCATENATED MODULE: ./optpresso/server/static/sass/style.scss
-
-            
-
-var options = {};
-
-options.insert = "head";
-options.singleton = false;
-
-var update = injectStylesIntoStyleTag_default()(style/* default */.Z, options);
-
-
-
-/* harmony default export */ const sass_style = (style/* default.locals */.Z.locals || {});
-// EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./node_modules/bootstrap/dist/css/bootstrap.min.css
-var bootstrap_min = __webpack_require__(889);
-;// CONCATENATED MODULE: ./node_modules/bootstrap/dist/css/bootstrap.min.css
-
-            
-
-var bootstrap_min_options = {};
-
-bootstrap_min_options.insert = "head";
-bootstrap_min_options.singleton = false;
-
-var bootstrap_min_update = injectStylesIntoStyleTag_default()(bootstrap_min/* default */.Z, bootstrap_min_options);
-
-
-
-/* harmony default export */ const css_bootstrap_min = (bootstrap_min/* default.locals */.Z.locals || {});
-;// CONCATENATED MODULE: ./optpresso/server/static/js/video.js
-
-
-class Video extends (build_default()).Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      streaming: false
-    };
-    this.startVideo = this.startVideo.bind(this);
-  }
-
-  componentDidMount() {
-    this.startVideo();
-  }
-
-  startVideo() {
-    var self = this;
-    var state = this.state;
-
-    if (state.streaming) {
-      this.setState({
-        streaming: false
-      });
-    }
-
-    var videoWidth, videoHeight;
-    var video = document.getElementById("video");
-    var canvasOutput = document.getElementById("canvasOutput");
-    var canvasOutputCtx = canvasOutput.getContext("2d");
-    var stream = null;
-
-    function startCamera() {
-      if (state.streaming) return;
-      navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: false
-      }).then(function (s) {
-        stream = s;
-        video.srcObject = s;
-        video.play();
-      }).catch(function (err) {
-        console.log("An error occured! " + err);
-        self.setState({
-          streaming: false
-        });
-      });
-      video.addEventListener("canplay", function (ev) {
-        if (!state.streaming) {
-          videoWidth = video.videoWidth;
-          videoHeight = video.videoHeight;
-          video.setAttribute("width", videoWidth);
-          video.setAttribute("height", videoHeight);
-          canvasOutput.width = videoWidth;
-          canvasOutput.height = videoHeight;
-          self.setState({
-            streaming: true
-          });
-          state.streaming = true;
-        }
-
-        startVideoProcessing();
-      }, false);
-      video.addEventListener("suspend", function (ev) {
-        if (state.streaming) {
-          self.setState({
-            streaming: false
-          });
-        }
-      }, false);
-    }
-
-    var canvasInput = null;
-    var canvasInputCtx = null;
-    var canvasBuffer = null;
-    var canvasBufferCtx = null;
-
-    function startVideoProcessing() {
-      if (!state.streaming) {
-        console.warn("Please startup your webcam");
-        return;
-      }
-
-      canvasInput = document.createElement("canvas");
-      canvasInput.width = videoWidth;
-      canvasInput.height = videoHeight;
-      canvasInputCtx = canvasInput.getContext("2d");
-      canvasBuffer = document.createElement("canvas");
-      canvasBuffer.width = videoWidth;
-      canvasBuffer.height = videoHeight;
-      canvasBufferCtx = canvasBuffer.getContext("2d");
-      requestAnimationFrame(processVideo);
-    }
-
-    function processVideo() {
-      canvasInputCtx.drawImage(video, 0, 0, videoWidth, videoHeight);
-      var imageData = canvasInputCtx.getImageData(0, 0, videoWidth, videoHeight);
-      canvasOutputCtx.drawImage(canvasInput, 0, 0, videoWidth, videoHeight);
-      requestAnimationFrame(processVideo);
-    }
-
-    startCamera();
-  }
-
-  render() {
-    return /*#__PURE__*/build_default().createElement("div", null, /*#__PURE__*/build_default().createElement("div", {
-      class: "container center-block"
-    }, /*#__PURE__*/build_default().createElement("canvas", {
-      class: "center-block",
-      id: "canvasOutput"
-    })), !this.state.streaming && /*#__PURE__*/build_default().createElement("button", {
-      id: "cameraReset",
-      class: "center-block",
-      onClick: evt => this.startVideo()
-    }, "Reset Video"), /*#__PURE__*/build_default().createElement("div", {
-      class: "invisible"
-    }, /*#__PURE__*/build_default().createElement("video", {
-      id: "video",
-      class: "hidden"
-    }, "Your browser does not support the video tag.")));
-  }
-
-}
-;// CONCATENATED MODULE: ./optpresso/server/static/js/math.js
-function median(numbers) {
-  const sorted = numbers.slice().sort((a, b) => a - b);
-  const middle = Math.floor(sorted.length / 2);
-
-  if (sorted.length % 2 === 0) {
-    return (sorted[middle - 1] + sorted[middle]) / 2;
-  }
-
-  return sorted[middle];
-}
-function mean(numbers) {
-  return numbers.reduce((a, b) => a + b, 0) / numbers.length;
-}
-function std(numbers) {
-  let avg = mean(numbers);
-  return Math.sqrt(numbers.reduce((a, b) => a + Math.pow(b - avg, 2), 0) / numbers.length);
-}
-;// CONCATENATED MODULE: ./optpresso/server/static/js/app.js
-
-
-
-
-
-
-(0,build.setGlobal)({
-  config: {},
-  pullData: {
-    pullTime: 30,
-    grindSetting: "",
-    coffee: "",
-    gramsIn: 18,
-    gramsOut: 36
-  }
-});
-
-function predictPullTime(callback) {
-  let form = new FormData();
-  postImage(form, "/predict/", callback);
-}
-
-function captureImage(data, callback) {
-  let form = new FormData();
-
-  for (const [key, value] of Object.entries(data)) {
-    form.append(key, value);
-  }
-
-  postImage(form, "/capture/", callback);
-}
-
-function postImage(formData, url, callback) {
-  let canvasOutput = document.getElementById("canvasOutput");
-  formData.append("image", canvasOutput.toDataURL());
-  httpPostAsync(url, formData, callback);
-}
-
-function httpPostAsync(url, formData, callback) {
-  var xmlHttp = new XMLHttpRequest();
-
-  xmlHttp.onreadystatechange = function () {
-    if (xmlHttp.readyState == 4 && xmlHttp.status < 300) callback(xmlHttp.responseText);
-  };
-
-  xmlHttp.open("POST", url, true); // true for asynchronous
-
-  xmlHttp.send(formData);
-}
-
-function httpGetAsync(url, callback) {
-  var xmlHttp = new XMLHttpRequest();
-
-  xmlHttp.onreadystatechange = function () {
-    if (xmlHttp.readyState == 4 && xmlHttp.status < 300) callback(xmlHttp.responseText);
-  };
-
-  xmlHttp.open("GET", url, true); // true for asynchronous
-
-  xmlHttp.send();
-}
-
-class Nav extends (build_default()).Component {
-  constructor(props) {
-    super(props);
-    this.setPredict = this.setPredict.bind(this);
-    this.setCapture = this.setCapture.bind(this);
-  }
-
-  setPredict(event) {
-    event.preventDefault();
-    this.props.setMode("predict");
-    window.history.pushState({}, "", "/predict/");
-    const navEvent = new PopStateEvent('popstate');
-    window.dispatchEvent(navEvent);
-  }
-
-  setCapture() {
-    event.preventDefault();
-    this.props.setMode("capture");
-    window.history.pushState({}, "", "/capture/");
-    const navEvent = new PopStateEvent('popstate');
-    window.dispatchEvent(navEvent);
-  }
-
-  render() {
-    return /*#__PURE__*/build_default().createElement("nav", {
-      class: "navbar navbar-expand-sm navbar-dark bg-dark fixed-top"
-    }, /*#__PURE__*/build_default().createElement("div", {
-      class: "container-fluid"
-    }, /*#__PURE__*/build_default().createElement("a", {
-      class: "navbar-brand",
-      href: "#"
-    }, "Optpresso"), /*#__PURE__*/build_default().createElement("button", {
-      class: "navbar-toggler",
-      type: "button",
-      "aria-expanded": "false",
-      "aria-label": "Toggle navigation"
-    }, /*#__PURE__*/build_default().createElement("span", {
-      class: "navbar-toggler-icon"
-    })), /*#__PURE__*/build_default().createElement("div", {
-      class: "collapse navbar-collapse",
-      id: "navbarsExampleDefault"
-    }, /*#__PURE__*/build_default().createElement("ul", {
-      class: "navbar-nav me-auto mb-1 mb-sm-0"
-    }, /*#__PURE__*/build_default().createElement("li", {
-      class: "nav-item"
-    }, /*#__PURE__*/build_default().createElement("a", {
-      className: `nav-link ${window.location.pathname != "/predict/" ? "active" : ""}`,
-      href: "#",
-      onClick: this.setCapture
-    }, "Capture")), /*#__PURE__*/build_default().createElement("li", {
-      class: "nav-item"
-    }, /*#__PURE__*/build_default().createElement("a", {
-      className: `nav-link ${window.location.pathname == "/predict/" ? "active" : ""}`,
-      href: "#",
-      onClick: this.setPredict
-    }, "Predict"))))));
-  }
-
-}
-
-class PredictControl extends (build_default()).Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      predictions: []
-    };
-    this.handlePredict = this.handlePredict.bind(this);
-    this.clearPredictions = this.clearPredictions.bind(this);
-  }
-
-  handlePredict(event) {
-    event.target.disabled = true;
-    let self = this;
-    predictPullTime(function (data) {
-      const obj = JSON.parse(data);
-      self.state.predictions.push(obj.prediction);
-      self.setState({ ...self.state
-      });
-      event.target.disabled = false;
-    });
-  }
-
-  clearPredictions(event) {
-    this.setState({
-      predictions: []
-    });
-  }
-
-  render() {
-    const listItems = this.state.predictions.map(pred => /*#__PURE__*/build_default().createElement("li", null, pred));
-    let avg = 0.0;
-    let std_val = 0.0;
-    let med = 0.0;
-
-    if (this.state.predictions.length > 1) {
-      avg = mean(this.state.predictions);
-      med = median(this.state.predictions);
-      std_val = std(this.state.predictions);
-    }
-
-    avg = Number(avg.toFixed(2));
-    std_val = Number(std_val.toFixed(2));
-    med = Number(med.toFixed(2));
-    return /*#__PURE__*/build_default().createElement("div", {
-      class: "container"
-    }, /*#__PURE__*/build_default().createElement("div", {
-      class: "row"
-    }, /*#__PURE__*/build_default().createElement("div", {
-      class: "col-md-5 offset-1 config"
-    }, /*#__PURE__*/build_default().createElement("h3", null, "Predictions"), /*#__PURE__*/build_default().createElement("button", {
-      onClick: this.clearPredictions
-    }, "Clear"), /*#__PURE__*/build_default().createElement("hr", null), "Median:", med, /*#__PURE__*/build_default().createElement("br", null), "Mean:", avg, /*#__PURE__*/build_default().createElement("br", null), "Std: ", std_val, /*#__PURE__*/build_default().createElement("ul", null, listItems)), /*#__PURE__*/build_default().createElement("div", {
-      class: "col-md-5 offset-1 config"
-    }, /*#__PURE__*/build_default().createElement("button", {
-      onClick: this.handlePredict
-    }, "Predict"))));
-  }
-
-}
-
-class CaptureControl extends (build_default()).Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      config: this.props.config,
-      pullData: this.props.pullData
-    };
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleConfigUpdate = this.handleConfigUpdate.bind(this);
-  }
-
-  componentDidUpdate(oldProps) {
-    if (oldProps !== this.props) {
-      let newState = {
-        config: { ...this.props.config
-        },
-        pullData: this.state.pullData
-      };
-      this.setState(newState);
-    }
-  }
-
-  handleConfigUpdate(event) {
-    event.target.disabled = true;
-    let form = new FormData();
-
-    for (let [key, value] of Object.entries(this.state.config)) {
-      if (value == null) {
-        value = "";
-      }
-
-      form.append(key, value);
-    }
-
-    httpPostAsync("/config/", form, () => {
-      event.target.disabled = false;
-    });
-  }
-
-  handleChange(event) {
-    let val = event.target.value;
-
-    if (event.target.type == "checkbox") {
-      val = event.target.checked;
-    }
-
-    if (this.state.config.hasOwnProperty(event.target.name)) {
-      this.setState({
-        config: { ...this.state.config,
-          [event.target.name]: val
-        }
-      });
-      this.props.setConfig({ ...this.state.config,
-        [event.target.name]: val
-      });
-    } else {
-      this.setState({
-        pullData: { ...this.state.pullData,
-          [event.target.name]: val
-        }
-      });
-      this.props.setPullData({ ...this.state.pullData,
-        [event.target.name]: val
-      });
-    }
-  }
-
-  handleSubmit(event) {
-    event.target.disabled = true;
-    this.props.setConfig(this.state.config);
-    event.preventDefault();
-    captureImage({ ...this.state.config,
-      ...this.state.pullData
-    }, data => {
-      event.target.disabled = false;
-    });
-  }
-
-  render() {
-    return /*#__PURE__*/build_default().createElement("div", {
-      class: "container"
-    }, /*#__PURE__*/build_default().createElement("div", {
-      class: "row"
-    }, /*#__PURE__*/build_default().createElement("div", {
-      class: "col-md-5 offset-1 config"
-    }, /*#__PURE__*/build_default().createElement("h3", null, "Configuration"), /*#__PURE__*/build_default().createElement("button", {
-      onClick: evt => this.handleConfigUpdate(evt)
-    }, "Update Config"), /*#__PURE__*/build_default().createElement("hr", null), Object.entries(this.state.config).map(([key, value]) => {
-      const labelName = key.replace(" ", "%nbsp;") ? key : "";
-      return /*#__PURE__*/build_default().createElement("div", {
-        class: "form-group"
-      }, /*#__PURE__*/build_default().createElement("label", null, labelName, ":", /*#__PURE__*/build_default().createElement("input", {
-        type: "text",
-        name: key,
-        value: value,
-        onChange: evt => this.handleChange(evt)
-      })));
-    })), /*#__PURE__*/build_default().createElement("div", {
-      class: "col-md-5 offset-1 config"
-    }, /*#__PURE__*/build_default().createElement("h3", null, "Capture"), /*#__PURE__*/build_default().createElement("button", {
-      onClick: evt => this.handleSubmit(evt)
-    }, "Capture"), /*#__PURE__*/build_default().createElement("hr", null), Object.entries(this.state.pullData).map(([key, value]) => {
-      const labelName = key.replace(" ", "%nbsp;") ? key : "";
-
-      if (typeof value === "boolean") {
-        return /*#__PURE__*/build_default().createElement("div", {
-          class: "checkbox"
-        }, /*#__PURE__*/build_default().createElement("label", null, labelName, ":", /*#__PURE__*/build_default().createElement("input", {
-          name: key,
-          type: "checkbox",
-          checked: value,
-          onClick: evt => this.handleChange(evt)
-        })));
-      } else {
-        return /*#__PURE__*/build_default().createElement("div", {
-          class: "form-group"
-        }, /*#__PURE__*/build_default().createElement("label", null, labelName, ":", /*#__PURE__*/build_default().createElement("input", {
-          type: "text",
-          name: key,
-          value: value,
-          onChange: evt => this.handleChange(evt)
-        })));
-      }
-    }))));
-  }
-
-}
-
-function CaptureComponent() {
-  const [mode, setMode] = (0,build.useGlobal)("mode");
-  const [config, setConfig] = (0,build.useGlobal)("config");
-  const [pullData, setPullData] = (0,build.useGlobal)("pullData");
-  const [currentPath, setCurrentPath] = (0,build.useState)(window.location.pathname);
-
-  const getExistingConfig = () => {
-    httpGetAsync("/config/", function (data) {
-      const savedConfig = JSON.parse(data);
-      setConfig(savedConfig);
-    });
-  };
-
-  build_default().useEffect(() => {
-    getExistingConfig();
-
-    const onLocationChange = () => {
-      // update path state to current window URL
-      setCurrentPath(window.location.pathname);
-    }; // listen for popstate event
-
-
-    window.addEventListener('popstate', onLocationChange);
-  }, []);
-  let controls;
-
-  if (window.location.pathname == "/predict/") {
-    controls = /*#__PURE__*/build_default().createElement(PredictControl, {
-      config: config,
-      setConfig: setConfig
-    });
-  } else {
-    controls = /*#__PURE__*/build_default().createElement(CaptureControl, {
-      config: config,
-      setConfig: setConfig,
-      pullData: pullData,
-      setPullData: setPullData
-    });
-  }
-
-  return /*#__PURE__*/build_default().createElement("main", null, /*#__PURE__*/build_default().createElement(Nav, {
-    mode: mode,
-    setMode: setMode
-  }), /*#__PURE__*/build_default().createElement(Video, null), controls);
-}
-
-react_dom.render( /*#__PURE__*/build_default().createElement(CaptureComponent, null), document.getElementById("root"));
-
-/***/ }),
 
 /***/ 889:
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
@@ -1147,7 +597,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 function _addCallback(globalStateManager, callback) {
     return globalStateManager.addCallback(callback);
 }
-exports.default = _addCallback;
+exports["default"] = _addCallback;
 ;
 
 
@@ -1161,7 +611,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 function _addReducer(globalStateManager, name, reducer) {
     return globalStateManager.addReducer(name, reducer);
 }
-exports.default = _addReducer;
+exports["default"] = _addReducer;
 ;
 
 
@@ -1235,7 +685,7 @@ function _addReducers(globalStateManager, reducers) {
         return success;
     };
 }
-exports.default = _addReducers;
+exports["default"] = _addReducers;
 ;
 
 
@@ -1353,7 +803,7 @@ var getContext = function () {
     }
     return null;
 };
-exports.default = getContext();
+exports["default"] = getContext();
 
 
 /***/ }),
@@ -1468,7 +918,7 @@ function _createProvider(initialState, initialReducers) {
         return ReactNProvider;
     }(React.Component));
 }
-exports.default = _createProvider;
+exports["default"] = _createProvider;
 
 
 /***/ }),
@@ -1590,7 +1040,7 @@ function ReactN(DecoratedComponent) {
     }(DecoratedComponent));
     return DecoratedReactNComponent;
 }
-exports.default = ReactN;
+exports["default"] = ReactN;
 ;
 
 
@@ -1602,7 +1052,7 @@ exports.default = ReactN;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 var global_state_manager_1 = __webpack_require__(712);
-exports.default = new global_state_manager_1.default();
+exports["default"] = new global_state_manager_1.default();
 
 
 /***/ }),
@@ -1615,7 +1065,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 function _getDispatch(globalStateManager) {
     return globalStateManager.dispatchers;
 }
-exports.default = _getDispatch;
+exports["default"] = _getDispatch;
 ;
 
 
@@ -1629,7 +1079,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 function _getGlobal(globalStateManager) {
     return globalStateManager.state;
 }
-exports.default = _getGlobal;
+exports["default"] = _getGlobal;
 ;
 
 
@@ -1999,7 +1449,7 @@ var GlobalStateManager = (function () {
     });
     return GlobalStateManager;
 }());
-exports.default = GlobalStateManager;
+exports["default"] = GlobalStateManager;
 ;
 
 
@@ -2097,7 +1547,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 function _removeCallback(globalStateManager, callback) {
     return globalStateManager.removeCallback(callback);
 }
-exports.default = _removeCallback;
+exports["default"] = _removeCallback;
 ;
 
 
@@ -2111,7 +1561,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 function _resetGlobal(globalStateManager) {
     return globalStateManager.reset();
 }
-exports.default = _resetGlobal;
+exports["default"] = _resetGlobal;
 ;
 
 
@@ -2138,7 +1588,7 @@ function _setGlobal(globalStateManager, newGlobalState, callback) {
         return globalStateManager.state;
     });
 }
-exports.default = _setGlobal;
+exports["default"] = _setGlobal;
 ;
 
 
@@ -2240,7 +1690,7 @@ function _useDispatch(overrideGlobalStateManager, reducer, property) {
     }
     return globalStateManager.getDispatcher(reducer);
 }
-exports.default = _useDispatch;
+exports["default"] = _useDispatch;
 ;
 
 
@@ -2288,7 +1738,7 @@ function _useGlobal(overrideGlobalStateManager, property) {
     }, []);
     return [globalStateManager.state[property], globalPropertySetter];
 }
-exports.default = _useGlobal;
+exports["default"] = _useGlobal;
 
 
 /***/ }),
@@ -2345,7 +1795,7 @@ function bindLifecycleMethods(that) {
         };
     }
 }
-exports.default = bindLifecycleMethods;
+exports["default"] = bindLifecycleMethods;
 ;
 
 
@@ -2433,7 +1883,7 @@ function getGlobalStateManager() {
             context_1.default._currentValue)) ||
         default_global_state_manager_1.default;
 }
-exports.default = getGlobalStateManager;
+exports["default"] = getGlobalStateManager;
 
 
 /***/ }),
@@ -2446,7 +1896,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 function isPropertyReducer(_reducer, property) {
     return typeof property !== 'undefined';
 }
-exports.default = isPropertyReducer;
+exports["default"] = isPropertyReducer;
 ;
 
 
@@ -2470,7 +1920,7 @@ function objectGetListener(obj, listener) {
         return accumulator;
     }, Object.create(null));
 }
-exports.default = objectGetListener;
+exports["default"] = objectGetListener;
 ;
 
 
@@ -2481,7 +1931,7 @@ exports.default = objectGetListener;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.default = new Error('The installed version of React does not support Context. ' +
+exports["default"] = new Error('The installed version of React does not support Context. ' +
     'Upgrade to React v16.3.0 or later.');
 
 
@@ -2492,7 +1942,7 @@ exports.default = new Error('The installed version of React does not support Con
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.default = new Error('The installed version of React does not support Hooks. ' +
+exports["default"] = new Error('The installed version of React does not support Hooks. ' +
     'Upgrade to React v16.8.0 or later.');
 
 
@@ -2646,7 +2096,7 @@ function _withGlobal(globalStateManager, getter, setter) {
             _a;
     };
 }
-exports.default = _withGlobal;
+exports["default"] = _withGlobal;
 ;
 
 
@@ -2726,7 +2176,7 @@ function _withInit(initialGlobal, initialReducers) {
         }(components_1.ReactNComponent));
     };
 }
-exports.default = _withInit;
+exports["default"] = _withInit;
 
 
 /***/ }),
@@ -3074,7 +2524,7 @@ function useForceUpdate() {
     }, [dispatch]);
     return memoizedDispatch;
 }
-exports.default = useForceUpdate;
+exports["default"] = useForceUpdate;
 
 
 /***/ })
@@ -3087,8 +2537,9 @@ exports.default = useForceUpdate;
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		if(__webpack_module_cache__[moduleId]) {
-/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
@@ -3145,11 +2596,562 @@ exports.default = useForceUpdate;
 /******/ 		};
 /******/ 	})();
 /******/ 	
+/******/ 	/* webpack/runtime/nonce */
+/******/ 	(() => {
+/******/ 		__webpack_require__.nc = undefined;
+/******/ 	})();
+/******/ 	
 /************************************************************************/
-/******/ 	// module exports must be returned from runtime so entry inlining is disabled
-/******/ 	// startup
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(261);
-/******/ })()
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+(() => {
+// ESM COMPAT FLAG
+__webpack_require__.r(__webpack_exports__);
 
-));
+// EXTERNAL MODULE: ./node_modules/reactn/build/index.js
+var build = __webpack_require__(383);
+var build_default = /*#__PURE__*/__webpack_require__.n(build);
+// EXTERNAL MODULE: ./node_modules/react-dom/index.js
+var react_dom = __webpack_require__(935);
+// EXTERNAL MODULE: ./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js
+var injectStylesIntoStyleTag = __webpack_require__(379);
+var injectStylesIntoStyleTag_default = /*#__PURE__*/__webpack_require__.n(injectStylesIntoStyleTag);
+// EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./optpresso/server/static/sass/style.scss
+var style = __webpack_require__(717);
+;// CONCATENATED MODULE: ./optpresso/server/static/sass/style.scss
+
+            
+
+var options = {};
+
+options.insert = "head";
+options.singleton = false;
+
+var update = injectStylesIntoStyleTag_default()(style/* default */.Z, options);
+
+
+
+/* harmony default export */ const sass_style = (style/* default.locals */.Z.locals || {});
+// EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./node_modules/bootstrap/dist/css/bootstrap.min.css
+var bootstrap_min = __webpack_require__(889);
+;// CONCATENATED MODULE: ./node_modules/bootstrap/dist/css/bootstrap.min.css
+
+            
+
+var bootstrap_min_options = {};
+
+bootstrap_min_options.insert = "head";
+bootstrap_min_options.singleton = false;
+
+var bootstrap_min_update = injectStylesIntoStyleTag_default()(bootstrap_min/* default */.Z, bootstrap_min_options);
+
+
+
+/* harmony default export */ const css_bootstrap_min = (bootstrap_min/* default.locals */.Z.locals || {});
+;// CONCATENATED MODULE: ./optpresso/server/static/js/video.js
+
+
+class Video extends (build_default()).Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      streaming: false
+    };
+    this.startVideo = this.startVideo.bind(this);
+  }
+
+  componentDidMount() {
+    this.startVideo();
+  }
+
+  startVideo() {
+    var self = this;
+    var state = this.state;
+
+    if (state.streaming) {
+      this.setState({
+        streaming: false
+      });
+    }
+
+    var videoWidth, videoHeight;
+    var video = document.getElementById("video");
+    var canvasOutput = document.getElementById("canvasOutput");
+    var canvasOutputCtx = canvasOutput.getContext("2d");
+    var stream = null;
+
+    function startCamera() {
+      if (state.streaming) return;
+      navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: false
+      }).then(function (s) {
+        stream = s;
+        video.srcObject = s;
+        video.play();
+      }).catch(function (err) {
+        console.log("An error occured! " + err);
+        self.setState({
+          streaming: false
+        });
+      });
+      video.addEventListener("canplay", function (ev) {
+        if (!state.streaming) {
+          videoWidth = video.videoWidth;
+          videoHeight = video.videoHeight;
+          video.setAttribute("width", videoWidth);
+          video.setAttribute("height", videoHeight);
+          canvasOutput.width = videoWidth;
+          canvasOutput.height = videoHeight;
+          self.setState({
+            streaming: true
+          });
+          state.streaming = true;
+        }
+
+        startVideoProcessing();
+      }, false);
+      video.addEventListener("suspend", function (ev) {
+        if (state.streaming) {
+          self.setState({
+            streaming: false
+          });
+        }
+      }, false);
+    }
+
+    var canvasInput = null;
+    var canvasInputCtx = null;
+    var canvasBuffer = null;
+    var canvasBufferCtx = null;
+
+    function startVideoProcessing() {
+      if (!state.streaming) {
+        console.warn("Please startup your webcam");
+        return;
+      }
+
+      canvasInput = document.createElement("canvas");
+      canvasInput.width = videoWidth;
+      canvasInput.height = videoHeight;
+      canvasInputCtx = canvasInput.getContext("2d");
+      canvasBuffer = document.createElement("canvas");
+      canvasBuffer.width = videoWidth;
+      canvasBuffer.height = videoHeight;
+      canvasBufferCtx = canvasBuffer.getContext("2d");
+      requestAnimationFrame(processVideo);
+    }
+
+    function processVideo() {
+      canvasInputCtx.drawImage(video, 0, 0, videoWidth, videoHeight);
+      var imageData = canvasInputCtx.getImageData(0, 0, videoWidth, videoHeight);
+      canvasOutputCtx.drawImage(canvasInput, 0, 0, videoWidth, videoHeight);
+      requestAnimationFrame(processVideo);
+    }
+
+    startCamera();
+  }
+
+  render() {
+    return /*#__PURE__*/build_default().createElement("div", null, /*#__PURE__*/build_default().createElement("div", {
+      class: "container center-block"
+    }, /*#__PURE__*/build_default().createElement("canvas", {
+      class: "center-block",
+      id: "canvasOutput"
+    })), !this.state.streaming && /*#__PURE__*/build_default().createElement("button", {
+      id: "cameraReset",
+      class: "center-block",
+      onClick: evt => this.startVideo()
+    }, "Reset Video"), /*#__PURE__*/build_default().createElement("div", {
+      class: "invisible"
+    }, /*#__PURE__*/build_default().createElement("video", {
+      id: "video",
+      class: "hidden"
+    }, "Your browser does not support the video tag.")));
+  }
+
+}
+;// CONCATENATED MODULE: ./optpresso/server/static/js/math.js
+function median(numbers) {
+  const sorted = numbers.slice().sort((a, b) => a - b);
+  const middle = Math.floor(sorted.length / 2);
+
+  if (sorted.length % 2 === 0) {
+    return (sorted[middle - 1] + sorted[middle]) / 2;
+  }
+
+  return sorted[middle];
+}
+function mean(numbers) {
+  return numbers.reduce((a, b) => a + b, 0) / numbers.length;
+}
+function std(numbers) {
+  let avg = mean(numbers);
+  return Math.sqrt(numbers.reduce((a, b) => a + Math.pow(b - avg, 2), 0) / numbers.length);
+}
+;// CONCATENATED MODULE: ./optpresso/server/static/js/app.js
+
+
+
+
+
+
+(0,build.setGlobal)({
+  config: {},
+  pullData: {
+    pullTime: 30,
+    grindSetting: "",
+    coffee: "",
+    gramsIn: 18,
+    gramsOut: 36
+  }
+});
+
+function predictPullTime(callback) {
+  let form = new FormData();
+  postImage(form, "api/cnn/predict/", callback);
+}
+
+function captureImage(data, callback) {
+  let form = new FormData();
+
+  for (const [key, value] of Object.entries(data)) {
+    form.append(key, value);
+  }
+
+  postImage(form, "api/cnn/capture/", callback);
+}
+
+function postImage(formData, url, callback) {
+  let canvasOutput = document.getElementById("canvasOutput");
+  formData.append("image", canvasOutput.toDataURL());
+  httpPostAsync(url, formData, callback);
+}
+
+function httpPostAsync(url, formData, callback) {
+  var xmlHttp = new XMLHttpRequest();
+
+  xmlHttp.onreadystatechange = function () {
+    if (xmlHttp.readyState == 4 && xmlHttp.status < 300) callback(xmlHttp.responseText);
+  };
+
+  xmlHttp.open("POST", url, true); // true for asynchronous
+
+  xmlHttp.send(formData);
+}
+
+function httpGetAsync(url, callback) {
+  var xmlHttp = new XMLHttpRequest();
+
+  xmlHttp.onreadystatechange = function () {
+    if (xmlHttp.readyState == 4 && xmlHttp.status < 300) callback(xmlHttp.responseText);
+  };
+
+  xmlHttp.open("GET", url, true); // true for asynchronous
+
+  xmlHttp.send();
+}
+
+class Nav extends (build_default()).Component {
+  constructor(props) {
+    super(props);
+    this.setPredict = this.setPredict.bind(this);
+    this.setCapture = this.setCapture.bind(this);
+  }
+
+  setPredict(event) {
+    event.preventDefault();
+    this.props.setMode("predict");
+    window.history.pushState({}, "", "/predict/");
+    const navEvent = new PopStateEvent('popstate');
+    window.dispatchEvent(navEvent);
+  }
+
+  setCapture() {
+    event.preventDefault();
+    this.props.setMode("capture");
+    window.history.pushState({}, "", "/capture/");
+    const navEvent = new PopStateEvent('popstate');
+    window.dispatchEvent(navEvent);
+  }
+
+  render() {
+    return /*#__PURE__*/build_default().createElement("nav", {
+      class: "navbar navbar-expand-sm navbar-dark bg-dark fixed-top"
+    }, /*#__PURE__*/build_default().createElement("div", {
+      class: "container-fluid"
+    }, /*#__PURE__*/build_default().createElement("a", {
+      class: "navbar-brand",
+      href: "#"
+    }, "Optpresso"), /*#__PURE__*/build_default().createElement("button", {
+      class: "navbar-toggler",
+      type: "button",
+      "aria-expanded": "false",
+      "aria-label": "Toggle navigation"
+    }, /*#__PURE__*/build_default().createElement("span", {
+      class: "navbar-toggler-icon"
+    })), /*#__PURE__*/build_default().createElement("div", {
+      class: "collapse navbar-collapse",
+      id: "navbarsExampleDefault"
+    }, /*#__PURE__*/build_default().createElement("ul", {
+      class: "navbar-nav me-auto mb-1 mb-sm-0"
+    }, /*#__PURE__*/build_default().createElement("li", {
+      class: "nav-item"
+    }, /*#__PURE__*/build_default().createElement("a", {
+      className: `nav-link ${window.location.pathname != "/predict/" ? "active" : ""}`,
+      href: "#",
+      onClick: this.setCapture
+    }, "Capture")), /*#__PURE__*/build_default().createElement("li", {
+      class: "nav-item"
+    }, /*#__PURE__*/build_default().createElement("a", {
+      className: `nav-link ${window.location.pathname == "/predict/" ? "active" : ""}`,
+      href: "#",
+      onClick: this.setPredict
+    }, "Predict"))))));
+  }
+
+}
+
+class PredictControl extends (build_default()).Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      predictions: []
+    };
+    this.handlePredict = this.handlePredict.bind(this);
+    this.clearPredictions = this.clearPredictions.bind(this);
+  }
+
+  handlePredict(event) {
+    event.target.disabled = true;
+    let self = this;
+    predictPullTime(function (data) {
+      const obj = JSON.parse(data);
+      self.state.predictions.push(obj.prediction);
+      self.setState({ ...self.state
+      });
+      event.target.disabled = false;
+    });
+  }
+
+  clearPredictions(event) {
+    this.setState({
+      predictions: []
+    });
+  }
+
+  render() {
+    const listItems = this.state.predictions.map(pred => /*#__PURE__*/build_default().createElement("li", null, pred));
+    let avg = 0.0;
+    let std_val = 0.0;
+    let med = 0.0;
+
+    if (this.state.predictions.length > 1) {
+      avg = mean(this.state.predictions);
+      med = median(this.state.predictions);
+      std_val = std(this.state.predictions);
+    }
+
+    avg = Number(avg.toFixed(2));
+    std_val = Number(std_val.toFixed(2));
+    med = Number(med.toFixed(2));
+    return /*#__PURE__*/build_default().createElement("div", {
+      class: "container"
+    }, /*#__PURE__*/build_default().createElement("div", {
+      class: "row"
+    }, /*#__PURE__*/build_default().createElement("div", {
+      class: "col-md-5 offset-1 config"
+    }, /*#__PURE__*/build_default().createElement("h3", null, "Predictions"), /*#__PURE__*/build_default().createElement("button", {
+      onClick: this.clearPredictions
+    }, "Clear"), /*#__PURE__*/build_default().createElement("hr", null), "Median:", med, /*#__PURE__*/build_default().createElement("br", null), "Mean:", avg, /*#__PURE__*/build_default().createElement("br", null), "Std: ", std_val, /*#__PURE__*/build_default().createElement("ul", null, listItems)), /*#__PURE__*/build_default().createElement("div", {
+      class: "col-md-5 offset-1 config"
+    }, /*#__PURE__*/build_default().createElement("button", {
+      onClick: this.handlePredict
+    }, "Predict"))));
+  }
+
+}
+
+class CaptureControl extends (build_default()).Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      config: this.props.config,
+      pullData: this.props.pullData
+    };
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleConfigUpdate = this.handleConfigUpdate.bind(this);
+  }
+
+  componentDidUpdate(oldProps) {
+    if (oldProps !== this.props) {
+      let newState = {
+        config: { ...this.props.config
+        },
+        pullData: this.state.pullData
+      };
+      this.setState(newState);
+    }
+  }
+
+  handleConfigUpdate(event) {
+    event.target.disabled = true;
+    let form = new FormData();
+
+    for (let [key, value] of Object.entries(this.state.config)) {
+      if (value == null) {
+        value = "";
+      }
+
+      form.append(key, value);
+    }
+
+    httpPostAsync("api/config/", form, () => {
+      event.target.disabled = false;
+    });
+  }
+
+  handleChange(event) {
+    let val = event.target.value;
+
+    if (event.target.type == "checkbox") {
+      val = event.target.checked;
+    }
+
+    if (this.state.config.hasOwnProperty(event.target.name)) {
+      this.setState({
+        config: { ...this.state.config,
+          [event.target.name]: val
+        }
+      });
+      this.props.setConfig({ ...this.state.config,
+        [event.target.name]: val
+      });
+    } else {
+      this.setState({
+        pullData: { ...this.state.pullData,
+          [event.target.name]: val
+        }
+      });
+      this.props.setPullData({ ...this.state.pullData,
+        [event.target.name]: val
+      });
+    }
+  }
+
+  handleSubmit(event) {
+    event.target.disabled = true;
+    this.props.setConfig(this.state.config);
+    event.preventDefault();
+    captureImage({ ...this.state.config,
+      ...this.state.pullData
+    }, data => {
+      event.target.disabled = false;
+    });
+  }
+
+  render() {
+    return /*#__PURE__*/build_default().createElement("div", {
+      class: "container"
+    }, /*#__PURE__*/build_default().createElement("div", {
+      class: "row"
+    }, /*#__PURE__*/build_default().createElement("div", {
+      class: "col-md-5 offset-1 config"
+    }, /*#__PURE__*/build_default().createElement("h3", null, "Configuration"), /*#__PURE__*/build_default().createElement("button", {
+      onClick: evt => this.handleConfigUpdate(evt)
+    }, "Update Config"), /*#__PURE__*/build_default().createElement("hr", null), Object.entries(this.state.config).map(([key, value]) => {
+      const labelName = key.replace(" ", "%nbsp;") ? key : "";
+      return /*#__PURE__*/build_default().createElement("div", {
+        class: "form-group"
+      }, /*#__PURE__*/build_default().createElement("label", null, labelName, ":", /*#__PURE__*/build_default().createElement("input", {
+        type: "text",
+        name: key,
+        value: value,
+        onChange: evt => this.handleChange(evt)
+      })));
+    })), /*#__PURE__*/build_default().createElement("div", {
+      class: "col-md-5 offset-1 config"
+    }, /*#__PURE__*/build_default().createElement("h3", null, "Capture"), /*#__PURE__*/build_default().createElement("button", {
+      onClick: evt => this.handleSubmit(evt)
+    }, "Capture"), /*#__PURE__*/build_default().createElement("hr", null), Object.entries(this.state.pullData).map(([key, value]) => {
+      const labelName = key.replace(" ", "%nbsp;") ? key : "";
+
+      if (typeof value === "boolean") {
+        return /*#__PURE__*/build_default().createElement("div", {
+          class: "checkbox"
+        }, /*#__PURE__*/build_default().createElement("label", null, labelName, ":", /*#__PURE__*/build_default().createElement("input", {
+          name: key,
+          type: "checkbox",
+          checked: value,
+          onClick: evt => this.handleChange(evt)
+        })));
+      } else {
+        return /*#__PURE__*/build_default().createElement("div", {
+          class: "form-group"
+        }, /*#__PURE__*/build_default().createElement("label", null, labelName, ":", /*#__PURE__*/build_default().createElement("input", {
+          type: "text",
+          name: key,
+          value: value,
+          onChange: evt => this.handleChange(evt)
+        })));
+      }
+    }))));
+  }
+
+}
+
+function CaptureComponent() {
+  const [mode, setMode] = (0,build.useGlobal)("mode");
+  const [config, setConfig] = (0,build.useGlobal)("config");
+  const [pullData, setPullData] = (0,build.useGlobal)("pullData");
+  const [currentPath, setCurrentPath] = (0,build.useState)(window.location.pathname);
+
+  const getExistingConfig = () => {
+    httpGetAsync("/config/", function (data) {
+      const savedConfig = JSON.parse(data);
+      setConfig(savedConfig);
+    });
+  };
+
+  build_default().useEffect(() => {
+    getExistingConfig();
+
+    const onLocationChange = () => {
+      // update path state to current window URL
+      setCurrentPath(window.location.pathname);
+    }; // listen for popstate event
+
+
+    window.addEventListener('popstate', onLocationChange);
+  }, []);
+  let controls;
+
+  if (window.location.pathname == "/predict/") {
+    controls = /*#__PURE__*/build_default().createElement(PredictControl, {
+      config: config,
+      setConfig: setConfig
+    });
+  } else {
+    controls = /*#__PURE__*/build_default().createElement(CaptureControl, {
+      config: config,
+      setConfig: setConfig,
+      pullData: pullData,
+      setPullData: setPullData
+    });
+  }
+
+  return /*#__PURE__*/build_default().createElement("main", null, /*#__PURE__*/build_default().createElement(Nav, {
+    mode: mode,
+    setMode: setMode
+  }), /*#__PURE__*/build_default().createElement(Video, null), controls);
+}
+
+react_dom.render( /*#__PURE__*/build_default().createElement(CaptureComponent, null), document.getElementById("root"));
+})();
+
+var __webpack_export_target__ = window;
+for(var i in __webpack_exports__) __webpack_export_target__[i] = __webpack_exports__[i];
+if(__webpack_exports__.__esModule) Object.defineProperty(__webpack_export_target__, "__esModule", { value: true });
+/******/ })()
+;
