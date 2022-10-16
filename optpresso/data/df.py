@@ -96,7 +96,10 @@ def prepare_df_for_modeling(
                 if col not in drop_cols:
                     print("No such column:", col)
                 continue
-            vals = encoder.transform(np.asarray(new_frame[col]).reshape(-1, 1))
+            try:
+                vals = encoder.transform(new_frame[col].values.reshape(-1, 1))
+            except TypeError:
+                vals = encoder.transform(new_frame[col].values)
             new_frame[col] = [vals[i] for i in range(len(vals))]
 
     y = np.asarray(new_frame[result_col])
