@@ -62,11 +62,19 @@ class Nav extends React.Component {
     super(props);
     this.setPredict = this.setPredict.bind(this);
     this.setCapture = this.setCapture.bind(this);
+    this.setModel = this.setModel.bind(this);
   }
   setPredict(event) {
     event.preventDefault();
     this.props.setMode("predict");
     window.history.pushState({}, "", "/predict/");
+     const navEvent = new PopStateEvent('popstate');
+    window.dispatchEvent(navEvent);
+  }
+  setModel(event) {
+    event.preventDefault();
+    this.props.setMode("model");
+    window.history.pushState({}, "", "/model/");
      const navEvent = new PopStateEvent('popstate');
     window.dispatchEvent(navEvent);
   }
@@ -98,7 +106,7 @@ class Nav extends React.Component {
               <li class="nav-item">
                 <a
                   className={`nav-link ${
-                    window.location.pathname != "/predict/" ? "active" : ""
+                    ['/capture/', '/'].includes(window.location.pathname)  ? "active" : ""
                   }`}
                   href="#"
                   onClick={this.setCapture}
@@ -115,6 +123,17 @@ class Nav extends React.Component {
                   onClick={this.setPredict}
                 >
                   Predict
+                </a>
+              </li>
+              <li class="nav-item">
+                <a
+                  className={`nav-link ${
+                    window.location.pathname == "/model/" ? "active" : ""
+                  }`}
+                  href="#"
+                  onClick={this.setModel}
+                >
+                  Model
                 </a>
               </li>
             </ul>
@@ -217,7 +236,7 @@ class CaptureControl extends React.Component {
       }
       form.append(key, value);
     }
-    httpPostAsync("api/config/", form, () => {
+    httpPostAsync("/api/config/", form, () => {
       event.target.disabled = false;
     });
   }
@@ -325,8 +344,117 @@ class CaptureControl extends React.Component {
   }
 }
 
+class ModelControl extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      config: this.props.config,
+      modelConfig: {},
+    };
 
-function CaptureComponent() {
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleConfigUpdate = this.handleConfigUpdate.bind(this);
+    this.setModelConfig = this.setModelConfig.bind(this);
+
+    var setModelConfig = this.setModelConfig;
+
+    const getConfig = () => {
+      httpGetAsync("/api/trad/config/", function (data) {
+        console.log(data);
+        const savedConfig = JSON.parse(data);
+        setModelConfig(savedConfig);
+      });
+    };
+    getConfig();
+  }
+
+  setModelConfig(data) {
+    this.setState({modelConfig: {...data}});
+  }
+ 
+  handleConfigUpdate(event) {
+    event.target.disabled = true;
+    let form = new FormData();
+    for (let [key, value] of Object.entries(this.state.config)) {
+      if (value == null) {
+        value = "";
+      }
+      form.append(key, value);
+    }
+    httpPostAsync("/api/config/", form, () => {
+      event.target.disabled = false;
+    });
+  }
+
+  handleChange(event) {
+    let val = event.target.value;
+    if (event.target.type == "checkbox") {
+      val = event.target.checked;
+    }
+    if (this.state.config.hasOwnProperty(event.target.name)) {
+      this.setState({
+        config: {
+          ...this.state.config,
+          [event.target.name]: val,
+        },
+      });
+      this.props.setConfig({...this.state.config, [event.target.name]: val})
+    } else {
+      this.setState({
+        pullData: {
+          ...this.state.pullData,
+          [event.target.name]: val,
+        },
+      });
+      this.props.setPullData({...this.state.pullData, [event.target.name]: val});
+    }
+  }
+
+  handleSubmit(event) {
+    event.target.disabled = true;
+    this.props.setConfig(this.state.config);
+    event.preventDefault();
+    captureImage({ ...this.state.config, ...this.state.pullData }, (data) => {
+      event.target.disabled = false;
+    });
+  }
+
+  render() {
+    return (
+      <div class="container">
+        <div class="row">
+          <div class="col-md-10 offset-1">
+            <h3>Model Parameters</h3>
+            <hr></hr>
+            {Object.entries(this.state.modelConfig).map(([key, value]) => {
+              const labelName = key.replace(" ", "%nbsp;") ? key : "";
+              return (
+                <div class="form-group">
+                  <label>
+                    {labelName}:
+                    <input
+                      type="text"
+                      name={key}
+                      value={value}
+                      onChange={(evt) => this.handleChange(evt)}
+                    />
+                  </label>
+                </div>
+              );
+            })}
+            <button onClick={(evt) => this.handleConfigUpdate(evt)}>
+              Update Config
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+}
+
+
+function ParentComponent() {
   const [mode, setMode] = useGlobal("mode");
   const [config, setConfig] = useGlobal("config");
   const [pullData, setPullData] = useGlobal("pullData");
@@ -334,7 +462,7 @@ function CaptureComponent() {
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
 
   const getExistingConfig = () => {
-    httpGetAsync("/config/", function (data) {
+    httpGetAsync("/api/config/", function (data) {
       const savedConfig = JSON.parse(data);
       setConfig(savedConfig);
     });
@@ -352,16 +480,28 @@ function CaptureComponent() {
   let controls;
   if (window.location.pathname == "/predict/") {
     controls = <PredictControl config={config} setConfig={setConfig} />;
-  } else {
+  } else if (['/capture/', '/'].includes(window.location.pathname)){
     controls = <CaptureControl config={config} setConfig={setConfig} pullData={pullData} setPullData={setPullData}/>;
+  } else {
+    console.log(window.location.pathname);
+    controls = <ModelControl config={config} setConfig={setConfig}/>;
   }
-  return (
-    <main>
-      <Nav mode={mode} setMode={setMode}></Nav>
-      <Video />
-      {controls}
-    </main>
-  );
+  if (['/predict/', '/capture/', '/'].includes(window.location.pathname)) {
+    return (
+      <main>
+        <Nav mode={mode} setMode={setMode}></Nav>
+        <Video />
+        {controls}
+      </main>
+    );
+  } else {
+    return (
+      <main>
+        <Nav mode={mode} setMode={setMode}></Nav>
+        {controls}
+      </main>
+    );
+  }
 }
 
-ReactDOM.render(<CaptureComponent />, document.getElementById("root"));
+ReactDOM.render(<ParentComponent />, document.getElementById("root"));

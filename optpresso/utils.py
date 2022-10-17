@@ -8,10 +8,13 @@ from numpy.random import seed as np_seed
 
 from optpresso.data.partition import find_test_paths
 
-from tensorflow import float16, float32
-from tensorflow.random import set_seed
-from tensorflow.data import AUTOTUNE, Dataset
-from tensorflow.keras.preprocessing.image import img_to_array, load_img
+try:
+    from tensorflow import float16, float32
+    from tensorflow.random import set_seed
+    from tensorflow.data import AUTOTUNE, Dataset
+    from tensorflow.keras.preprocessing.image import img_to_array, load_img
+except Exception:
+    set_seed = lambda x: x
 
 IMG_EXTS = [".jpg", ".png"]
 

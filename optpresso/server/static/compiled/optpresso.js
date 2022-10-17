@@ -2857,12 +2857,21 @@ class Nav extends (build_default()).Component {
     super(props);
     this.setPredict = this.setPredict.bind(this);
     this.setCapture = this.setCapture.bind(this);
+    this.setModel = this.setModel.bind(this);
   }
 
   setPredict(event) {
     event.preventDefault();
     this.props.setMode("predict");
     window.history.pushState({}, "", "/predict/");
+    const navEvent = new PopStateEvent('popstate');
+    window.dispatchEvent(navEvent);
+  }
+
+  setModel(event) {
+    event.preventDefault();
+    this.props.setMode("model");
+    window.history.pushState({}, "", "/model/");
     const navEvent = new PopStateEvent('popstate');
     window.dispatchEvent(navEvent);
   }
@@ -2898,7 +2907,7 @@ class Nav extends (build_default()).Component {
     }, /*#__PURE__*/build_default().createElement("li", {
       class: "nav-item"
     }, /*#__PURE__*/build_default().createElement("a", {
-      className: `nav-link ${window.location.pathname != "/predict/" ? "active" : ""}`,
+      className: `nav-link ${['/capture/', '/'].includes(window.location.pathname) ? "active" : ""}`,
       href: "#",
       onClick: this.setCapture
     }, "Capture")), /*#__PURE__*/build_default().createElement("li", {
@@ -2907,7 +2916,13 @@ class Nav extends (build_default()).Component {
       className: `nav-link ${window.location.pathname == "/predict/" ? "active" : ""}`,
       href: "#",
       onClick: this.setPredict
-    }, "Predict"))))));
+    }, "Predict")), /*#__PURE__*/build_default().createElement("li", {
+      class: "nav-item"
+    }, /*#__PURE__*/build_default().createElement("a", {
+      className: `nav-link ${window.location.pathname == "/model/" ? "active" : ""}`,
+      href: "#",
+      onClick: this.setModel
+    }, "Model"))))));
   }
 
 }
@@ -3007,7 +3022,7 @@ class CaptureControl extends (build_default()).Component {
       form.append(key, value);
     }
 
-    httpPostAsync("api/config/", form, () => {
+    httpPostAsync("/api/config/", form, () => {
       event.target.disabled = false;
     });
   }
@@ -3101,14 +3116,125 @@ class CaptureControl extends (build_default()).Component {
 
 }
 
-function CaptureComponent() {
+class ModelControl extends (build_default()).Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      config: this.props.config,
+      modelConfig: {}
+    };
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleConfigUpdate = this.handleConfigUpdate.bind(this);
+    this.setModelConfig = this.setModelConfig.bind(this);
+    var setModelConfig = this.setModelConfig;
+
+    const getConfig = () => {
+      httpGetAsync("/api/trad/config/", function (data) {
+        console.log(data);
+        const savedConfig = JSON.parse(data);
+        setModelConfig(savedConfig);
+      });
+    };
+
+    getConfig();
+  }
+
+  setModelConfig(data) {
+    this.setState({
+      modelConfig: { ...data
+      }
+    });
+  }
+
+  handleConfigUpdate(event) {
+    event.target.disabled = true;
+    let form = new FormData();
+
+    for (let [key, value] of Object.entries(this.state.config)) {
+      if (value == null) {
+        value = "";
+      }
+
+      form.append(key, value);
+    }
+
+    httpPostAsync("/api/config/", form, () => {
+      event.target.disabled = false;
+    });
+  }
+
+  handleChange(event) {
+    let val = event.target.value;
+
+    if (event.target.type == "checkbox") {
+      val = event.target.checked;
+    }
+
+    if (this.state.config.hasOwnProperty(event.target.name)) {
+      this.setState({
+        config: { ...this.state.config,
+          [event.target.name]: val
+        }
+      });
+      this.props.setConfig({ ...this.state.config,
+        [event.target.name]: val
+      });
+    } else {
+      this.setState({
+        pullData: { ...this.state.pullData,
+          [event.target.name]: val
+        }
+      });
+      this.props.setPullData({ ...this.state.pullData,
+        [event.target.name]: val
+      });
+    }
+  }
+
+  handleSubmit(event) {
+    event.target.disabled = true;
+    this.props.setConfig(this.state.config);
+    event.preventDefault();
+    captureImage({ ...this.state.config,
+      ...this.state.pullData
+    }, data => {
+      event.target.disabled = false;
+    });
+  }
+
+  render() {
+    return /*#__PURE__*/build_default().createElement("div", {
+      class: "container"
+    }, /*#__PURE__*/build_default().createElement("div", {
+      class: "row"
+    }, /*#__PURE__*/build_default().createElement("div", {
+      class: "col-md-10 offset-1"
+    }, /*#__PURE__*/build_default().createElement("h3", null, "Model Parameters"), /*#__PURE__*/build_default().createElement("hr", null), Object.entries(this.state.modelConfig).map(([key, value]) => {
+      const labelName = key.replace(" ", "%nbsp;") ? key : "";
+      return /*#__PURE__*/build_default().createElement("div", {
+        class: "form-group"
+      }, /*#__PURE__*/build_default().createElement("label", null, labelName, ":", /*#__PURE__*/build_default().createElement("input", {
+        type: "text",
+        name: key,
+        value: value,
+        onChange: evt => this.handleChange(evt)
+      })));
+    }), /*#__PURE__*/build_default().createElement("button", {
+      onClick: evt => this.handleConfigUpdate(evt)
+    }, "Update Config"))));
+  }
+
+}
+
+function ParentComponent() {
   const [mode, setMode] = (0,build.useGlobal)("mode");
   const [config, setConfig] = (0,build.useGlobal)("config");
   const [pullData, setPullData] = (0,build.useGlobal)("pullData");
   const [currentPath, setCurrentPath] = (0,build.useState)(window.location.pathname);
 
   const getExistingConfig = () => {
-    httpGetAsync("/config/", function (data) {
+    httpGetAsync("/api/config/", function (data) {
       const savedConfig = JSON.parse(data);
       setConfig(savedConfig);
     });
@@ -3132,22 +3258,35 @@ function CaptureComponent() {
       config: config,
       setConfig: setConfig
     });
-  } else {
+  } else if (['/capture/', '/'].includes(window.location.pathname)) {
     controls = /*#__PURE__*/build_default().createElement(CaptureControl, {
       config: config,
       setConfig: setConfig,
       pullData: pullData,
       setPullData: setPullData
     });
+  } else {
+    console.log(window.location.pathname);
+    controls = /*#__PURE__*/build_default().createElement(ModelControl, {
+      config: config,
+      setConfig: setConfig
+    });
   }
 
-  return /*#__PURE__*/build_default().createElement("main", null, /*#__PURE__*/build_default().createElement(Nav, {
-    mode: mode,
-    setMode: setMode
-  }), /*#__PURE__*/build_default().createElement(Video, null), controls);
+  if (['/predict/', '/capture/', '/'].includes(window.location.pathname)) {
+    return /*#__PURE__*/build_default().createElement("main", null, /*#__PURE__*/build_default().createElement(Nav, {
+      mode: mode,
+      setMode: setMode
+    }), /*#__PURE__*/build_default().createElement(Video, null), controls);
+  } else {
+    return /*#__PURE__*/build_default().createElement("main", null, /*#__PURE__*/build_default().createElement(Nav, {
+      mode: mode,
+      setMode: setMode
+    }), controls);
+  }
 }
 
-react_dom.render( /*#__PURE__*/build_default().createElement(CaptureComponent, null), document.getElementById("root"));
+react_dom.render( /*#__PURE__*/build_default().createElement(ParentComponent, null), document.getElementById("root"));
 })();
 
 var __webpack_export_target__ = window;

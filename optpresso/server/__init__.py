@@ -1,6 +1,7 @@
 import os
 import sys
 import time
+import json
 import random
 import webbrowser
 
@@ -12,13 +13,13 @@ from dataclasses import asdict, fields
 import numpy as np
 
 from flask import Flask, request, redirect
-from tensorflow.keras.preprocessing.image import img_to_array, load_img
+# from tensorflow.keras.preprocessing.image import img_to_array, load_img
 from PIL.PngImagePlugin import PngInfo
 
 import optpresso
 from optpresso.utils import set_random_seed
 from optpresso.data.config import load_config
-from optpresso.models.serialization import load_model
+# from optpresso.models.serialization import load_model
 
 
 optpresso_dir = os.path.dirname(os.path.dirname(optpresso.__file__))
@@ -45,7 +46,8 @@ def index():
 
 @app.errorhandler(404)
 def page_not_found(e):
-    return redirect("/")
+    # print()
+    return index()
 
 @app.route("/static/<path>")
 def serve_static(path):
@@ -151,12 +153,35 @@ def capture():
     img.save(os.path.join(output_dir, name), pnginfo=metadata)
     return {}
 
+@app.route("/api/trad/config/", methods=["get"])
+def model_config():
+    if request.method == "POST":
+        model_config = {}
+    else:
+        # print(dir(request))
+        # request.cookies.setdefault("model_config", '{}')
+        model_config = request.cookies.get("model_config", '{}')
+        try:
+            model_config = json.loads(model_config)
+        except Exception:
+            model_config = {}
+        if len(model_config) == 0:
+            model_config = {
+                "model": "GradientBoosting",
+                "estimators": 200,
+                "loss": "poisson",
+                "seed": 814,
+            }
+    # Immutable, what?
+    # request.cookies.update("model_config", json.dumps(model_config))
+    return model_config
+
 
 def serve_server(parent_args, leftover):
     global args
     parser = ArgumentParser(description="Optpresso Web UI")
     parser.add_argument(
-        "capture_dir", default=".", help="Directory to write out captured images to"
+        "--capture_dir", default=".", help="Directory to write out captured images to"
     )
     parser.add_argument("--browser", action="store_true", help="Open the browser")
     parser.add_argument("--port", default=8888, type=int, help="Port to serve on")
