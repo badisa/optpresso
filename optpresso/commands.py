@@ -30,8 +30,6 @@ def main():
         from optpresso.models.training import train
 
         train(args, leftover)
-
-        predict(args, leftover)
     elif args.cmd == EVAL:
         from optpresso.models.eval import evalulate_model
 
