@@ -1,5 +1,6 @@
 """Optpresso utilities for Panda DataFrames"""
 import os
+import warnings
 from datetime import date
 
 from tempfile import mkstemp
@@ -91,16 +92,18 @@ def prepare_df_for_modeling(
         except KeyError:
             continue
     if encoders is not None:
-        for col, encoder in encoders.items():
-            if col not in new_frame:
-                if col not in drop_cols:
-                    print("No such column:", col)
-                continue
-            try:
-                vals = encoder.transform(new_frame[col].values.reshape(-1, 1))
-            except TypeError:
-                vals = encoder.transform(new_frame[col].values)
-            new_frame[col] = [vals[i] for i in range(len(vals))]
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            for col, encoder in encoders.items():
+                if col not in new_frame:
+                    if col not in drop_cols:
+                        print("No such column:", col)
+                    continue
+                try:
+                    vals = encoder.transform(new_frame[col].values.reshape(-1, 1))
+                except TypeError:
+                    vals = encoder.transform(new_frame[col].values)
+                new_frame[col] = [vals[i] for i in range(len(vals))]
 
     y = np.asarray(new_frame[result_col])
     for drop_col in [result_col]:
