@@ -47,10 +47,10 @@ While this project is currently tightly coupled to the Linea Mini's flow/pressur
 
 ## Installation and Initialization
 
-Developed/"tested" using python 3.7, suggested to use the same setup if you want to use it.
+Developed/"tested" using python 3.8, suggested to use the same setup if you want to use it.
 
 ```
-$ conda create -n optpresso python=3.7
+$ conda create -n optpresso python=3.8
 $ pip install -e .
 ```
 
