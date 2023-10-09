@@ -15,26 +15,26 @@ setup(
     install_requires=[
         "pandas>=1.4.0,<2.0.0",
         "scikit-learn==1.3.*",
-        "tensorflow==2.13.*",
         "numpy",
         "matplotlib",
-        "scipy==1.11.*",
+        "scipy==1.10.*",
         "astropy",
-        "flask",
-        "jinja2",
+        "jupyter"
     ],
-    extra_requires={
+    extras_require={
         "dev": [
-            "wandb==0.12.*",
+            "black[jupyter]",
+        ],
+        "test": [
+            "pytest",
         ],
     },
     packages=find_packages(),
-    entry_points={"console_scripts": ["optpresso=optpresso.commands:main"]},
     author="Forrest York",
     description="Optpresso: ML for espresso",
     classifiers=[
         "Programming Language :: Python",
         "Operating System :: OS Independent",
-        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
     ],
 )
