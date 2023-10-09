@@ -35,7 +35,7 @@ def dataframe_from_csv(path_or_uri: str) -> pd.DataFrame:
 
 
 def convert_datetime_to_epoch_time(date):
-    return (date.astype("uint64") / 1e9).astype("uint32")
+    return (date.astype("int64") / 1e9).astype("int32")
 
 
 def find_columns_to_drop(
