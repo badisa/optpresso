@@ -44,3 +44,5 @@ Since I would like to better understand Machine Learning, I will attempt to docu
 ### Day 246 - [Looking back](day246.md)
 
 ### Day 274 - [Boring Skepticism](day274.md)
+
+### Day 1051 - [The day the CNN died](day1051.md)
