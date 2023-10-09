@@ -1,8 +1,6 @@
 # OptPresso
 
 Optpresso is a toy project for trying to apply simply machine learning models to espresso. If you are looking for the old attempt to use CNNs to predict shot times from pictures of the grinds refer to https://github.com/badisa/optpresso/releases/tag/v0.0.1.
-several assumptions are made regarding the espresso:
-
 
 ## Installation and Initialization
 
