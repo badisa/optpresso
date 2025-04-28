@@ -14,11 +14,10 @@ setup(
     version=version,
     install_requires=[
         "pandas>=1.4.0,<2.0.0",
-        "scikit-learn==1.3.*",
+        "scikit-learn==1.6.*",
         "numpy",
         "matplotlib",
-        "scipy==1.10.*",
-        "astropy",
+        "scipy==1.11.*",
         "jupyter"
     ],
     extras_require={
@@ -30,7 +29,7 @@ setup(
         ],
     },
     packages=find_packages(),
-    author="Forrest York",
+    author="badisa",
     description="Optpresso: ML for espresso",
     classifiers=[
         "Programming Language :: Python",

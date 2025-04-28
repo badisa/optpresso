@@ -23,6 +23,7 @@ def dataframe_from_csv(path_or_uri: str) -> pd.DataFrame:
             os.close(fd)
             with open(path, "wb") as ofs:
                 resp = requests.get(path_or_uri, stream=True)
+                resp.raise_for_status()
                 for chunk in resp.iter_content():
                     ofs.write(chunk)
             return pd.read_csv(path)
@@ -100,21 +101,21 @@ def prepare_df_for_modeling(
                         print("No such column:", col)
                     continue
                 try:
-                    vals = encoder.transform(new_frame[col].values.reshape(-1, 1))
+                    encoded_vals = encoder.transform(new_frame[col].values.reshape(-1, 1))
                 except TypeError:
-                    vals = encoder.transform(new_frame[col].values)
-                new_frame[col] = [vals[i] for i in range(len(vals))]
+                    encoded_vals = encoder.transform(new_frame[col].values)
+                new_frame[col] = np.asarray(encoded_vals).reshape(len(encoded_vals), -1).squeeze()
 
     y = np.asarray(new_frame[result_col])
-    for drop_col in [result_col]:
-        try:
-            new_frame = new_frame.drop(drop_col, axis=1)
-        except KeyError:
-            continue
+    # Drop the column used as output
+    try:
+        new_frame = new_frame.drop(result_col, axis=1)
+    except KeyError:
+        pass
     # Stable sort the columns so the ordering is consistent
     cols = list(sorted(new_frame.columns.tolist()))
     frame_array = new_frame[cols].to_numpy()
-    x = np.zeros((frame_array.shape[0], np.hstack(frame_array[0]).shape[0]))
+    x = np.empty((frame_array.shape[0], np.hstack(frame_array[0]).shape[0]))
     # Surely there is a way to vectorize this?
     for i in range(frame_array.shape[0]):
         x[i] = np.hstack(frame_array[i])
